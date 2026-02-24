@@ -1,0 +1,44 @@
+# Dentic
+
+> Dentic is a scientific tooth brushing app that guides users through the Bass Method with 3D oral navigation, a segmented timer, and daily habit streaks.
+
+## About
+
+Dentic helps people brush their teeth correctly using the clinically recommended Bass Method. It provides real-time guidance through every stage of a brushing session, ensuring no tooth surface is missed.
+
+The app is designed as a mobile-first web application, planned for packaging as a native app.
+
+## Core Features
+
+- **3D Oral Navigation**: An interactive 3D tooth model that highlights which zone to brush next in real time
+- **Segmented Timer**: Automatically advances through 7 brushing zones with audio and haptic cues; default session is 3 minutes
+- **Daily Check-in Streaks**: AM/PM logging with a monthly calendar view and quality scoring
+- **Bass Method Guidance**: Step-by-step coaching based on the most effective clinically proven tooth brushing technique
+- **Toothbrush Mode**: Supports both manual and electric toothbrush workflows
+
+## Target Users
+
+- People who want to build a consistent, scientifically grounded brushing habit
+- Individuals advised by dentists to improve their brushing technique
+- Users seeking guidance on the Bass Method (also called the Modified Bass Technique)
+
+## Key Concepts
+
+**Bass Method**: A tooth brushing technique recommended by dental professionals. The brush is held at a 45° angle to the tooth surface with bristles directed toward the gumline. Short horizontal vibrating strokes (approximately 2mm) are applied to 2–3 teeth at a time, followed by a sweeping motion toward the crown. The technique systematically covers all labial, lingual, and occlusal surfaces. Each session should last no less than 3 minutes.
+
+**3D Oral Navigation**: A visual map of the mouth divided into brushing zones. The app tracks coverage and prompts the user when to move to the next zone.
+
+**Brushing Zones**: The mouth is divided into segments — upper right, upper front, upper left, lower right, lower front, lower left — covering both outer (labial/buccal) and inner (lingual/palatal) surfaces, plus occlusal surfaces.
+
+## Technology
+
+- Platform: Web (mobile-first), planned iOS and Android native packaging
+- Pricing: Free
+
+## Developer
+
+Built by caterpi11ar — https://dentic.caterpi11ar.com/
+
+## Contact
+
+https://dentic.caterpi11ar.com/

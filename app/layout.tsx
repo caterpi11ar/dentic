@@ -36,14 +36,35 @@ export const viewport: Viewport = {
 
 const schemaOrg = {
   "@context": "https://schema.org",
-  "@type": "MobileApplication",
-  name: "Dentic",
-  description:
-    "Scientific tooth brushing app with 3D oral navigation and habit tracking.",
-  applicationCategory: "HealthApplication",
-  operatingSystem: "Web",
-  url: siteUrl,
-  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": `${siteUrl}/#organization`,
+      name: "caterpi11ar",
+      url: siteUrl,
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${siteUrl}/#website`,
+      name: "Dentic",
+      url: siteUrl,
+      description:
+        "Scientific tooth brushing app with 3D oral navigation and Bass Method guidance.",
+      publisher: { "@id": `${siteUrl}/#organization` },
+    },
+    {
+      "@type": "MobileApplication",
+      "@id": `${siteUrl}/#app`,
+      name: "Dentic",
+      description:
+        "Scientific tooth brushing app with 3D oral navigation and habit tracking. Guides users through the Bass Method with a segmented timer and daily streaks.",
+      applicationCategory: "HealthApplication",
+      operatingSystem: "Web, iOS, Android",
+      url: siteUrl,
+      offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+      author: { "@id": `${siteUrl}/#organization` },
+    },
+  ],
 };
 
 export default function RootLayout({
