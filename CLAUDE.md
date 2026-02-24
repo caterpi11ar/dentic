@@ -6,25 +6,31 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```bash
 pnpm dev          # Start dev server
-pnpm build        # Type-check + Vite build (tsc -b && vite build)
+pnpm build        # Next.js production build
+pnpm start        # Start production server
 pnpm lint         # Run ESLint
-pnpm lint:fix     # Run ESLint with auto-fix
-pnpm preview      # Preview production build
 ```
 
 No test framework is configured yet.
 
 ## Stack
 
-- **React 19** + **TypeScript** (strict mode)
-- **Vite 8** (beta) with `@vitejs/plugin-react`
-- **Tailwind CSS v4** via `@tailwindcss/vite` plugin
+- **Next.js 16** + **React 19** + **TypeScript** (strict mode)
+- **Tailwind CSS v4** via `@tailwindcss/postcss`
+- **ESLint** with `eslint-config-next`
 - **Three.js** planned for 3D tooth model visualization
-- `vite-tsconfig-paths` enables path aliases from `tsconfig.app.json`
+- Path alias: `@/*` maps to the project root
 
 ## Architecture
 
-This is an early-stage mobile-first web app (to be packaged as a native app later). The codebase is currently a Vite scaffold; product features are yet to be built.
+This is an early-stage mobile-first web app (to be packaged as a native app later), using the Next.js App Router.
+
+Route structure:
+- `app/page.tsx` — root redirect
+- `app/(main)/layout.tsx` — shared layout with bottom navigation
+- `app/(main)/home/page.tsx` — home / dashboard
+- `app/(main)/history/page.tsx` — brushing history
+- `app/(main)/settings/page.tsx` — user preferences
 
 Planned core features (see README.md):
 1. **3D oral navigation** — Three.js interactive tooth model with real-time region highlighting
@@ -34,10 +40,6 @@ Planned core features (see README.md):
 
 The brushing methodology (Bass Method, 7 steps) is documented in `docs/brushing-method.md`.
 
-## ESLint
-
-Uses `@antfu/eslint-config`. Notable rule overrides: `no-console` is off, `antfu/no-top-level-await` is off. Markdown files are ignored by ESLint.
-
 ## TypeScript
 
-Strict mode with `noUnusedLocals`, `noUnusedParameters`, `verbatimModuleSyntax`, and `erasableSyntaxOnly` enabled. Use `import type` for type-only imports.
+Strict mode enabled. Path alias `@/*` resolves to the project root (configured in `tsconfig.json`). Use `import type` for type-only imports.
