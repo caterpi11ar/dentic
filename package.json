@@ -1,7 +1,21 @@
 {
-  "name": "next-dentic",
+  "name": "dentic",
   "version": "0.1.0",
-  "private": true,
+  "description": "Build a lifelong brushing habit the scientific way.",
+  "author": "Dentic",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/caterpi11ar/dentic.git"
+  },
+  "homepage": "https://dentic.caterpi11ar.com",
+  "keywords": [
+    "dentic",
+    "brushing",
+    "habit",
+    "scientific",
+    "health"
+  ],
   "scripts": {
     "dev": "next dev",
     "build": "next build",
