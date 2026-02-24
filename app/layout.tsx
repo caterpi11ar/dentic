@@ -26,9 +26,6 @@ export const metadata: Metadata = {
     description:
       "Build a lifelong brushing habit with 3D oral navigation and Bass Method guidance.",
   },
-  verification: {
-    google: "DYr6Q5fSZhD1kffuiU78Y5J1vVfYEUFg5-FHwGp73Tg",
-  },
 };
 
 export const viewport: Viewport = {
