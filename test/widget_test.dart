@@ -6,6 +6,8 @@ import 'package:dentic/app.dart';
 void main() {
   testWidgets('App renders without crashing', (WidgetTester tester) async {
     await tester.pumpWidget(const ProviderScope(child: DenticApp()));
+    // Settle all flutter_animate timers
+    await tester.pumpAndSettle();
     expect(find.text('Dentic'), findsOneWidget);
   });
 }

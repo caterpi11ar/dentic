@@ -27,6 +27,10 @@ dependencies:
   # Icons
   cupertino_icons: ^1.0.8
 
+  # UI enhancement
+  flutter_animate: ^4.5.2
+  google_fonts: ^6.2.1
+
   # Celebration effects
   confetti: ^0.8.0
 

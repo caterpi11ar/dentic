@@ -140,6 +140,41 @@ class _BrushingScreenState extends State<BrushingScreen>
           ),
           body: Stack(
             children: [
+              // Ambient orbs for glass refraction
+              Positioned(
+                top: -20,
+                right: -40,
+                child: Container(
+                  width: 200,
+                  height: 200,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: RadialGradient(
+                      colors: [
+                        AppColors.primary.withValues(alpha: 0.3),
+                        AppColors.primary.withValues(alpha: 0),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                bottom: 200,
+                left: -60,
+                child: Container(
+                  width: 180,
+                  height: 180,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: RadialGradient(
+                      colors: [
+                        const Color(0xFF6C63FF).withValues(alpha: 0.2),
+                        const Color(0xFF6C63FF).withValues(alpha: 0),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
               SafeArea(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24),

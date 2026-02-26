@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import 'app_colors.dart';
 
@@ -6,12 +7,15 @@ class AppTheme {
   AppTheme._();
 
   static ThemeData get light {
-    return ThemeData(
+    final base = ThemeData(
       useMaterial3: true,
       colorScheme: ColorScheme.fromSeed(
         seedColor: AppColors.primary,
         brightness: Brightness.light,
       ),
+    );
+    return base.copyWith(
+      textTheme: GoogleFonts.interTextTheme(base.textTheme),
       scaffoldBackgroundColor: Colors.transparent,
       appBarTheme: const AppBarTheme(
         centerTitle: true,
@@ -44,12 +48,15 @@ class AppTheme {
   }
 
   static ThemeData get dark {
-    return ThemeData(
+    final base = ThemeData(
       useMaterial3: true,
       colorScheme: ColorScheme.fromSeed(
         seedColor: AppColors.primary,
         brightness: Brightness.dark,
       ),
+    );
+    return base.copyWith(
+      textTheme: GoogleFonts.interTextTheme(base.textTheme),
       scaffoldBackgroundColor: Colors.transparent,
       appBarTheme: const AppBarTheme(
         centerTitle: true,
