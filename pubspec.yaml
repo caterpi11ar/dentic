@@ -1,0 +1,49 @@
+name: dentic
+description: Build a lifelong brushing habit the scientific way.
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.7.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Navigation
+  go_router: ^17.1.0
+
+  # State management
+  flutter_riverpod: ^3.2.1
+  riverpod_annotation: ^4.0.2
+
+  # Local storage
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+
+  # Audio
+  just_audio: ^0.10.5
+
+  # Icons
+  cupertino_icons: ^1.0.8
+
+  # Celebration effects
+  confetti: ^0.8.0
+
+  # iOS 26 Liquid Glass design system
+  liquid_glass_widgets: ^0.3.0-dev.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  riverpod_generator: ^4.0.3
+  build_runner: ^2.4.14
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/models/
+    - assets/sounds/
+    - assets/images/

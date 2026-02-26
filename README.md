@@ -2,9 +2,7 @@
 
 > Build a lifelong brushing habit the scientific way.
 
-A **mobile-first web app** designed for phones — brush with one hand, follow the screen with your eyes.
-
-[中文](./README.zh.md)
+A **mobile app** built with Flutter for iOS and Android — brush with one hand, follow the screen with your eyes.
 
 ---
 
@@ -18,7 +16,7 @@ Most people share the same three brushing problems: **missed zones, insufficient
 
 ### 1. Immersive 3D Oral Navigation
 
-An interactive 3D tooth model powered by **Three.js** sits at the center of the screen, highlighting the current cleaning zone in real time. Just follow the screen — the app tells you exactly where to brush and how, no memorization needed.
+An interactive 3D tooth model sits at the center of the screen, highlighting the current cleaning zone in real time. Just follow the screen — the app tells you exactly where to brush and how, no memorization needed.
 
 ### 2. Scientific Segmented Timer
 
@@ -46,7 +44,31 @@ Dentic is built on the **Bass Method** — the gold standard in dental hygiene �
 
 ## Development
 
+### Prerequisites
+
+- [Flutter SDK](https://docs.flutter.dev/get-started/install) 3.41+
+- Xcode (for iOS) / Android Studio (for Android)
+
+### Setup
+
 ```bash
-pnpm install
-pnpm dev
+# First time: generate platform directories
+flutter create .
+
+# Install dependencies
+flutter pub get
+
+# Run on a connected device or simulator
+flutter run
+```
+
+### Project Structure
+
+```
+lib/
+├── main.dart           # Entry point
+├── app.dart            # MaterialApp setup
+├── core/               # Theme, router, constants, services
+├── features/           # brushing, checkin, history, settings
+└── shared/             # Reusable widgets & data models
 ```
