@@ -147,4 +147,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get start => 'Start';
+
+  @override
+  String completeDays(int count) {
+    return '$count complete days';
+  }
+
+  @override
+  String partialDays(int count) {
+    return '$count partial days';
+  }
+
+  @override
+  String get streakActive => 'Keep it going!';
 }

@@ -51,5 +51,19 @@
   "pause": "暂停",
   "skip": "跳过",
   "resume": "继续",
-  "start": "开始"
+  "start": "开始",
+
+  "completeDays": "{count} 天完成",
+  "@completeDays": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "partialDays": "{count} 天部分完成",
+  "@partialDays": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "streakActive": "继续保持！"
 }

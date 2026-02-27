@@ -367,6 +367,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Start'**
   String get start;
+
+  /// No description provided for @completeDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} complete days'**
+  String completeDays(int count);
+
+  /// No description provided for @partialDays.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} partial days'**
+  String partialDays(int count);
+
+  /// No description provided for @streakActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep it going!'**
+  String get streakActive;
 }
 
 class _AppLocalizationsDelegate

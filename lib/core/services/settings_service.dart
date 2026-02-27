@@ -9,6 +9,7 @@ class SettingsService {
 
   static const _keyThemeMode = 'themeMode';
   static const _keyLocale = 'locale';
+  static const _keySoundEnabled = 'soundEnabled';
 
   // -- Theme --
 
@@ -44,5 +45,15 @@ class SettingsService {
       return _box.delete(_keyLocale);
     }
     return _box.put(_keyLocale, locale.languageCode);
+  }
+
+  // -- Sound --
+
+  bool get soundEnabled {
+    return _box.get(_keySoundEnabled, defaultValue: true) as bool;
+  }
+
+  Future<void> setSoundEnabled(bool enabled) {
+    return _box.put(_keySoundEnabled, enabled);
   }
 }

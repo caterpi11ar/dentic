@@ -5,6 +5,7 @@ import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
 import 'app.dart';
 import 'core/providers.dart';
+import 'core/services/audio_service.dart';
 import 'core/services/checkin_service.dart';
 import 'core/services/settings_service.dart';
 import 'shared/models/checkin_record.dart';
@@ -21,6 +22,10 @@ void main() async {
   // Liquid Glass
   await LiquidGlassWidgets.initialize();
 
+  // Audio
+  final audioService = AudioService();
+  await audioService.initialize();
+
   runApp(
     ProviderScope(
       overrides: [
@@ -30,6 +35,7 @@ void main() async {
         checkinServiceProvider.overrideWithValue(
           CheckinService(checkinsBox),
         ),
+        audioServiceProvider.overrideWithValue(audioService),
       ],
       child: const DenticApp(),
     ),

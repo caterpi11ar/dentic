@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../shared/models/checkin_record.dart';
+import 'services/audio_service.dart';
 import 'services/checkin_service.dart';
 import 'services/settings_service.dart';
 
@@ -15,6 +16,10 @@ final settingsServiceProvider = Provider<SettingsService>(
 
 final checkinServiceProvider = Provider<CheckinService>(
   (_) => throw UnimplementedError('Override checkinServiceProvider'),
+);
+
+final audioServiceProvider = Provider<AudioService>(
+  (_) => throw UnimplementedError('Override audioServiceProvider'),
 );
 
 // ---------------------------------------------------------------------------
@@ -102,3 +107,47 @@ class TodayCheckinNotifier extends Notifier<CheckinRecord> {
     }
   }
 }
+
+// ---------------------------------------------------------------------------
+// Sound enabled toggle
+// ---------------------------------------------------------------------------
+
+final soundEnabledProvider =
+    NotifierProvider<SoundEnabledNotifier, bool>(SoundEnabledNotifier.new);
+
+class SoundEnabledNotifier extends Notifier<bool> {
+  @override
+  bool build() {
+    final service = ref.watch(settingsServiceProvider);
+    return service.soundEnabled;
+  }
+
+  Future<void> toggle() async {
+    final next = !state;
+    await ref.read(settingsServiceProvider).setSoundEnabled(next);
+    state = next;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Month records (for history calendar)
+// ---------------------------------------------------------------------------
+
+final monthRecordsProvider =
+    Provider.family<List<CheckinRecord>, ({int year, int month})>((ref, key) {
+  final service = ref.watch(checkinServiceProvider);
+  // Also depend on today's check-in so that new records trigger rebuilds.
+  ref.watch(todayCheckinProvider);
+  return service.getRecordsForMonth(key.year, key.month);
+});
+
+// ---------------------------------------------------------------------------
+// Streak counter
+// ---------------------------------------------------------------------------
+
+final streakProvider = Provider<int>((ref) {
+  final service = ref.watch(checkinServiceProvider);
+  // Re-evaluate when today's check-in changes.
+  ref.watch(todayCheckinProvider);
+  return service.getStreak();
+});

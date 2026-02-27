@@ -146,4 +146,17 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get start => '开始';
+
+  @override
+  String completeDays(int count) {
+    return '$count 天完成';
+  }
+
+  @override
+  String partialDays(int count) {
+    return '$count 天部分完成';
+  }
+
+  @override
+  String get streakActive => '继续保持！';
 }

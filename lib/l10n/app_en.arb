@@ -62,5 +62,19 @@
   "pause": "Pause",
   "skip": "Skip",
   "resume": "Resume",
-  "start": "Start"
+  "start": "Start",
+
+  "completeDays": "{count} complete days",
+  "@completeDays": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "partialDays": "{count} partial days",
+  "@partialDays": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "streakActive": "Keep it going!"
 }

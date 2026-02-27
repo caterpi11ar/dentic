@@ -18,6 +18,7 @@ class CheckinScreen extends ConsumerWidget {
     final theme = Theme.of(context);
     final l = AppLocalizations.of(context)!;
     final checkin = ref.watch(todayCheckinProvider);
+    final streak = ref.watch(streakProvider);
     final isMorning = DateTime.now().hour < 12;
 
     return SafeArea(
@@ -129,7 +130,7 @@ class CheckinScreen extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          l.streakCount(0),
+                          l.streakCount(streak),
                           style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.w700,
                             color: Colors.white,
@@ -137,7 +138,7 @@ class CheckinScreen extends ConsumerWidget {
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          l.streakEmpty,
+                          streak > 0 ? l.streakActive : l.streakEmpty,
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: Colors.white54,
                           ),

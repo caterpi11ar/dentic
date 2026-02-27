@@ -17,6 +17,7 @@ class SettingsScreen extends ConsumerWidget {
     final l = AppLocalizations.of(context)!;
     final themeMode = ref.watch(themeModeProvider);
     final locale = ref.watch(localeProvider);
+    final soundEnabled = ref.watch(soundEnabledProvider);
 
     return SafeArea(
       bottom: false,
@@ -72,68 +73,26 @@ class SettingsScreen extends ConsumerWidget {
               .slideY(begin: 0.1, end: 0),
           const SizedBox(height: 16),
 
-          // Toothbrush mode
+          // Sound
           _SettingsSection(
-            title: l.brushing,
+            title: l.sound,
             children: [
-              ListTile(
-                leading: const Icon(CupertinoIcons.paintbrush,
+              SwitchListTile(
+                secondary: const Icon(CupertinoIcons.speaker_2,
                     color: Colors.white),
-                title: Text(l.toothbrushMode,
+                title: Text(l.sound,
                     style: const TextStyle(color: Colors.white)),
-                subtitle: Text(l.manual,
+                subtitle: Text(
+                    soundEnabled ? l.defaultLabel : 'Off',
                     style: const TextStyle(color: Colors.white54)),
-                trailing: const Icon(CupertinoIcons.chevron_right,
-                    color: Colors.white38, size: 18),
-                onTap: () {},
-              ),
-              ListTile(
-                leading: const Icon(CupertinoIcons.timer,
-                    color: Colors.white),
-                title: Text(l.sessionDuration,
-                    style: const TextStyle(color: Colors.white)),
-                subtitle: Text(l.threeMinutes,
-                    style: const TextStyle(color: Colors.white54)),
-                trailing: const Icon(CupertinoIcons.chevron_right,
-                    color: Colors.white38, size: 18),
-                onTap: () {},
+                value: soundEnabled,
+                onChanged: (_) =>
+                    ref.read(soundEnabledProvider.notifier).toggle(),
               ),
             ],
           )
               .animate()
               .fadeIn(duration: 600.ms, delay: 200.ms)
-              .slideY(begin: 0.1, end: 0),
-          const SizedBox(height: 16),
-
-          // Notifications
-          _SettingsSection(
-            title: l.notifications,
-            children: [
-              SwitchListTile(
-                secondary: const Icon(CupertinoIcons.bell,
-                    color: Colors.white),
-                title: Text(l.reminders,
-                    style: const TextStyle(color: Colors.white)),
-                subtitle: Text(l.morningAndEvening,
-                    style: const TextStyle(color: Colors.white54)),
-                value: false,
-                onChanged: (value) {},
-              ),
-              ListTile(
-                leading: const Icon(CupertinoIcons.speaker_2,
-                    color: Colors.white),
-                title: Text(l.sound,
-                    style: const TextStyle(color: Colors.white)),
-                subtitle: Text(l.defaultLabel,
-                    style: const TextStyle(color: Colors.white54)),
-                trailing: const Icon(CupertinoIcons.chevron_right,
-                    color: Colors.white38, size: 18),
-                onTap: () {},
-              ),
-            ],
-          )
-              .animate()
-              .fadeIn(duration: 600.ms, delay: 350.ms)
               .slideY(begin: 0.1, end: 0),
           const SizedBox(height: 16),
 
@@ -152,7 +111,7 @@ class SettingsScreen extends ConsumerWidget {
             ],
           )
               .animate()
-              .fadeIn(duration: 600.ms, delay: 500.ms)
+              .fadeIn(duration: 600.ms, delay: 350.ms)
               .slideY(begin: 0.1, end: 0),
           const SizedBox(height: 100),
         ],
@@ -183,7 +142,8 @@ class SettingsScreen extends ConsumerWidget {
     final current = ref.read(themeModeProvider);
     showModalBottomSheet(
       context: context,
-      builder: (_) => SafeArea(
+      useRootNavigator: true,
+      builder: (sheetContext) => SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -191,24 +151,24 @@ class SettingsScreen extends ConsumerWidget {
               title: l.systemTheme,
               selected: current == ThemeMode.system,
               onTap: () {
+                Navigator.pop(sheetContext);
                 ref.read(themeModeProvider.notifier).set(ThemeMode.system);
-                Navigator.pop(context);
               },
             ),
             _PickerTile(
               title: l.lightTheme,
               selected: current == ThemeMode.light,
               onTap: () {
+                Navigator.pop(sheetContext);
                 ref.read(themeModeProvider.notifier).set(ThemeMode.light);
-                Navigator.pop(context);
               },
             ),
             _PickerTile(
               title: l.darkTheme,
               selected: current == ThemeMode.dark,
               onTap: () {
+                Navigator.pop(sheetContext);
                 ref.read(themeModeProvider.notifier).set(ThemeMode.dark);
-                Navigator.pop(context);
               },
             ),
           ],
@@ -222,7 +182,8 @@ class SettingsScreen extends ConsumerWidget {
     final current = ref.read(localeProvider);
     showModalBottomSheet(
       context: context,
-      builder: (_) => SafeArea(
+      useRootNavigator: true,
+      builder: (sheetContext) => SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -230,24 +191,24 @@ class SettingsScreen extends ConsumerWidget {
               title: l.followSystem,
               selected: current == null,
               onTap: () {
+                Navigator.pop(sheetContext);
                 ref.read(localeProvider.notifier).set(null);
-                Navigator.pop(context);
               },
             ),
             _PickerTile(
               title: l.english,
               selected: current?.languageCode == 'en',
               onTap: () {
+                Navigator.pop(sheetContext);
                 ref.read(localeProvider.notifier).set(const Locale('en'));
-                Navigator.pop(context);
               },
             ),
             _PickerTile(
               title: l.chinese,
               selected: current?.languageCode == 'zh',
               onTap: () {
+                Navigator.pop(sheetContext);
                 ref.read(localeProvider.notifier).set(const Locale('zh'));
-                Navigator.pop(context);
               },
             ),
           ],

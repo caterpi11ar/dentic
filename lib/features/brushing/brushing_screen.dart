@@ -9,6 +9,7 @@ import '../../core/constants/app_constants.dart';
 import '../../core/providers.dart';
 import '../../core/theme/app_colors.dart';
 import '../../l10n/app_localizations.dart';
+import 'widgets/dental_arch_widget.dart';
 
 /// Full-screen brushing session with timer and zone guidance.
 /// Launched outside the shell (no bottom nav).
@@ -24,6 +25,7 @@ class _BrushingScreenState extends ConsumerState<BrushingScreen>
   late final AnimationController _timerController;
   late final AnimationController _celebrationScaleController;
   late final Animation<double> _celebrationScale;
+  late final AnimationController _glowController;
   late final ConfettiController _confettiController;
 
   int _currentZoneIndex = 0;
@@ -55,6 +57,11 @@ class _BrushingScreenState extends ConsumerState<BrushingScreen>
     _confettiController = ConfettiController(
       duration: const Duration(seconds: 3),
     );
+
+    _glowController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+    )..repeat(reverse: true);
   }
 
   void _onTimerStatus(AnimationStatus status) {
@@ -65,12 +72,16 @@ class _BrushingScreenState extends ConsumerState<BrushingScreen>
 
   void _advanceZone() {
     HapticFeedback.mediumImpact();
+    final soundEnabled = ref.read(soundEnabledProvider);
+    final audioService = ref.read(audioServiceProvider);
+
     if (_currentZoneIndex < _totalZones - 1) {
       setState(() {
         _currentZoneIndex++;
       });
       _timerController.reset();
       _timerController.forward();
+      if (soundEnabled) audioService.playZoneTransition();
     } else {
       setState(() {
         _isRunning = false;
@@ -79,6 +90,7 @@ class _BrushingScreenState extends ConsumerState<BrushingScreen>
       HapticFeedback.heavyImpact();
       _confettiController.play();
       _celebrationScaleController.forward(from: 0);
+      if (soundEnabled) audioService.playSessionComplete();
       // Auto-mark current period as done
       ref.read(todayCheckinProvider.notifier).markCurrentPeriod();
     }
@@ -108,6 +120,7 @@ class _BrushingScreenState extends ConsumerState<BrushingScreen>
   void dispose() {
     _timerController.dispose();
     _celebrationScaleController.dispose();
+    _glowController.dispose();
     _confettiController.dispose();
     super.dispose();
   }
@@ -189,17 +202,23 @@ class _BrushingScreenState extends ConsumerState<BrushingScreen>
                     children: [
                       const Spacer(),
 
-                      // 3D model placeholder — glass circle
+                      // Dental arch visualization
                       GlassContainer(
-                        width: 200,
-                        height: 200,
-                        shape: LiquidRoundedSuperellipse(borderRadius: 100),
+                        width: 260,
+                        height: 260,
+                        shape: LiquidRoundedSuperellipse(borderRadius: 32),
                         quality: GlassQuality.premium,
-                        child: const Center(
-                          child: Icon(
-                            Icons.view_in_ar,
-                            size: 80,
-                            color: Colors.white70,
+                        child: AnimatedBuilder(
+                          animation: Listenable.merge([
+                            _glowController,
+                            _timerController,
+                          ]),
+                          builder: (context, child) => Center(
+                            child: DentalArchWidget(
+                              currentZone: _currentZone,
+                              glowAnimation: _glowController.value,
+                              completedZoneCount: _currentZoneIndex,
+                            ),
                           ),
                         ),
                       ),
