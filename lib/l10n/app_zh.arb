@@ -1,0 +1,55 @@
+{
+  "@@locale": "zh",
+
+  "appName": "Dentic",
+  "appTagline": "养成终身刷牙好习惯。",
+
+  "home": "首页",
+  "history": "历史",
+  "settings": "设置",
+
+  "today": "今日",
+  "morning": "早上",
+  "evening": "晚上",
+  "streakCount": "连续 {count} 天",
+  "streakEmpty": "开始刷牙，建立你的连续记录！",
+  "startBrushing": "开始刷牙",
+
+  "historyTitle": "历史",
+  "historySubtitle": "追踪你的刷牙进度。",
+  "historyEmpty": "还没有刷牙记录",
+  "historyEmptyHint": "完成第一次刷牙\n即可在此查看统计。",
+
+  "settingsTitle": "设置",
+  "brushing": "刷牙",
+  "toothbrushMode": "牙刷类型",
+  "manual": "手动",
+  "sessionDuration": "刷牙时长",
+  "threeMinutes": "3 分钟",
+  "notifications": "通知",
+  "reminders": "提醒",
+  "morningAndEvening": "早晚提醒",
+  "sound": "声音",
+  "defaultLabel": "默认",
+  "about": "关于",
+  "version": "版本",
+
+  "appearance": "外观",
+  "theme": "主题",
+  "language": "语言",
+  "systemTheme": "跟随系统",
+  "lightTheme": "浅色",
+  "darkTheme": "深色",
+  "followSystem": "跟随系统",
+  "english": "English",
+  "chinese": "中文",
+
+  "zoneProgress": "区域 {current} / {total}",
+  "sessionComplete": "刷牙完成！",
+  "restart": "重新开始",
+  "done": "完成",
+  "pause": "暂停",
+  "skip": "跳过",
+  "resume": "继续",
+  "start": "开始"
+}

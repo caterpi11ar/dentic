@@ -1,0 +1,66 @@
+{
+  "@@locale": "en",
+
+  "appName": "Dentic",
+  "appTagline": "Build a lifelong brushing habit.",
+
+  "home": "Home",
+  "history": "History",
+  "settings": "Settings",
+
+  "today": "Today",
+  "morning": "Morning",
+  "evening": "Evening",
+  "streakCount": "{count}-day streak",
+  "@streakCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "streakEmpty": "Start brushing to build your streak!",
+  "startBrushing": "Start Brushing",
+
+  "historyTitle": "History",
+  "historySubtitle": "Track your brushing progress.",
+  "historyEmpty": "No brushing history yet",
+  "historyEmptyHint": "Complete your first session\nto see stats here.",
+
+  "settingsTitle": "Settings",
+  "brushing": "Brushing",
+  "toothbrushMode": "Toothbrush Mode",
+  "manual": "Manual",
+  "sessionDuration": "Session Duration",
+  "threeMinutes": "3 minutes",
+  "notifications": "Notifications",
+  "reminders": "Reminders",
+  "morningAndEvening": "Morning & evening",
+  "sound": "Sound",
+  "defaultLabel": "Default",
+  "about": "About",
+  "version": "Version",
+
+  "appearance": "Appearance",
+  "theme": "Theme",
+  "language": "Language",
+  "systemTheme": "System",
+  "lightTheme": "Light",
+  "darkTheme": "Dark",
+  "followSystem": "Follow system",
+  "english": "English",
+  "chinese": "中文",
+
+  "zoneProgress": "Zone {current} / {total}",
+  "@zoneProgress": {
+    "placeholders": {
+      "current": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "sessionComplete": "Session Complete!",
+  "restart": "Restart",
+  "done": "Done",
+  "pause": "Pause",
+  "skip": "Skip",
+  "resume": "Resume",
+  "start": "Start"
+}

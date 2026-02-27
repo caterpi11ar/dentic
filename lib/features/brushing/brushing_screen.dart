@@ -1,22 +1,25 @@
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
 import '../../core/constants/brushing_zones.dart';
 import '../../core/constants/app_constants.dart';
+import '../../core/providers.dart';
 import '../../core/theme/app_colors.dart';
+import '../../l10n/app_localizations.dart';
 
 /// Full-screen brushing session with timer and zone guidance.
 /// Launched outside the shell (no bottom nav).
-class BrushingScreen extends StatefulWidget {
+class BrushingScreen extends ConsumerStatefulWidget {
   const BrushingScreen({super.key});
 
   @override
-  State<BrushingScreen> createState() => _BrushingScreenState();
+  ConsumerState<BrushingScreen> createState() => _BrushingScreenState();
 }
 
-class _BrushingScreenState extends State<BrushingScreen>
+class _BrushingScreenState extends ConsumerState<BrushingScreen>
     with TickerProviderStateMixin {
   late final AnimationController _timerController;
   late final AnimationController _celebrationScaleController;
@@ -76,6 +79,8 @@ class _BrushingScreenState extends State<BrushingScreen>
       HapticFeedback.heavyImpact();
       _confettiController.play();
       _celebrationScaleController.forward(from: 0);
+      // Auto-mark current period as done
+      ref.read(todayCheckinProvider.notifier).markCurrentPeriod();
     }
   }
 
@@ -111,6 +116,8 @@ class _BrushingScreenState extends State<BrushingScreen>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final l = AppLocalizations.of(context)!;
+    final isZh = Localizations.localeOf(context).languageCode == 'zh';
 
     return Container(
       decoration: BoxDecoration(
@@ -134,7 +141,7 @@ class _BrushingScreenState extends State<BrushingScreen>
             backgroundColor: Colors.transparent,
             foregroundColor: Colors.white,
             title: Text(
-              'Zone ${_currentZoneIndex + 1} / $_totalZones',
+              l.zoneProgress(_currentZoneIndex + 1, _totalZones),
               style: const TextStyle(color: Colors.white),
             ),
           ),
@@ -198,9 +205,9 @@ class _BrushingScreenState extends State<BrushingScreen>
                       ),
                       const SizedBox(height: 32),
 
-                      // Zone label
+                      // Zone label — show primary language first
                       Text(
-                        _currentZone.labelZh,
+                        isZh ? _currentZone.labelZh : _currentZone.labelEn,
                         style: theme.textTheme.headlineSmall?.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -208,7 +215,7 @@ class _BrushingScreenState extends State<BrushingScreen>
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        _currentZone.labelEn,
+                        isZh ? _currentZone.labelEn : _currentZone.labelZh,
                         style: theme.textTheme.bodyLarge?.copyWith(
                           color: Colors.white70,
                         ),
@@ -273,7 +280,7 @@ class _BrushingScreenState extends State<BrushingScreen>
                               ),
                               const SizedBox(height: 16),
                               Text(
-                                'Session Complete!',
+                                l.sessionComplete,
                                 style: theme.textTheme.titleLarge?.copyWith(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -286,10 +293,11 @@ class _BrushingScreenState extends State<BrushingScreen>
                                     child: GlassButton.custom(
                                       onTap: _reset,
                                       height: 56,
-                                      shape: LiquidRoundedSuperellipse(borderRadius: 16),
-                                      child: const Text(
-                                        'Restart',
-                                        style: TextStyle(
+                                      shape: LiquidRoundedSuperellipse(
+                                          borderRadius: 16),
+                                      child: Text(
+                                        l.restart,
+                                        style: const TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.w600,
                                         ),
@@ -302,10 +310,11 @@ class _BrushingScreenState extends State<BrushingScreen>
                                       onTap: () =>
                                           Navigator.of(context).pop(),
                                       height: 56,
-                                      shape: LiquidRoundedSuperellipse(borderRadius: 16),
-                                      child: const Text(
-                                        'Done',
-                                        style: TextStyle(
+                                      shape: LiquidRoundedSuperellipse(
+                                          borderRadius: 16),
+                                      child: Text(
+                                        l.done,
+                                        style: const TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
                                         ),
@@ -325,17 +334,18 @@ class _BrushingScreenState extends State<BrushingScreen>
                                 child: GlassButton.custom(
                                   onTap: _pause,
                                   height: 56,
-                                  shape: LiquidRoundedSuperellipse(borderRadius: 16),
-                                  child: const Row(
+                                  shape: LiquidRoundedSuperellipse(
+                                      borderRadius: 16),
+                                  child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.center,
                                     children: [
-                                      Icon(Icons.pause,
+                                      const Icon(Icons.pause,
                                           size: 20, color: Colors.white),
-                                      SizedBox(width: 8),
+                                      const SizedBox(width: 8),
                                       Text(
-                                        'Pause',
-                                        style: TextStyle(
+                                        l.pause,
+                                        style: const TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.w600,
                                         ),
@@ -349,10 +359,11 @@ class _BrushingScreenState extends State<BrushingScreen>
                                 child: GlassButton.custom(
                                   onTap: _advanceZone,
                                   height: 56,
-                                  shape: LiquidRoundedSuperellipse(borderRadius: 16),
-                                  child: const Text(
-                                    'Skip',
-                                    style: TextStyle(
+                                  shape: LiquidRoundedSuperellipse(
+                                      borderRadius: 16),
+                                  child: Text(
+                                    l.skip,
+                                    style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w600,
                                     ),
@@ -364,7 +375,8 @@ class _BrushingScreenState extends State<BrushingScreen>
                                 child: GlassButton.custom(
                                   onTap: _startOrResume,
                                   height: 56,
-                                  shape: LiquidRoundedSuperellipse(borderRadius: 16),
+                                  shape: LiquidRoundedSuperellipse(
+                                      borderRadius: 16),
                                   child: Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.center,
@@ -374,8 +386,8 @@ class _BrushingScreenState extends State<BrushingScreen>
                                       const SizedBox(width: 8),
                                       Text(
                                         _timerController.value > 0
-                                            ? 'Resume'
-                                            : 'Start',
+                                            ? l.resume
+                                            : l.start,
                                         style: const TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.w600,

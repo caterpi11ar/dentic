@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
 import '../../core/theme/app_colors.dart';
+import '../../l10n/app_localizations.dart';
 import 'glass_scaffold.dart';
 
 /// Shell widget with iOS 26 Liquid Glass bottom navigation bar.
@@ -26,6 +27,7 @@ class AppShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentIndex = _currentIndex(context);
+    final l = AppLocalizations.of(context)!;
 
     return GlassScaffold(
       extendBody: true,
@@ -33,19 +35,19 @@ class AppShell extends StatelessWidget {
       bottomNavigationBar: GlassBottomBar(
         tabs: [
           GlassBottomBarTab(
-            label: 'Home',
+            label: l.home,
             icon: CupertinoIcons.home,
             selectedIcon: CupertinoIcons.house_fill,
             glowColor: AppColors.primary,
           ),
           GlassBottomBarTab(
-            label: 'History',
+            label: l.history,
             icon: CupertinoIcons.calendar,
             selectedIcon: CupertinoIcons.calendar_today,
             glowColor: AppColors.primary,
           ),
           GlassBottomBarTab(
-            label: 'Settings',
+            label: l.settings,
             icon: CupertinoIcons.gear,
             selectedIcon: CupertinoIcons.gear_solid,
             glowColor: AppColors.primary,

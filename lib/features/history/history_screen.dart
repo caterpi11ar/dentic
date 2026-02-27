@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
+import '../../l10n/app_localizations.dart';
+
 /// Brushing history with calendar view and stats.
 class HistoryScreen extends StatelessWidget {
   const HistoryScreen({super.key});
@@ -9,6 +11,7 @@ class HistoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final l = AppLocalizations.of(context)!;
 
     return SafeArea(
       bottom: false,
@@ -19,7 +22,7 @@ class HistoryScreen extends StatelessWidget {
           children: [
             const SizedBox(height: 24),
             Text(
-              'History',
+              l.historyTitle,
               style: theme.textTheme.headlineLarge?.copyWith(
                 fontWeight: FontWeight.w800,
                 color: Colors.white,
@@ -31,7 +34,7 @@ class HistoryScreen extends StatelessWidget {
                 .slideY(begin: -0.2, end: 0),
             const SizedBox(height: 4),
             Text(
-              'Track your brushing progress.',
+              l.historySubtitle,
               style: theme.textTheme.bodyLarge?.copyWith(
                 color: Colors.white60,
               ),
@@ -59,7 +62,7 @@ class HistoryScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        'No brushing history yet',
+                        l.historyEmpty,
                         style: theme.textTheme.titleMedium?.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,
@@ -67,7 +70,7 @@ class HistoryScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 8),
                       Text(
-                        'Complete your first session\nto see stats here.',
+                        l.historyEmptyHint,
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: Colors.white54,
                         ),

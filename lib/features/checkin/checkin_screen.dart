@@ -1,18 +1,24 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
+import '../../core/providers.dart';
 import '../../core/theme/app_colors.dart';
+import '../../l10n/app_localizations.dart';
 
 /// Home / check-in screen — daily AM/PM logging + start brushing.
-class CheckinScreen extends StatelessWidget {
+class CheckinScreen extends ConsumerWidget {
   const CheckinScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final l = AppLocalizations.of(context)!;
+    final checkin = ref.watch(todayCheckinProvider);
+    final isMorning = DateTime.now().hour < 12;
 
     return SafeArea(
       bottom: false,
@@ -23,7 +29,7 @@ class CheckinScreen extends StatelessWidget {
           children: [
             const SizedBox(height: 24),
             Text(
-              'Dentic',
+              l.appName,
               style: theme.textTheme.headlineLarge?.copyWith(
                 fontWeight: FontWeight.w800,
                 color: Colors.white,
@@ -35,7 +41,7 @@ class CheckinScreen extends StatelessWidget {
                 .slideY(begin: -0.2, end: 0),
             const SizedBox(height: 4),
             Text(
-              'Build a lifelong brushing habit.',
+              l.appTagline,
               style: theme.textTheme.bodyLarge?.copyWith(
                 color: Colors.white60,
               ),
@@ -63,7 +69,7 @@ class CheckinScreen extends StatelessWidget {
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        'Today',
+                        l.today,
                         style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.w600,
                           color: Colors.white,
@@ -72,18 +78,26 @@ class CheckinScreen extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 16),
-                  const Row(
+                  Row(
                     children: [
                       _CheckinChip(
-                        label: 'Morning',
+                        label: l.morning,
                         icon: CupertinoIcons.sun_max,
-                        checked: false,
+                        checked: checkin.morningDone,
+                        highlighted: isMorning,
+                        onTap: () => ref
+                            .read(todayCheckinProvider.notifier)
+                            .toggleMorning(),
                       ),
-                      SizedBox(width: 12),
+                      const SizedBox(width: 12),
                       _CheckinChip(
-                        label: 'Evening',
+                        label: l.evening,
                         icon: CupertinoIcons.moon,
-                        checked: false,
+                        checked: checkin.eveningDone,
+                        highlighted: !isMorning,
+                        onTap: () => ref
+                            .read(todayCheckinProvider.notifier)
+                            .toggleEvening(),
                       ),
                     ],
                   ),
@@ -115,7 +129,7 @@ class CheckinScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          '0-day streak',
+                          l.streakCount(0),
                           style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.w700,
                             color: Colors.white,
@@ -123,7 +137,7 @@ class CheckinScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          'Start brushing to build your streak!',
+                          l.streakEmpty,
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: Colors.white54,
                           ),
@@ -156,7 +170,7 @@ class CheckinScreen extends StatelessWidget {
                           color: Colors.white, size: 22),
                       const SizedBox(width: 8),
                       Text(
-                        'Start Brushing',
+                        l.startBrushing,
                         style: theme.textTheme.titleMedium?.copyWith(
                           color: Colors.white,
                           fontWeight: FontWeight.w600,
@@ -182,34 +196,46 @@ class _CheckinChip extends StatelessWidget {
     required this.label,
     required this.icon,
     required this.checked,
+    required this.highlighted,
+    required this.onTap,
   });
 
   final String label;
   final IconData icon;
   final bool checked;
+  final bool highlighted;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: GlassContainer(
-        padding: const EdgeInsets.symmetric(vertical: 14),
-        child: Column(
-          children: [
-            Icon(
-              checked ? CupertinoIcons.check_mark_circled_solid : icon,
-              color: checked ? AppColors.primary : Colors.white70,
-              size: 26,
-            ),
-            const SizedBox(height: 6),
-            Text(
-              label,
-              style: TextStyle(
-                color: checked ? Colors.white : Colors.white70,
-                fontSize: 13,
-                fontWeight: checked ? FontWeight.w600 : FontWeight.normal,
+      child: GestureDetector(
+        onTap: onTap,
+        child: GlassContainer(
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          child: Column(
+            children: [
+              Icon(
+                checked ? CupertinoIcons.check_mark_circled_solid : icon,
+                color: checked
+                    ? AppColors.primary
+                    : highlighted
+                        ? Colors.white
+                        : Colors.white70,
+                size: 26,
               ),
-            ),
-          ],
+              const SizedBox(height: 6),
+              Text(
+                label,
+                style: TextStyle(
+                  color: checked || highlighted ? Colors.white : Colors.white70,
+                  fontSize: 13,
+                  fontWeight:
+                      checked || highlighted ? FontWeight.w600 : FontWeight.normal,
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
