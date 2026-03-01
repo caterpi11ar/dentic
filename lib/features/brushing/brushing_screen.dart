@@ -198,11 +198,20 @@ class _BrushingScreenState extends ConsumerState<BrushingScreen>
               SafeArea(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24),
-                  child: Column(
-                    children: [
-                      const Spacer(),
+                  child: LayoutBuilder(
+                    builder: (context, constraints) =>
+                        SingleChildScrollView(
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minHeight: constraints.maxHeight,
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const SizedBox(height: 16),
 
-                      // Dental arch visualization
+                            // Dental arch visualization
                       GlassContainer(
                         width: 260,
                         height: 260,
@@ -284,7 +293,7 @@ class _BrushingScreenState extends ConsumerState<BrushingScreen>
                         ),
                       ),
 
-                      const Spacer(),
+                      const SizedBox(height: 24),
 
                       // Controls
                       if (_isComplete)
@@ -294,10 +303,10 @@ class _BrushingScreenState extends ConsumerState<BrushingScreen>
                             children: [
                               const Icon(
                                 Icons.check_circle,
-                                size: 64,
+                                size: 48,
                                 color: Colors.white,
                               ),
-                              const SizedBox(height: 16),
+                              const SizedBox(height: 12),
                               Text(
                                 l.sessionComplete,
                                 style: theme.textTheme.titleLarge?.copyWith(
@@ -418,8 +427,11 @@ class _BrushingScreenState extends ConsumerState<BrushingScreen>
                               ),
                           ],
                         ),
-                      const SizedBox(height: 32),
-                    ],
+                            const SizedBox(height: 32),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),
