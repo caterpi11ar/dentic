@@ -1,10 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
 import '../../core/providers.dart';
+import '../../core/theme/app_colors.dart';
 import '../../l10n/app_localizations.dart';
 
 /// User preferences screen.
@@ -14,13 +13,15 @@ class SettingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final colors = theme.colorScheme;
     final l = AppLocalizations.of(context)!;
     final themeMode = ref.watch(themeModeProvider);
     final locale = ref.watch(localeProvider);
     final soundEnabled = ref.watch(soundEnabledProvider);
+    final toothbrushMode = ref.watch(toothbrushModeProvider);
+    final sessionDuration = ref.watch(sessionDurationProvider);
 
     return SafeArea(
-      bottom: false,
       child: ListView(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         children: [
@@ -29,7 +30,7 @@ class SettingsScreen extends ConsumerWidget {
             l.settingsTitle,
             style: theme.textTheme.headlineLarge?.copyWith(
               fontWeight: FontWeight.w800,
-              color: Colors.white,
+              color: colors.onSurface,
               letterSpacing: -0.5,
             ),
           )
@@ -38,33 +39,37 @@ class SettingsScreen extends ConsumerWidget {
               .slideY(begin: -0.2, end: 0),
           const SizedBox(height: 24),
 
-          // Appearance
+          // Brushing
           _SettingsSection(
-            title: l.appearance,
+            title: l.brushing,
             children: [
               ListTile(
-                leading:
-                    const Icon(CupertinoIcons.moon_stars, color: Colors.white),
-                title: Text(l.theme, style: const TextStyle(color: Colors.white)),
+                leading: Icon(Icons.brush_outlined,
+                    color: colors.onSurfaceVariant),
+                title: Text(l.toothbrushMode,
+                    style: TextStyle(color: colors.onSurface)),
                 subtitle: Text(
-                  _themeModeLabel(l, themeMode),
-                  style: const TextStyle(color: Colors.white54),
+                  toothbrushMode == 'manual' ? l.manual : l.electric,
+                  style: TextStyle(color: colors.onSurfaceVariant),
                 ),
-                trailing: const Icon(CupertinoIcons.chevron_right,
-                    color: Colors.white38, size: 18),
-                onTap: () => _showThemePicker(context, ref, l),
+                trailing: Icon(Icons.chevron_right,
+                    color: colors.onSurfaceVariant.withValues(alpha: 0.5),
+                    size: 18),
+                onTap: () => _showToothbrushModePicker(context, ref, l),
               ),
               ListTile(
-                leading: const Icon(CupertinoIcons.globe, color: Colors.white),
-                title:
-                    Text(l.language, style: const TextStyle(color: Colors.white)),
+                leading: Icon(Icons.timer_outlined,
+                    color: colors.onSurfaceVariant),
+                title: Text(l.sessionDuration,
+                    style: TextStyle(color: colors.onSurface)),
                 subtitle: Text(
-                  _localeLabel(l, locale),
-                  style: const TextStyle(color: Colors.white54),
+                  l.durationMinutes(sessionDuration ~/ 60),
+                  style: TextStyle(color: colors.onSurfaceVariant),
                 ),
-                trailing: const Icon(CupertinoIcons.chevron_right,
-                    color: Colors.white38, size: 18),
-                onTap: () => _showLocalePicker(context, ref, l),
+                trailing: Icon(Icons.chevron_right,
+                    color: colors.onSurfaceVariant.withValues(alpha: 0.5),
+                    size: 18),
+                onTap: () => _showDurationPicker(context, ref, l),
               ),
             ],
           )
@@ -73,18 +78,57 @@ class SettingsScreen extends ConsumerWidget {
               .slideY(begin: 0.1, end: 0),
           const SizedBox(height: 16),
 
+          // Appearance
+          _SettingsSection(
+            title: l.appearance,
+            children: [
+              ListTile(
+                leading: Icon(Icons.dark_mode_outlined,
+                    color: colors.onSurfaceVariant),
+                title: Text(l.theme,
+                    style: TextStyle(color: colors.onSurface)),
+                subtitle: Text(
+                  _themeModeLabel(l, themeMode),
+                  style: TextStyle(color: colors.onSurfaceVariant),
+                ),
+                trailing: Icon(Icons.chevron_right,
+                    color: colors.onSurfaceVariant.withValues(alpha: 0.5),
+                    size: 18),
+                onTap: () => _showThemePicker(context, ref, l),
+              ),
+              ListTile(
+                leading: Icon(Icons.language,
+                    color: colors.onSurfaceVariant),
+                title: Text(l.language,
+                    style: TextStyle(color: colors.onSurface)),
+                subtitle: Text(
+                  _localeLabel(l, locale),
+                  style: TextStyle(color: colors.onSurfaceVariant),
+                ),
+                trailing: Icon(Icons.chevron_right,
+                    color: colors.onSurfaceVariant.withValues(alpha: 0.5),
+                    size: 18),
+                onTap: () => _showLocalePicker(context, ref, l),
+              ),
+            ],
+          )
+              .animate()
+              .fadeIn(duration: 600.ms, delay: 200.ms)
+              .slideY(begin: 0.1, end: 0),
+          const SizedBox(height: 16),
+
           // Sound
           _SettingsSection(
             title: l.sound,
             children: [
               SwitchListTile(
-                secondary: const Icon(CupertinoIcons.speaker_2,
-                    color: Colors.white),
+                secondary: Icon(Icons.volume_up_outlined,
+                    color: colors.onSurfaceVariant),
                 title: Text(l.sound,
-                    style: const TextStyle(color: Colors.white)),
+                    style: TextStyle(color: colors.onSurface)),
                 subtitle: Text(
                     soundEnabled ? l.defaultLabel : 'Off',
-                    style: const TextStyle(color: Colors.white54)),
+                    style: TextStyle(color: colors.onSurfaceVariant)),
                 value: soundEnabled,
                 onChanged: (_) =>
                     ref.read(soundEnabledProvider.notifier).toggle(),
@@ -92,7 +136,7 @@ class SettingsScreen extends ConsumerWidget {
             ],
           )
               .animate()
-              .fadeIn(duration: 600.ms, delay: 200.ms)
+              .fadeIn(duration: 600.ms, delay: 300.ms)
               .slideY(begin: 0.1, end: 0),
           const SizedBox(height: 16),
 
@@ -102,18 +146,18 @@ class SettingsScreen extends ConsumerWidget {
             children: [
               ListTile(
                 leading:
-                    const Icon(CupertinoIcons.info, color: Colors.white),
+                    Icon(Icons.info_outline, color: colors.onSurfaceVariant),
                 title: Text(l.version,
-                    style: const TextStyle(color: Colors.white)),
-                subtitle: const Text('0.1.0',
-                    style: TextStyle(color: Colors.white54)),
+                    style: TextStyle(color: colors.onSurface)),
+                subtitle: Text('0.1.0',
+                    style: TextStyle(color: colors.onSurfaceVariant)),
               ),
             ],
           )
               .animate()
-              .fadeIn(duration: 600.ms, delay: 350.ms)
+              .fadeIn(duration: 600.ms, delay: 400.ms)
               .slideY(begin: 0.1, end: 0),
-          const SizedBox(height: 100),
+          const SizedBox(height: 24),
         ],
       ),
     );
@@ -216,6 +260,63 @@ class SettingsScreen extends ConsumerWidget {
       ),
     );
   }
+
+  void _showToothbrushModePicker(
+      BuildContext context, WidgetRef ref, AppLocalizations l) {
+    final current = ref.read(toothbrushModeProvider);
+    showModalBottomSheet(
+      context: context,
+      useRootNavigator: true,
+      builder: (sheetContext) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _PickerTile(
+              title: l.manual,
+              selected: current == 'manual',
+              onTap: () {
+                Navigator.pop(sheetContext);
+                ref.read(toothbrushModeProvider.notifier).set('manual');
+              },
+            ),
+            _PickerTile(
+              title: l.electric,
+              selected: current == 'electric',
+              onTap: () {
+                Navigator.pop(sheetContext);
+                ref.read(toothbrushModeProvider.notifier).set('electric');
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showDurationPicker(
+      BuildContext context, WidgetRef ref, AppLocalizations l) {
+    final current = ref.read(sessionDurationProvider);
+    showModalBottomSheet(
+      context: context,
+      useRootNavigator: true,
+      builder: (sheetContext) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            for (final secs in [120, 180, 240, 300])
+              _PickerTile(
+                title: l.durationMinutes(secs ~/ 60),
+                selected: current == secs,
+                onTap: () {
+                  Navigator.pop(sheetContext);
+                  ref.read(sessionDurationProvider.notifier).set(secs);
+                },
+              ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -237,7 +338,8 @@ class _PickerTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       title: Text(title),
-      trailing: selected ? const Icon(Icons.check, color: Colors.teal) : null,
+      trailing:
+          selected ? const Icon(Icons.check, color: AppColors.primary) : null,
       onTap: onTap,
     );
   }
@@ -254,6 +356,7 @@ class _SettingsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = Theme.of(context).colorScheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -261,15 +364,15 @@ class _SettingsSection extends StatelessWidget {
           padding: const EdgeInsets.only(left: 4, bottom: 8),
           child: Text(
             title.toUpperCase(),
-            style: const TextStyle(
-              color: Colors.white38,
+            style: TextStyle(
+              color: colors.onSurfaceVariant,
               fontSize: 12,
               fontWeight: FontWeight.w600,
               letterSpacing: 1.2,
             ),
           ),
         ),
-        GlassCard(
+        Card(
           child: Column(children: children),
         ),
       ],

@@ -146,6 +146,18 @@ abstract class AppLocalizations {
   /// **'Evening'**
   String get evening;
 
+  /// No description provided for @goodMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'Good morning!'**
+  String get goodMorning;
+
+  /// No description provided for @goodEvening.
+  ///
+  /// In en, this message translates to:
+  /// **'Good evening!'**
+  String get goodEvening;
+
   /// No description provided for @streakCount.
   ///
   /// In en, this message translates to:
@@ -157,6 +169,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Start brushing to build your streak!'**
   String get streakEmpty;
+
+  /// No description provided for @streakActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep it going!'**
+  String get streakActive;
 
   /// No description provided for @startBrushing.
   ///
@@ -212,11 +230,23 @@ abstract class AppLocalizations {
   /// **'Manual'**
   String get manual;
 
+  /// No description provided for @electric.
+  ///
+  /// In en, this message translates to:
+  /// **'Electric'**
+  String get electric;
+
   /// No description provided for @sessionDuration.
   ///
   /// In en, this message translates to:
   /// **'Session Duration'**
   String get sessionDuration;
+
+  /// No description provided for @durationMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} minutes'**
+  String durationMinutes(int count);
 
   /// No description provided for @threeMinutes.
   ///
@@ -371,20 +401,44 @@ abstract class AppLocalizations {
   /// No description provided for @completeDays.
   ///
   /// In en, this message translates to:
-  /// **'{count} complete days'**
+  /// **'{count} complete'**
   String completeDays(int count);
 
   /// No description provided for @partialDays.
   ///
   /// In en, this message translates to:
-  /// **'{count} partial days'**
+  /// **'{count} partial'**
   String partialDays(int count);
 
-  /// No description provided for @streakActive.
+  /// No description provided for @avgQuality.
   ///
   /// In en, this message translates to:
-  /// **'Keep it going!'**
-  String get streakActive;
+  /// **'{percent}% avg'**
+  String avgQuality(int percent);
+
+  /// No description provided for @sessionDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Session Details'**
+  String get sessionDetails;
+
+  /// No description provided for @sessionDurationValue.
+  ///
+  /// In en, this message translates to:
+  /// **'{seconds}s'**
+  String sessionDurationValue(int seconds);
+
+  /// No description provided for @zonesCompletedValue.
+  ///
+  /// In en, this message translates to:
+  /// **'{completed}/{total} zones'**
+  String zonesCompletedValue(int completed, int total);
+
+  /// No description provided for @qualityScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Quality: {percent}%'**
+  String qualityScore(int percent);
 }
 
 class _AppLocalizationsDelegate

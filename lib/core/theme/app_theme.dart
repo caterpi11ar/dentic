@@ -7,34 +7,40 @@ class AppTheme {
   AppTheme._();
 
   static ThemeData get light {
+    final colorScheme = ColorScheme.fromSeed(
+      seedColor: AppColors.primary,
+      brightness: Brightness.light,
+    );
     final base = ThemeData(
       useMaterial3: true,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: AppColors.primary,
-        brightness: Brightness.light,
-      ),
+      colorScheme: colorScheme,
     );
     return base.copyWith(
       textTheme: GoogleFonts.interTextTheme(base.textTheme),
-      scaffoldBackgroundColor: Colors.transparent,
-      appBarTheme: const AppBarTheme(
+      scaffoldBackgroundColor: AppColors.backgroundLight,
+      appBarTheme: AppBarTheme(
         centerTitle: true,
         elevation: 0,
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppColors.backgroundLight,
         surfaceTintColor: Colors.transparent,
+        foregroundColor: colorScheme.onSurface,
       ),
       navigationBarTheme: NavigationBarThemeData(
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppColors.surfaceLight,
         surfaceTintColor: Colors.transparent,
-        indicatorColor: Colors.white.withValues(alpha: 0.2),
+        indicatorColor: AppColors.primary.withValues(alpha: 0.15),
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
       ),
       cardTheme: CardThemeData(
-        elevation: 0,
-        color: Colors.transparent,
+        elevation: 1,
+        color: AppColors.surfaceLight,
+        surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(16),
         ),
+      ),
+      dividerTheme: DividerThemeData(
+        color: colorScheme.outlineVariant.withValues(alpha: 0.3),
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
@@ -48,34 +54,40 @@ class AppTheme {
   }
 
   static ThemeData get dark {
+    final colorScheme = ColorScheme.fromSeed(
+      seedColor: AppColors.primary,
+      brightness: Brightness.dark,
+    );
     final base = ThemeData(
       useMaterial3: true,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: AppColors.primary,
-        brightness: Brightness.dark,
-      ),
+      colorScheme: colorScheme,
     );
     return base.copyWith(
       textTheme: GoogleFonts.interTextTheme(base.textTheme),
-      scaffoldBackgroundColor: Colors.transparent,
-      appBarTheme: const AppBarTheme(
+      scaffoldBackgroundColor: AppColors.backgroundDark,
+      appBarTheme: AppBarTheme(
         centerTitle: true,
         elevation: 0,
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppColors.backgroundDark,
         surfaceTintColor: Colors.transparent,
+        foregroundColor: colorScheme.onSurface,
       ),
       navigationBarTheme: NavigationBarThemeData(
-        backgroundColor: Colors.transparent,
+        backgroundColor: AppColors.surfaceDark,
         surfaceTintColor: Colors.transparent,
-        indicatorColor: Colors.white.withValues(alpha: 0.15),
+        indicatorColor: AppColors.primaryLight.withValues(alpha: 0.2),
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
       ),
       cardTheme: CardThemeData(
-        elevation: 0,
-        color: Colors.transparent,
+        elevation: 1,
+        color: AppColors.surfaceDark,
+        surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(16),
         ),
+      ),
+      dividerTheme: DividerThemeData(
+        color: colorScheme.outlineVariant.withValues(alpha: 0.3),
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(

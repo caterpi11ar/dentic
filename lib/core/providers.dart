@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../shared/models/brushing_session.dart';
 import '../shared/models/checkin_record.dart';
 import 'services/audio_service.dart';
+import 'services/brushing_session_service.dart';
 import 'services/checkin_service.dart';
 import 'services/settings_service.dart';
 
@@ -20,6 +22,10 @@ final checkinServiceProvider = Provider<CheckinService>(
 
 final audioServiceProvider = Provider<AudioService>(
   (_) => throw UnimplementedError('Override audioServiceProvider'),
+);
+
+final brushingSessionServiceProvider = Provider<BrushingSessionService>(
+  (_) => throw UnimplementedError('Override brushingSessionServiceProvider'),
 );
 
 // ---------------------------------------------------------------------------
@@ -142,6 +148,18 @@ final monthRecordsProvider =
 });
 
 // ---------------------------------------------------------------------------
+// Month sessions (for history details)
+// ---------------------------------------------------------------------------
+
+final monthSessionsProvider = Provider.family<List<BrushingSession>,
+    ({int year, int month})>((ref, key) {
+  final service = ref.watch(brushingSessionServiceProvider);
+  // Re-evaluate when today's check-in changes (proxy for new sessions).
+  ref.watch(todayCheckinProvider);
+  return service.getSessionsForMonth(key.year, key.month);
+});
+
+// ---------------------------------------------------------------------------
 // Streak counter
 // ---------------------------------------------------------------------------
 
@@ -151,3 +169,45 @@ final streakProvider = Provider<int>((ref) {
   ref.watch(todayCheckinProvider);
   return service.getStreak();
 });
+
+// ---------------------------------------------------------------------------
+// Toothbrush mode
+// ---------------------------------------------------------------------------
+
+final toothbrushModeProvider =
+    NotifierProvider<ToothbrushModeNotifier, String>(
+        ToothbrushModeNotifier.new);
+
+class ToothbrushModeNotifier extends Notifier<String> {
+  @override
+  String build() {
+    final service = ref.watch(settingsServiceProvider);
+    return service.toothbrushMode;
+  }
+
+  Future<void> set(String mode) async {
+    await ref.read(settingsServiceProvider).setToothbrushMode(mode);
+    state = mode;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Session duration (seconds)
+// ---------------------------------------------------------------------------
+
+final sessionDurationProvider =
+    NotifierProvider<SessionDurationNotifier, int>(
+        SessionDurationNotifier.new);
+
+class SessionDurationNotifier extends Notifier<int> {
+  @override
+  int build() {
+    final service = ref.watch(settingsServiceProvider);
+    return service.sessionDurationSec;
+  }
+
+  Future<void> set(int seconds) async {
+    await ref.read(settingsServiceProvider).setSessionDurationSec(seconds);
+    state = seconds;
+  }
+}

@@ -8,8 +8,12 @@ class AppConstants {
   /// Number of brushing zones.
   static const int zoneCount = 14;
 
-  /// Duration per zone in seconds (evenly divided).
+  /// Default duration per zone in seconds (evenly divided).
   static int get secondsPerZone => defaultSessionDurationSec ~/ zoneCount;
+
+  /// Compute seconds per zone for a given total duration.
+  static int secondsPerZoneFor(int totalDurationSec) =>
+      totalDurationSec ~/ zoneCount;
 
   /// App name.
   static const String appName = 'Dentic';

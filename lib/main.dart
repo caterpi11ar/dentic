@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
 import 'app.dart';
 import 'core/providers.dart';
 import 'core/services/audio_service.dart';
+import 'core/services/brushing_session_service.dart';
 import 'core/services/checkin_service.dart';
 import 'core/services/settings_service.dart';
+import 'shared/models/brushing_session.dart';
 import 'shared/models/checkin_record.dart';
 
 void main() async {
@@ -16,11 +17,10 @@ void main() async {
   // Hive
   await Hive.initFlutter();
   Hive.registerAdapter(CheckinRecordAdapter());
+  Hive.registerAdapter(BrushingSessionAdapter());
   final settingsBox = await Hive.openBox<dynamic>('settings');
   final checkinsBox = await Hive.openBox<CheckinRecord>('checkins');
-
-  // Liquid Glass
-  await LiquidGlassWidgets.initialize();
+  final sessionsBox = await Hive.openBox<BrushingSession>('brushing_sessions');
 
   // Audio
   final audioService = AudioService();
@@ -34,6 +34,9 @@ void main() async {
         ),
         checkinServiceProvider.overrideWithValue(
           CheckinService(checkinsBox),
+        ),
+        brushingSessionServiceProvider.overrideWithValue(
+          BrushingSessionService(sessionsBox),
         ),
         audioServiceProvider.overrideWithValue(audioService),
       ],

@@ -33,12 +33,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get evening => 'Evening';
 
   @override
+  String get goodMorning => 'Good morning!';
+
+  @override
+  String get goodEvening => 'Good evening!';
+
+  @override
   String streakCount(int count) {
     return '$count-day streak';
   }
 
   @override
   String get streakEmpty => 'Start brushing to build your streak!';
+
+  @override
+  String get streakActive => 'Keep it going!';
 
   @override
   String get startBrushing => 'Start Brushing';
@@ -69,7 +78,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get manual => 'Manual';
 
   @override
+  String get electric => 'Electric';
+
+  @override
   String get sessionDuration => 'Session Duration';
+
+  @override
+  String durationMinutes(int count) {
+    return '$count minutes';
+  }
 
   @override
   String get threeMinutes => '3 minutes';
@@ -150,14 +167,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String completeDays(int count) {
-    return '$count complete days';
+    return '$count complete';
   }
 
   @override
   String partialDays(int count) {
-    return '$count partial days';
+    return '$count partial';
   }
 
   @override
-  String get streakActive => 'Keep it going!';
+  String avgQuality(int percent) {
+    return '$percent% avg';
+  }
+
+  @override
+  String get sessionDetails => 'Session Details';
+
+  @override
+  String sessionDurationValue(int seconds) {
+    return '${seconds}s';
+  }
+
+  @override
+  String zonesCompletedValue(int completed, int total) {
+    return '$completed/$total zones';
+  }
+
+  @override
+  String qualityScore(int percent) {
+    return 'Quality: $percent%';
+  }
 }

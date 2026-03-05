@@ -1,9 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
 import '../../core/providers.dart';
 import '../../core/theme/app_colors.dart';
@@ -16,13 +14,13 @@ class CheckinScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final colors = theme.colorScheme;
     final l = AppLocalizations.of(context)!;
     final checkin = ref.watch(todayCheckinProvider);
     final streak = ref.watch(streakProvider);
     final isMorning = DateTime.now().hour < 12;
 
     return SafeArea(
-      bottom: false,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
@@ -30,10 +28,10 @@ class CheckinScreen extends ConsumerWidget {
           children: [
             const SizedBox(height: 24),
             Text(
-              l.appName,
+              isMorning ? l.goodMorning : l.goodEvening,
               style: theme.textTheme.headlineLarge?.copyWith(
                 fontWeight: FontWeight.w800,
-                color: Colors.white,
+                color: colors.onSurface,
                 letterSpacing: -0.5,
               ),
             )
@@ -44,7 +42,7 @@ class CheckinScreen extends ConsumerWidget {
             Text(
               l.appTagline,
               style: theme.textTheme.bodyLarge?.copyWith(
-                color: Colors.white60,
+                color: colors.onSurfaceVariant,
               ),
             )
                 .animate()
@@ -53,56 +51,58 @@ class CheckinScreen extends ConsumerWidget {
             const SizedBox(height: 36),
 
             // Today's status card
-            GlassCard(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: 8,
-                        height: 8,
-                        decoration: const BoxDecoration(
-                          color: AppColors.primary,
-                          shape: BoxShape.circle,
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          width: 8,
+                          height: 8,
+                          decoration: const BoxDecoration(
+                            color: AppColors.primary,
+                            shape: BoxShape.circle,
+                          ),
                         ),
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        l.today,
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
+                        const SizedBox(width: 8),
+                        Text(
+                          l.today,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: colors.onSurface,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    children: [
-                      _CheckinChip(
-                        label: l.morning,
-                        icon: CupertinoIcons.sun_max,
-                        checked: checkin.morningDone,
-                        highlighted: isMorning,
-                        onTap: () => ref
-                            .read(todayCheckinProvider.notifier)
-                            .toggleMorning(),
-                      ),
-                      const SizedBox(width: 12),
-                      _CheckinChip(
-                        label: l.evening,
-                        icon: CupertinoIcons.moon,
-                        checked: checkin.eveningDone,
-                        highlighted: !isMorning,
-                        onTap: () => ref
-                            .read(todayCheckinProvider.notifier)
-                            .toggleEvening(),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        _CheckinChip(
+                          label: l.morning,
+                          icon: Icons.wb_sunny_outlined,
+                          checked: checkin.morningDone,
+                          highlighted: isMorning,
+                          onTap: () => ref
+                              .read(todayCheckinProvider.notifier)
+                              .toggleMorning(),
+                        ),
+                        const SizedBox(width: 12),
+                        _CheckinChip(
+                          label: l.evening,
+                          icon: Icons.nightlight_outlined,
+                          checked: checkin.eveningDone,
+                          highlighted: !isMorning,
+                          onTap: () => ref
+                              .read(todayCheckinProvider.notifier)
+                              .toggleEvening(),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             )
                 .animate()
@@ -111,42 +111,44 @@ class CheckinScreen extends ConsumerWidget {
             const SizedBox(height: 16),
 
             // Streak card
-            GlassCard(
-              padding: const EdgeInsets.all(20),
-              child: Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: AppColors.warning.withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(12),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: AppColors.warning.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Icon(Icons.local_fire_department,
+                          size: 28, color: AppColors.warning),
                     ),
-                    child: const Icon(CupertinoIcons.flame,
-                        size: 28, color: AppColors.warning),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          l.streakCount(streak),
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w700,
-                            color: Colors.white,
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l.streakCount(streak),
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w700,
+                              color: colors.onSurface,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          streak > 0 ? l.streakActive : l.streakEmpty,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: Colors.white54,
+                          const SizedBox(height: 2),
+                          Text(
+                            streak > 0 ? l.streakActive : l.streakEmpty,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: colors.onSurfaceVariant,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             )
                 .animate()
@@ -157,28 +159,22 @@ class CheckinScreen extends ConsumerWidget {
 
             // Start brushing button
             Padding(
-              padding: const EdgeInsets.only(bottom: 100),
-              child: Center(
-                child: GlassButton.custom(
-                  onTap: () => context.push('/brushing'),
-                  width: double.infinity,
-                  height: 56,
-                  shape: LiquidRoundedSuperellipse(borderRadius: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Icon(CupertinoIcons.play_arrow_solid,
-                          color: Colors.white, size: 22),
-                      const SizedBox(width: 8),
-                      Text(
-                        l.startBrushing,
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                        ),
+              padding: const EdgeInsets.only(bottom: 24),
+              child: FilledButton(
+                onPressed: () => context.push('/brushing'),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.play_arrow, size: 22),
+                    const SizedBox(width: 8),
+                    Text(
+                      l.startBrushing,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        color: colors.onPrimary,
+                        fontWeight: FontWeight.w600,
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             )
@@ -209,30 +205,45 @@ class _CheckinChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colors = theme.colorScheme;
+
     return Expanded(
       child: GestureDetector(
         onTap: onTap,
-        child: GlassContainer(
+        child: Container(
           padding: const EdgeInsets.symmetric(vertical: 14),
+          decoration: BoxDecoration(
+            color: checked
+                ? AppColors.primary.withValues(alpha: 0.1)
+                : colors.surfaceContainerHighest.withValues(alpha: 0.5),
+            borderRadius: BorderRadius.circular(12),
+            border: checked
+                ? Border.all(color: AppColors.primary.withValues(alpha: 0.3))
+                : null,
+          ),
           child: Column(
             children: [
               Icon(
-                checked ? CupertinoIcons.check_mark_circled_solid : icon,
+                checked ? Icons.check_circle : icon,
                 color: checked
                     ? AppColors.primary
                     : highlighted
-                        ? Colors.white
-                        : Colors.white70,
+                        ? colors.onSurface
+                        : colors.onSurfaceVariant,
                 size: 26,
               ),
               const SizedBox(height: 6),
               Text(
                 label,
                 style: TextStyle(
-                  color: checked || highlighted ? Colors.white : Colors.white70,
+                  color: checked || highlighted
+                      ? colors.onSurface
+                      : colors.onSurfaceVariant,
                   fontSize: 13,
-                  fontWeight:
-                      checked || highlighted ? FontWeight.w600 : FontWeight.normal,
+                  fontWeight: checked || highlighted
+                      ? FontWeight.w600
+                      : FontWeight.normal,
                 ),
               ),
             ],

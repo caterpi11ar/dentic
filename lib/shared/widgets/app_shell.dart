@@ -1,12 +1,9 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
 
-import '../../core/theme/app_colors.dart';
 import '../../l10n/app_localizations.dart';
-import 'glass_scaffold.dart';
 
-/// Shell widget with iOS 26 Liquid Glass bottom navigation bar.
+/// Shell widget with Material 3 bottom navigation bar.
 class AppShell extends StatelessWidget {
   const AppShell({super.key, required this.child});
 
@@ -29,34 +26,28 @@ class AppShell extends StatelessWidget {
     final currentIndex = _currentIndex(context);
     final l = AppLocalizations.of(context)!;
 
-    return GlassScaffold(
-      extendBody: true,
+    return Scaffold(
       body: child,
-      bottomNavigationBar: GlassBottomBar(
-        tabs: [
-          GlassBottomBarTab(
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: currentIndex,
+        onDestinationSelected: (index) => context.go(_tabs[index]),
+        destinations: [
+          NavigationDestination(
+            icon: const Icon(Icons.home_outlined),
+            selectedIcon: const Icon(Icons.home),
             label: l.home,
-            icon: CupertinoIcons.home,
-            selectedIcon: CupertinoIcons.house_fill,
-            glowColor: AppColors.primary,
           ),
-          GlassBottomBarTab(
+          NavigationDestination(
+            icon: const Icon(Icons.calendar_month_outlined),
+            selectedIcon: const Icon(Icons.calendar_month),
             label: l.history,
-            icon: CupertinoIcons.calendar,
-            selectedIcon: CupertinoIcons.calendar_today,
-            glowColor: AppColors.primary,
           ),
-          GlassBottomBarTab(
+          NavigationDestination(
+            icon: const Icon(Icons.settings_outlined),
+            selectedIcon: const Icon(Icons.settings),
             label: l.settings,
-            icon: CupertinoIcons.gear,
-            selectedIcon: CupertinoIcons.gear_solid,
-            glowColor: AppColors.primary,
           ),
         ],
-        selectedIndex: currentIndex,
-        onTabSelected: (index) => context.go(_tabs[index]),
-        barHeight: 64,
-        showIndicator: true,
       ),
     );
   }

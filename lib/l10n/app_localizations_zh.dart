@@ -33,12 +33,21 @@ class AppLocalizationsZh extends AppLocalizations {
   String get evening => '晚上';
 
   @override
+  String get goodMorning => '早上好！';
+
+  @override
+  String get goodEvening => '晚上好！';
+
+  @override
   String streakCount(int count) {
     return '连续 $count 天';
   }
 
   @override
   String get streakEmpty => '开始刷牙，建立你的连续记录！';
+
+  @override
+  String get streakActive => '继续保持！';
 
   @override
   String get startBrushing => '开始刷牙';
@@ -68,7 +77,15 @@ class AppLocalizationsZh extends AppLocalizations {
   String get manual => '手动';
 
   @override
+  String get electric => '电动';
+
+  @override
   String get sessionDuration => '刷牙时长';
+
+  @override
+  String durationMinutes(int count) {
+    return '$count 分钟';
+  }
 
   @override
   String get threeMinutes => '3 分钟';
@@ -154,9 +171,29 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String partialDays(int count) {
-    return '$count 天部分完成';
+    return '$count 天部分';
   }
 
   @override
-  String get streakActive => '继续保持！';
+  String avgQuality(int percent) {
+    return '$percent% 平均';
+  }
+
+  @override
+  String get sessionDetails => '刷牙详情';
+
+  @override
+  String sessionDurationValue(int seconds) {
+    return '$seconds秒';
+  }
+
+  @override
+  String zonesCompletedValue(int completed, int total) {
+    return '$completed/$total 区域';
+  }
+
+  @override
+  String qualityScore(int percent) {
+    return '质量：$percent%';
+  }
 }

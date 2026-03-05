@@ -9,6 +9,7 @@ import '../../core/constants/app_constants.dart';
 import '../../core/providers.dart';
 import '../../core/theme/app_colors.dart';
 import '../../l10n/app_localizations.dart';
+import '../../shared/models/brushing_session.dart';
 import 'widgets/dental_arch_widget.dart';
 
 /// Full-screen brushing session with timer and zone guidance.
@@ -22,7 +23,7 @@ class BrushingScreen extends ConsumerStatefulWidget {
 
 class _BrushingScreenState extends ConsumerState<BrushingScreen>
     with TickerProviderStateMixin {
-  late final AnimationController _timerController;
+  late AnimationController _timerController;
   late final AnimationController _celebrationScaleController;
   late final Animation<double> _celebrationScale;
   late final AnimationController _glowController;
@@ -31,8 +32,13 @@ class _BrushingScreenState extends ConsumerState<BrushingScreen>
   int _currentZoneIndex = 0;
   bool _isRunning = false;
   bool _isComplete = false;
+  DateTime? _startedAt;
 
-  int get _secondsPerZone => AppConstants.secondsPerZone;
+  int get _secondsPerZone {
+    final totalDuration = ref.read(sessionDurationProvider);
+    return totalDuration ~/ AppConstants.zoneCount;
+  }
+
   BrushingZone get _currentZone => BrushingZone.values[_currentZoneIndex];
   int get _totalZones => BrushingZone.values.length;
 
@@ -41,7 +47,7 @@ class _BrushingScreenState extends ConsumerState<BrushingScreen>
     super.initState();
     _timerController = AnimationController(
       vsync: this,
-      duration: Duration(seconds: _secondsPerZone),
+      duration: Duration(seconds: AppConstants.secondsPerZone),
     );
     _timerController.addStatusListener(_onTimerStatus);
 
@@ -62,6 +68,13 @@ class _BrushingScreenState extends ConsumerState<BrushingScreen>
       vsync: this,
       duration: const Duration(milliseconds: 1200),
     )..repeat(reverse: true);
+  }
+
+  void _updateTimerDuration() {
+    final secPerZone = _secondsPerZone;
+    if (_timerController.duration?.inSeconds != secPerZone) {
+      _timerController.duration = Duration(seconds: secPerZone);
+    }
   }
 
   void _onTimerStatus(AnimationStatus status) {
@@ -93,11 +106,32 @@ class _BrushingScreenState extends ConsumerState<BrushingScreen>
       if (soundEnabled) audioService.playSessionComplete();
       // Auto-mark current period as done
       ref.read(todayCheckinProvider.notifier).markCurrentPeriod();
+      // Save session
+      _saveSession();
     }
   }
 
+  void _saveSession() {
+    if (_startedAt == null) return;
+    final now = DateTime.now();
+    final durationSec = now.difference(_startedAt!).inSeconds;
+    final session = BrushingSession(
+      id: now.millisecondsSinceEpoch.toString(),
+      startedAt: _startedAt!,
+      durationSec: durationSec,
+      zonesCompleted: _currentZoneIndex + 1,
+      totalZones: _totalZones,
+      period: DateTime.now().hour < 12
+          ? BrushingPeriod.morning
+          : BrushingPeriod.evening,
+    );
+    ref.read(brushingSessionServiceProvider).saveSession(session);
+  }
+
   void _startOrResume() {
+    _updateTimerDuration();
     setState(() => _isRunning = true);
+    _startedAt ??= DateTime.now();
     _timerController.forward();
   }
 
@@ -111,6 +145,7 @@ class _BrushingScreenState extends ConsumerState<BrushingScreen>
       _currentZoneIndex = 0;
       _isRunning = false;
       _isComplete = false;
+      _startedAt = null;
     });
     _timerController.reset();
     _celebrationScaleController.reset();
@@ -128,18 +163,19 @@ class _BrushingScreenState extends ConsumerState<BrushingScreen>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
     final l = AppLocalizations.of(context)!;
     final isZh = Localizations.localeOf(context).languageCode == 'zh';
+    final secPerZone = _secondsPerZone;
 
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: isDark
-              ? [AppColors.gradientStartDark, AppColors.gradientEndDark]
-              : [AppColors.gradientStart, AppColors.gradientEnd],
+          colors: [
+            AppColors.brushingGradientStart,
+            AppColors.brushingGradientEnd,
+          ],
         ),
       ),
       child: AdaptiveLiquidGlassLayer(
@@ -160,7 +196,7 @@ class _BrushingScreenState extends ConsumerState<BrushingScreen>
           ),
           body: Stack(
             children: [
-              // Ambient orbs for glass refraction
+              // Ambient orbs for glass refraction — teal family
               Positioned(
                 top: -20,
                 right: -40,
@@ -188,8 +224,8 @@ class _BrushingScreenState extends ConsumerState<BrushingScreen>
                     shape: BoxShape.circle,
                     gradient: RadialGradient(
                       colors: [
-                        const Color(0xFF6C63FF).withValues(alpha: 0.2),
-                        const Color(0xFF6C63FF).withValues(alpha: 0),
+                        AppColors.primaryLight.withValues(alpha: 0.2),
+                        AppColors.primaryLight.withValues(alpha: 0),
                       ],
                     ),
                   ),
@@ -215,7 +251,7 @@ class _BrushingScreenState extends ConsumerState<BrushingScreen>
                       GlassContainer(
                         width: 260,
                         height: 260,
-                        shape: LiquidRoundedSuperellipse(borderRadius: 32),
+                        shape: const LiquidRoundedSuperellipse(borderRadius: 32),
                         quality: GlassQuality.premium,
                         child: AnimatedBuilder(
                           animation: Listenable.merge([
@@ -233,7 +269,7 @@ class _BrushingScreenState extends ConsumerState<BrushingScreen>
                       ),
                       const SizedBox(height: 32),
 
-                      // Zone label — show primary language first
+                      // Zone label
                       Text(
                         isZh ? _currentZone.labelZh : _currentZone.labelEn,
                         style: theme.textTheme.headlineSmall?.copyWith(
@@ -250,14 +286,14 @@ class _BrushingScreenState extends ConsumerState<BrushingScreen>
                       ),
                       const SizedBox(height: 32),
 
-                      // Timer ring — wrapped in glass card
+                      // Timer ring
                       GlassCard(
                         padding: const EdgeInsets.all(24),
                         quality: GlassQuality.premium,
                         child: AnimatedBuilder(
                           animation: _timerController,
                           builder: (context, child) {
-                            final remaining = (_secondsPerZone *
+                            final remaining = (secPerZone *
                                     (1 - _timerController.value))
                                 .ceil();
                             return SizedBox(
@@ -273,7 +309,7 @@ class _BrushingScreenState extends ConsumerState<BrushingScreen>
                                         Colors.white.withValues(alpha: 0.2),
                                     valueColor:
                                         const AlwaysStoppedAnimation<Color>(
-                                      Colors.white,
+                                      AppColors.primaryLight,
                                     ),
                                   ),
                                   Center(
@@ -304,7 +340,7 @@ class _BrushingScreenState extends ConsumerState<BrushingScreen>
                               const Icon(
                                 Icons.check_circle,
                                 size: 48,
-                                color: Colors.white,
+                                color: AppColors.primaryLight,
                               ),
                               const SizedBox(height: 12),
                               Text(
@@ -321,7 +357,7 @@ class _BrushingScreenState extends ConsumerState<BrushingScreen>
                                     child: GlassButton.custom(
                                       onTap: _reset,
                                       height: 56,
-                                      shape: LiquidRoundedSuperellipse(
+                                      shape: const LiquidRoundedSuperellipse(
                                           borderRadius: 16),
                                       child: Text(
                                         l.restart,
@@ -338,7 +374,7 @@ class _BrushingScreenState extends ConsumerState<BrushingScreen>
                                       onTap: () =>
                                           Navigator.of(context).pop(),
                                       height: 56,
-                                      shape: LiquidRoundedSuperellipse(
+                                      shape: const LiquidRoundedSuperellipse(
                                           borderRadius: 16),
                                       child: Text(
                                         l.done,
@@ -362,7 +398,7 @@ class _BrushingScreenState extends ConsumerState<BrushingScreen>
                                 child: GlassButton.custom(
                                   onTap: _pause,
                                   height: 56,
-                                  shape: LiquidRoundedSuperellipse(
+                                  shape: const LiquidRoundedSuperellipse(
                                       borderRadius: 16),
                                   child: Row(
                                     mainAxisAlignment:
@@ -387,7 +423,7 @@ class _BrushingScreenState extends ConsumerState<BrushingScreen>
                                 child: GlassButton.custom(
                                   onTap: _advanceZone,
                                   height: 56,
-                                  shape: LiquidRoundedSuperellipse(
+                                  shape: const LiquidRoundedSuperellipse(
                                       borderRadius: 16),
                                   child: Text(
                                     l.skip,
@@ -403,7 +439,7 @@ class _BrushingScreenState extends ConsumerState<BrushingScreen>
                                 child: GlassButton.custom(
                                   onTap: _startOrResume,
                                   height: 56,
-                                  shape: LiquidRoundedSuperellipse(
+                                  shape: const LiquidRoundedSuperellipse(
                                       borderRadius: 16),
                                   child: Row(
                                     mainAxisAlignment:
@@ -436,7 +472,7 @@ class _BrushingScreenState extends ConsumerState<BrushingScreen>
                 ),
               ),
 
-              // Confetti overlay
+              // Confetti overlay — teal palette
               Align(
                 alignment: Alignment.topCenter,
                 child: ConfettiWidget(
@@ -449,10 +485,10 @@ class _BrushingScreenState extends ConsumerState<BrushingScreen>
                   gravity: 0.2,
                   colors: const [
                     AppColors.primary,
+                    AppColors.primaryLight,
                     Colors.white,
-                    Color(0xFF80D8FF),
                     Color(0xFFFFD54F),
-                    Color(0xFF82B1FF),
+                    Color(0xFF5EEAD4), // teal-300
                   ],
                 ),
               ),

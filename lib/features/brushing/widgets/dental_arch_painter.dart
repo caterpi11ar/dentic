@@ -3,10 +3,11 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import '../../../core/constants/brushing_zones.dart';
+import '../../../core/theme/app_colors.dart';
 
 /// Draws a top-down view of upper + lower dental arches as white circles
-/// arranged in a horseshoe shape. Active zone teeth show a pulsing sparkle;
-/// completed zones are dimmed.
+/// arranged in a horseshoe shape. Active zone teeth show a pulsing teal glow;
+/// completed zones are desaturated teal; inactive zones are light gray.
 class DentalArchPainter extends CustomPainter {
   DentalArchPainter({
     required this.currentZone,
@@ -16,13 +17,18 @@ class DentalArchPainter extends CustomPainter {
 
   final BrushingZone currentZone;
 
-  /// 0.0–1.0 pulsing value for active zone glow.
+  /// 0.0-1.0 pulsing value for active zone glow.
   final double glowAnimation;
 
   /// Number of zones already completed (used to dim earlier teeth).
   final int completedZoneCount;
 
   static const int _teethPerArch = 14;
+
+  // Teal-based colors for teeth states
+  static const Color _activeColor = Color(0xFFE0FFFF); // teal-white
+  static const Color _completedColor = Color(0xFF5F9E99); // desaturated teal
+  static const Color _inactiveColor = Color(0xFFBCC8C6); // light gray-teal
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -93,7 +99,7 @@ class DentalArchPainter extends CustomPainter {
     return positions;
   }
 
-  /// Tooth radius — molars are larger, front teeth smaller.
+  /// Tooth radius -- molars are larger, front teeth smaller.
   double _toothRadius(int index, double archWidth) {
     final baseRadius = archWidth / _teethPerArch * 1.05;
 
@@ -112,7 +118,6 @@ class DentalArchPainter extends CustomPainter {
   }
 
   /// Draw order: back teeth first per side, then front teeth.
-  /// Left molars (0→3), right molars (13→10), front teeth (4→9).
   List<int> _backToFrontOrder() {
     return const [0, 1, 2, 3, 13, 12, 11, 10, 4, 5, 6, 7, 8, 9];
   }
@@ -130,18 +135,22 @@ class DentalArchPainter extends CustomPainter {
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3);
     canvas.drawCircle(center + const Offset(1.5, 1.5), radius, shadowPaint);
 
-    // Fill: active = bright white, default = dim gray, completed = very dim.
+    // Fill color based on state.
+    Color fillColor;
     double alpha;
     if (isActive) {
+      fillColor = _activeColor;
       alpha = 0.85 + 0.15 * glowAnimation;
     } else if (isCompleted) {
-      alpha = 0.25;
+      fillColor = _completedColor;
+      alpha = 0.6;
     } else {
-      alpha = 0.38;
+      fillColor = _inactiveColor;
+      alpha = 0.5;
     }
 
     final fillPaint = Paint()
-      ..color = Colors.white.withValues(alpha: alpha)
+      ..color = fillColor.withValues(alpha: alpha)
       ..style = PaintingStyle.fill;
     canvas.drawCircle(center, radius, fillPaint);
 
@@ -153,10 +162,11 @@ class DentalArchPainter extends CustomPainter {
 
   /// Draws a pulsing 4-pointed star sparkle on an active tooth.
   void _drawSparkle(Canvas canvas, Offset center, double toothRadius) {
-    // Soft glow behind the star.
+    // Soft teal glow behind the star.
     final glowRadius = toothRadius * (0.6 + 0.3 * glowAnimation);
     final glowPaint = Paint()
-      ..color = Colors.white.withValues(alpha: 0.3 + 0.3 * glowAnimation)
+      ..color = AppColors.primaryLight.withValues(
+          alpha: 0.3 + 0.3 * glowAnimation)
       ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6);
     canvas.drawCircle(center, glowRadius, glowPaint);
 
