@@ -1,0 +1,20 @@
+// 主题色
+$primary: #4FC3F7;
+$primary-dark: #0288D1;
+$success: #66BB6A;
+$warning: #FFA726;
+$danger: #EF5350;
+$text: #333333;
+$text-secondary: #999999;
+$bg: #F5F7FA;
+$white: #FFFFFF;
+$border: #E8E8E8;
+
+page {
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica,
+    'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+  background-color: $bg;
+  color: $text;
+  font-size: 28px;
+  line-height: 1.5;
+}
