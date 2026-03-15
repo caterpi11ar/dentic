@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Canvas } from '@tarojs/components'
+import { Canvas, View, Text } from '@tarojs/components'
 import Taro, { useReady } from '@tarojs/taro'
 import { ToothSceneManager } from './tooth-model'
 import { BRUSHING_STEPS } from '../../constants/brushing-steps'
@@ -14,6 +14,7 @@ interface Props {
 export default function ToothScene({ currentStepIndex, isActive, height = 400 }: Props) {
   const managerRef = useRef<ToothSceneManager | null>(null)
   const [ready, setReady] = useState(false)
+  const [initFailed, setInitFailed] = useState(false)
 
   useReady(() => {
     const query = Taro.createSelectorQuery()
@@ -21,7 +22,10 @@ export default function ToothScene({ currentStepIndex, isActive, height = 400 }:
       .select('#toothCanvas')
       .fields({ node: true, size: true })
       .exec((res) => {
-        if (!res[0]) return
+        if (!res[0]) {
+          setInitFailed(true)
+          return
+        }
         const canvas = res[0].node
         const width = res[0].width
         const h = res[0].height
@@ -32,7 +36,10 @@ export default function ToothScene({ currentStepIndex, isActive, height = 400 }:
             setReady(true)
           } catch (e) {
             console.error('ToothScene init failed:', e)
+            setInitFailed(true)
           }
+        } else {
+          setInitFailed(true)
         }
       })
   })
@@ -55,15 +62,26 @@ export default function ToothScene({ currentStepIndex, isActive, height = 400 }:
     }
   }, [])
 
+  const step = BRUSHING_STEPS[currentStepIndex]
+
+  if (initFailed) {
+    return (
+      <View className={styles.fallback} style={{ height: `${height}rpx` }}>
+        <Text className={styles.fallbackZone}>{step?.name ?? '刷牙中'}</Text>
+        <Text className={styles.fallbackPrompt}>{step?.prompt ?? ''}</Text>
+      </View>
+    )
+  }
+
   return (
-    <view className={styles.container} style={{ height: `${height}rpx` }}>
+    <View className={styles.container} style={{ height: `${height}rpx` }}>
       <Canvas
         type="webgl"
         id="toothCanvas"
         className={styles.canvas}
         style={{ width: '100%', height: '100%' }}
       />
-      {!ready && <view className={styles.loading}>加载中...</view>}
-    </view>
+      {!ready && <View className={styles.loading}>加载中...</View>}
+    </View>
   )
 }

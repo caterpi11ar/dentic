@@ -1,6 +1,7 @@
 /** 刷牙记录 */
 export interface BrushingRecord {
   date: string // YYYY-MM-DD
+  session: 'morning' | 'evening' // 早/晚
   completed: boolean
   duration: number // 实际用时（秒）
   completedSteps: number // 完成的步骤数

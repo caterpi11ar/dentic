@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { View, Text, Button } from '@tarojs/components'
-import { useDidShow } from '@tarojs/taro'
+import Taro, { useDidShow } from '@tarojs/taro'
 import { getSettings, saveSettings } from '../../services/storage'
 import type { UserSettings } from '../../types'
 import styles from './index.module.scss'
@@ -21,6 +21,15 @@ export default function SettingsPage() {
   }
 
   const handleReminderToggle = () => {
+    if (!settings.reminderEnabled) {
+      // 打开提醒时，提示用户手动设置手机闹钟
+      Taro.showModal({
+        title: '设置提醒',
+        content: `当前版本暂不支持自动推送提醒。\n\n建议您在手机闹钟中设置每天 ${settings.reminderTime} 的刷牙提醒。`,
+        showCancel: false,
+        confirmText: '我知道了',
+      })
+    }
     const updated = { ...settings, reminderEnabled: !settings.reminderEnabled }
     setSettings(updated)
     saveSettings({ reminderEnabled: updated.reminderEnabled })
@@ -60,7 +69,9 @@ export default function SettingsPage() {
               className={`${styles.switchTrack} ${settings.reminderEnabled ? styles.switchTrackOn : ''}`}
               onClick={handleReminderToggle}
             >
-              <View className={`${styles.switchThumb} ${settings.reminderEnabled ? styles.switchThumbOn : ''}`} />
+              <View
+                className={`${styles.switchThumb} ${settings.reminderEnabled ? styles.switchThumbOn : ''}`}
+              />
             </View>
           </View>
         </View>

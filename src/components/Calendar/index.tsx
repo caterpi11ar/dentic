@@ -1,6 +1,12 @@
 import { useState, useMemo } from 'react'
 import { View, Text, Button } from '@tarojs/components'
-import { getRecordsByMonth, getCurrentStreak, getTotalBrushedDays, formatDate } from '../../services/storage'
+import {
+  getRecordsByMonth,
+  getCurrentStreak,
+  getTotalBrushedDays,
+  formatDate,
+} from '../../services/storage'
+import type { BrushingRecord } from '../../types'
 import styles from './index.module.scss'
 
 const WEEKDAYS = ['日', '一', '二', '三', '四', '五', '六']
@@ -16,17 +22,29 @@ export default function Calendar({ onSelectDate }: Props) {
   const [selectedDate, setSelectedDate] = useState<string | null>(null)
 
   const records = useMemo(() => getRecordsByMonth(year, month), [year, month])
-  const brushedDates = useMemo(
-    () => new Set(records.filter((r) => r.completed).map((r) => r.date)),
-    [records]
-  )
+
+  // 按日期索引早晚完成状态
+  const daySessionMap = useMemo(() => {
+    const map = new Map<string, { morning: boolean; evening: boolean }>()
+    records
+      .filter((r: BrushingRecord) => r.completed)
+      .forEach((r: BrushingRecord) => {
+        const entry = map.get(r.date) ?? { morning: false, evening: false }
+        if (r.session === 'morning') entry.morning = true
+        else if (r.session === 'evening') entry.evening = true
+        map.set(r.date, entry)
+      })
+    return map
+  }, [records])
 
   const daysInMonth = new Date(year, month, 0).getDate()
   const firstDayOfWeek = new Date(year, month - 1, 1).getDay()
 
-  const streak = getCurrentStreak()
-  const totalDays = getTotalBrushedDays()
-  const monthBrushed = records.filter((r) => r.completed).length
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- records triggers recompute
+  const streak = useMemo(() => getCurrentStreak(), [records])
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- records triggers recompute
+  const totalDays = useMemo(() => getTotalBrushedDays(), [records])
+  const monthBrushed = useMemo(() => daySessionMap.size, [daySessionMap])
 
   const todayStr = formatDate(today)
 
@@ -58,21 +76,28 @@ export default function Calendar({ onSelectDate }: Props) {
     <View className={styles.calendar}>
       {/* 月份导航 */}
       <View className={styles.header}>
-        <Button className={styles.navBtn} onClick={goToPrevMonth}>‹</Button>
-        <Text className={styles.monthTitle}>{year}年{month}月</Text>
-        <Button className={styles.navBtn} onClick={goToNextMonth}>›</Button>
+        <Button className={styles.navBtn} onClick={goToPrevMonth}>
+          ‹
+        </Button>
+        <Text className={styles.monthTitle}>
+          {year}年{month}月
+        </Text>
+        <Button className={styles.navBtn} onClick={goToNextMonth}>
+          ›
+        </Button>
       </View>
 
       {/* 星期标题 */}
       <View className={styles.weekdays}>
         {WEEKDAYS.map((w) => (
-          <Text key={w} className={styles.weekday}>{w}</Text>
+          <Text key={w} className={styles.weekday}>
+            {w}
+          </Text>
         ))}
       </View>
 
       {/* 日期格子 */}
       <View className={styles.days}>
-        {/* 填充首日之前的空格 */}
         {Array.from({ length: firstDayOfWeek }, (_, i) => (
           <View key={`empty-${i}`} className={`${styles.day} ${styles.dayEmpty}`} />
         ))}
@@ -80,7 +105,8 @@ export default function Calendar({ onSelectDate }: Props) {
         {Array.from({ length: daysInMonth }, (_, i) => {
           const day = i + 1
           const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`
-          const isBrushed = brushedDates.has(dateStr)
+          const sessionInfo = daySessionMap.get(dateStr)
+          const isBrushed = !!sessionInfo
           const isToday = dateStr === todayStr
           const isSelected = dateStr === selectedDate
 
@@ -92,7 +118,12 @@ export default function Calendar({ onSelectDate }: Props) {
           return (
             <View key={day} className={cls} onClick={() => handleDayClick(day)}>
               <Text>{day}</Text>
-              {isBrushed && <View className={styles.dot} />}
+              {isBrushed && (
+                <View className={styles.dots}>
+                  {sessionInfo.morning && <View className={styles.dotMorning} />}
+                  {sessionInfo.evening && <View className={styles.dotEvening} />}
+                </View>
+              )}
             </View>
           )
         })}

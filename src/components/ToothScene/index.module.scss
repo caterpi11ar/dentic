@@ -19,3 +19,27 @@
   color: #999;
   font-size: 28px;
 }
+
+.fallback {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #e3f2fd 0%, #f5f7fa 100%);
+  border-radius: 24px;
+  padding: 32px;
+}
+
+.fallbackZone {
+  font-size: 36px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 16px;
+}
+
+.fallbackPrompt {
+  font-size: 28px;
+  color: #666;
+  text-align: center;
+}

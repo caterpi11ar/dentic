@@ -1,9 +1,5 @@
 export default defineAppConfig({
-  pages: [
-    'pages/brush/index',
-    'pages/history/index',
-    'pages/settings/index',
-  ],
+  pages: ['pages/brush/index', 'pages/history/index', 'pages/settings/index'],
   tabBar: {
     color: '#999999',
     selectedColor: '#4FC3F7',

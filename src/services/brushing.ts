@@ -102,8 +102,10 @@ export function skipStep(session: BrushingSession): BrushingSession {
 
 function saveBrushingRecord(session: BrushingSession) {
   const now = new Date()
+  const sessionType = now.getHours() < 14 ? 'morning' : 'evening'
   saveRecord({
     date: formatDate(now),
+    session: sessionType,
     completed: true,
     duration: session.elapsedTime,
     completedSteps: TOTAL_STEPS,
@@ -112,6 +114,10 @@ function saveBrushingRecord(session: BrushingSession) {
 }
 
 export function getProgress(session: BrushingSession): number {
-  return ((session.currentStepIndex * session.stepDuration + (session.stepDuration - session.stepTimeLeft)) /
-    (TOTAL_STEPS * session.stepDuration)) * 100
+  return (
+    ((session.currentStepIndex * session.stepDuration +
+      (session.stepDuration - session.stepTimeLeft)) /
+      (TOTAL_STEPS * session.stepDuration)) *
+    100
+  )
 }

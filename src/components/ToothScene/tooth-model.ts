@@ -23,20 +23,42 @@ const TONGUE_COLOR = new Color(0xff9a9e)
 
 // 区域索引映射到 zone 名称
 const ZONE_NAMES = [
-  'upper-outer-right', 'upper-outer-front', 'upper-outer-left',
-  'upper-inner-right', 'upper-inner-front', 'upper-inner-left',
+  'upper-outer-right',
+  'upper-outer-front',
+  'upper-outer-left',
+  'upper-inner-right',
+  'upper-inner-front',
+  'upper-inner-left',
   'upper-occlusal',
-  'lower-outer-right', 'lower-outer-front', 'lower-outer-left',
-  'lower-inner-right', 'lower-inner-front', 'lower-inner-left',
+  'lower-outer-right',
+  'lower-outer-front',
+  'lower-outer-left',
+  'lower-inner-right',
+  'lower-inner-front',
+  'lower-inner-left',
   'lower-occlusal',
   'tongue',
 ]
+
+/** 牙齿区域数据：存储对牙齿 Mesh 的引用 */
+interface TeethZoneData {
+  type: 'teeth'
+  teethRefs: Mesh[]
+}
+
+/** 舌头区域数据：直接使用 Group（children 即舌头 Mesh） */
+interface TongueZoneData {
+  type: 'tongue'
+  group: Group
+}
+
+type ZoneData = TeethZoneData | TongueZoneData
 
 export class ToothSceneManager {
   private scene: Scene
   private camera: PerspectiveCamera
   private renderer: WebGLRenderer
-  private zones: Map<string, Group> = new Map()
+  private zones: Map<string, ZoneData> = new Map()
   private clock: Clock
   private animationId = 0
   private highlightedZone: string | null = null
@@ -45,16 +67,17 @@ export class ToothSceneManager {
   private targetLookAt: Vector3 | null = null
   private disposed = false
 
-  constructor(canvas: any, width: number, height: number) {
+  // canvas 来自微信小程序 SelectorQuery，无公开类型
+  constructor(canvas: unknown, width: number, height: number) {
     this.clock = new Clock()
 
     // 渲染器
     this.renderer = new WebGLRenderer({
-      canvas,
+      canvas: canvas as OffscreenCanvas,
       antialias: true,
       alpha: true,
     })
-    const dpr = Math.min(2, (typeof wx !== 'undefined' ? wx.getSystemInfoSync().pixelRatio : 2))
+    const dpr = Math.min(2, typeof wx !== 'undefined' ? wx.getSystemInfoSync().pixelRatio : 2)
     this.renderer.setPixelRatio(dpr)
     this.renderer.setSize(width, height)
     this.renderer.setClearColor(0x000000, 0)
@@ -86,11 +109,9 @@ export class ToothSceneManager {
     const upperJaw = new Group()
     upperJaw.position.y = 0.5
 
-    // 上牙龈
     const upperGum = this.createGum(0.3)
     upperJaw.add(upperGum)
 
-    // 上排牙齿（弧形排列）
     const upperTeeth = this.createToothRow(1)
     upperJaw.add(upperTeeth)
 
@@ -117,9 +138,9 @@ export class ToothSceneManager {
     tongue.position.set(0, -0.3, 0.2)
     tongueGroup.add(tongue)
     this.scene.add(tongueGroup)
-    this.zones.set('tongue', tongueGroup)
+    this.zones.set('tongue', { type: 'tongue', group: tongueGroup })
 
-    // 构建分区 Groups
+    // 构建分区
     this.buildZoneGroups(upperTeeth, lowerTeeth)
   }
 
@@ -161,10 +182,6 @@ export class ToothSceneManager {
       // 让牙齿朝向弧形中心
       tooth.lookAt(0, direction * 0.1, 0)
 
-      // 存储分区信息
-      ;(tooth as any).toothIndex = i
-      ;(tooth as any).direction = direction
-
       row.add(tooth)
     }
 
@@ -172,11 +189,10 @@ export class ToothSceneManager {
   }
 
   private buildZoneGroups(upperTeeth: Group, lowerTeeth: Group) {
-    // 上排分区：右(0-3)、前(4-9)、左(10-13)
     const upperChildren = upperTeeth.children as Mesh[]
     const lowerChildren = lowerTeeth.children as Mesh[]
 
-    // 上外侧右/前/左
+    // 上外侧
     this.createZoneFromTeeth('upper-outer-right', upperChildren.slice(0, 4))
     this.createZoneFromTeeth('upper-outer-front', upperChildren.slice(4, 10))
     this.createZoneFromTeeth('upper-outer-left', upperChildren.slice(10, 14))
@@ -189,7 +205,7 @@ export class ToothSceneManager {
     // 上咬合面
     this.createZoneFromTeeth('upper-occlusal', upperChildren)
 
-    // 下外侧右/前/左
+    // 下外侧
     this.createZoneFromTeeth('lower-outer-right', lowerChildren.slice(0, 4))
     this.createZoneFromTeeth('lower-outer-front', lowerChildren.slice(4, 10))
     this.createZoneFromTeeth('lower-outer-left', lowerChildren.slice(10, 14))
@@ -204,10 +220,7 @@ export class ToothSceneManager {
   }
 
   private createZoneFromTeeth(zoneName: string, teeth: Mesh[]) {
-    // 为每个区域记录其包含的牙齿引用
-    const group = new Group()
-    ;(group as any).teethRefs = teeth
-    this.zones.set(zoneName, group)
+    this.zones.set(zoneName, { type: 'teeth', teethRefs: teeth })
   }
 
   highlightZone(zoneIndex: number) {
@@ -215,14 +228,13 @@ export class ToothSceneManager {
     if (this.highlightedZone) {
       const prevZone = this.zones.get(this.highlightedZone)
       if (prevZone) {
-        const refs = (prevZone as any).teethRefs as Mesh[] | undefined
-        if (refs) {
-          refs.forEach((tooth) => {
+        if (prevZone.type === 'teeth') {
+          prevZone.teethRefs.forEach((tooth) => {
             ;(tooth.material as MeshToonMaterial).color.copy(TOOTH_COLOR)
             tooth.scale.setScalar(1)
           })
-        } else if (this.highlightedZone === 'tongue') {
-          prevZone.children.forEach((child) => {
+        } else {
+          prevZone.group.children.forEach((child) => {
             ;((child as Mesh).material as MeshToonMaterial).color.copy(TONGUE_COLOR)
             child.scale.set(1, 0.3, 1.3)
           })
@@ -253,15 +265,14 @@ export class ToothSceneManager {
       const zone = this.zones.get(this.highlightedZone)
       if (zone) {
         const pulse = 1 + Math.sin(this.pulseTime * 4) * 0.05
-        const refs = (zone as any).teethRefs as Mesh[] | undefined
 
-        if (refs) {
-          refs.forEach((tooth) => {
+        if (zone.type === 'teeth') {
+          zone.teethRefs.forEach((tooth) => {
             ;(tooth.material as MeshToonMaterial).color.copy(HIGHLIGHT_COLOR)
             tooth.scale.setScalar(pulse)
           })
-        } else if (this.highlightedZone === 'tongue') {
-          zone.children.forEach((child) => {
+        } else {
+          zone.group.children.forEach((child) => {
             ;((child as Mesh).material as MeshToonMaterial).color.copy(HIGHLIGHT_COLOR)
             child.scale.set(pulse, 0.3 * pulse, 1.3 * pulse)
           })
