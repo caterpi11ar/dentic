@@ -10,6 +10,15 @@ const DEFAULT_SETTINGS: UserSettings = {
   stepDuration: 10,
   reminderEnabled: false,
   reminderTime: '07:30',
+  soundEnabled: true,
+}
+
+// ---- 记录缓存 ----
+
+let _cachedRecords: BrushingRecord[] | null = null
+
+function invalidateCache() {
+  _cachedRecords = null
 }
 
 // ---- 数据迁移 ----
@@ -33,9 +42,11 @@ function migrateRecords(records: BrushingRecord[]): BrushingRecord[] {
 // ---- 刷牙记录 ----
 
 export function getRecords(): BrushingRecord[] {
+  if (_cachedRecords) return _cachedRecords
   try {
     const raw = Taro.getStorageSync(STORAGE_KEYS.RECORDS) || []
-    return migrateRecords(raw)
+    _cachedRecords = migrateRecords(raw)
+    return _cachedRecords
   } catch {
     return []
   }
@@ -51,6 +62,7 @@ export function saveRecord(record: BrushingRecord): void {
     records.push(record)
   }
   Taro.setStorageSync(STORAGE_KEYS.RECORDS, records)
+  invalidateCache()
 }
 
 export function getRecordByDate(date: string): BrushingRecord | undefined {
@@ -101,6 +113,47 @@ export function getTotalBrushedDays(): number {
   return new Set(records.map((r) => r.date)).size
 }
 
+/** 本周统计（周一到周日） */
+export interface WeeklyStatsData {
+  days: { date: string; count: number; totalDuration: number }[]
+  totalSessions: number
+  avgDuration: number
+}
+
+export function getWeeklyStats(): WeeklyStatsData {
+  const now = new Date()
+  const dayOfWeek = now.getDay() // 0=Sunday
+  // 计算本周一
+  const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek
+  const monday = new Date(now)
+  monday.setDate(now.getDate() + mondayOffset)
+  monday.setHours(0, 0, 0, 0)
+
+  const days: WeeklyStatsData['days'] = []
+  const allRecords = getRecords().filter((r) => r.completed)
+
+  let totalSessions = 0
+  let totalDuration = 0
+
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(monday)
+    d.setDate(monday.getDate() + i)
+    const dateStr = formatDate(d)
+    const dayRecords = allRecords.filter((r) => r.date === dateStr)
+    const count = dayRecords.length
+    const dur = dayRecords.reduce((sum, r) => sum + r.duration, 0)
+    days.push({ date: dateStr, count, totalDuration: dur })
+    totalSessions += count
+    totalDuration += dur
+  }
+
+  return {
+    days,
+    totalSessions,
+    avgDuration: totalSessions > 0 ? Math.round(totalDuration / totalSessions) : 0,
+  }
+}
+
 // ---- 用户设置 ----
 
 export function getSettings(): UserSettings {
@@ -123,4 +176,20 @@ export function formatDate(date: Date): string {
   const m = String(date.getMonth() + 1).padStart(2, '0')
   const d = String(date.getDate()).padStart(2, '0')
   return `${y}-${m}-${d}`
+}
+
+// ---- 首次引导 ----
+
+const ONBOARDING_KEY = 'onboarding_seen'
+
+export function hasSeenOnboarding(): boolean {
+  try {
+    return !!Taro.getStorageSync(ONBOARDING_KEY)
+  } catch {
+    return false
+  }
+}
+
+export function markOnboardingSeen(): void {
+  Taro.setStorageSync(ONBOARDING_KEY, true)
 }

@@ -1,8 +1,10 @@
+@import '../../styles/variables';
+
 .page {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #f5f7fa;
+  background: $bg;
 }
 
 .statusBar {
@@ -10,7 +12,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 16px 32px;
-  background: #fff;
+  background: $white;
 }
 
 .streakBadge {
@@ -18,7 +20,7 @@
   align-items: center;
   gap: 8px;
   font-size: 28px;
-  color: #ffa726;
+  color: $warning;
   font-weight: bold;
 }
 
@@ -29,12 +31,12 @@
 }
 
 .sessionDone {
-  color: #66bb6a;
+  color: $success;
   font-weight: bold;
 }
 
 .sessionPending {
-  color: #999;
+  color: $text-secondary;
 }
 
 .sceneWrapper {
@@ -50,8 +52,8 @@
   width: 100%;
   height: 96px;
   border-radius: 48px;
-  background: linear-gradient(135deg, #4fc3f7, #0288d1);
-  color: #fff;
+  background: linear-gradient(135deg, $primary, $primary-dark);
+  color: $white;
   font-size: 36px;
   font-weight: bold;
   display: flex;
@@ -98,10 +100,10 @@
   flex: 1;
   height: 80px;
   border-radius: 40px;
-  background: #fff;
-  color: #4fc3f7;
+  background: $white;
+  color: $primary;
   font-size: 30px;
-  border: 2px solid #4fc3f7;
+  border: 2px solid $primary;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -115,8 +117,8 @@
   flex: 1;
   height: 80px;
   border-radius: 40px;
-  background: #f0f0f0;
-  color: #666;
+  background: $border-light;
+  color: $text-tertiary;
   font-size: 30px;
   border: none;
   display: flex;
@@ -156,7 +158,7 @@
   align-items: center;
   justify-content: center;
   padding: 48px 32px;
-  background: #fff;
+  background: $white;
   border-radius: 24px;
   margin: 24px;
   animation: fadeScaleIn 0.5s ease-out;
@@ -166,7 +168,7 @@
   width: 120px;
   height: 120px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #66bb6a, #43a047);
+  background: linear-gradient(135deg, $success, $success-dark);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -176,13 +178,13 @@
 
 .completedCheck {
   font-size: 64px;
-  color: #fff;
+  color: $white;
 }
 
 .completedTitle {
   font-size: 36px;
   font-weight: bold;
-  color: #333;
+  color: $text;
   margin-bottom: 24px;
   text-align: center;
 }
@@ -192,8 +194,8 @@
   justify-content: space-around;
   width: 100%;
   padding: 20px 0;
-  border-top: 1px solid #f0f0f0;
-  border-bottom: 1px solid #f0f0f0;
+  border-top: 1px solid $border-light;
+  border-bottom: 1px solid $border-light;
   margin-bottom: 16px;
 }
 
@@ -206,18 +208,18 @@
 .completedStatValue {
   font-size: 40px;
   font-weight: bold;
-  color: #4fc3f7;
+  color: $primary;
 }
 
 .completedStatLabel {
   font-size: 22px;
-  color: #999;
+  color: $text-secondary;
   margin-top: 4px;
 }
 
 .milestoneMessage {
   font-size: 32px;
-  color: #ffa726;
+  color: $warning;
   font-weight: bold;
   margin-top: 16px;
 }
@@ -233,8 +235,8 @@
   flex: 1;
   height: 80px;
   border-radius: 40px;
-  background: linear-gradient(135deg, #66bb6a, #43a047);
-  color: #fff;
+  background: linear-gradient(135deg, $success, $success-dark);
+  color: $white;
   font-size: 30px;
   border: none;
   display: flex;
@@ -250,8 +252,8 @@
   flex: 1;
   height: 80px;
   border-radius: 40px;
-  background: #f0f0f0;
-  color: #666;
+  background: $border-light;
+  color: $text-tertiary;
   font-size: 30px;
   border: none;
   display: flex;
@@ -261,4 +263,40 @@
   &::after {
     border: none;
   }
+}
+
+// 倒计时覆盖层
+@keyframes countdownPulse {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+}
+
+.countdownOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 100;
+}
+
+.countdownNumber {
+  font-size: 200px;
+  font-weight: bold;
+  color: $white;
+  animation: countdownPulse 0.8s ease-out;
 }

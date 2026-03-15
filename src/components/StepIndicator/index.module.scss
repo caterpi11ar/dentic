@@ -1,3 +1,5 @@
+@import '../../styles/variables';
+
 .container {
   display: flex;
   flex-direction: column;
@@ -17,17 +19,17 @@
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background-color: #e8e8e8;
+  background-color: $border;
   transition: all 0.3s ease;
 }
 
 .dotActive {
-  background-color: #4fc3f7;
+  background-color: $primary;
   transform: scale(1.3);
 }
 
 .dotDone {
-  background-color: #66bb6a;
+  background-color: $success;
 }
 
 .infoRow {
@@ -39,11 +41,11 @@
 
 .info {
   font-size: 24px;
-  color: #999;
+  color: $text-secondary;
 }
 
 .zoneName {
   font-size: 24px;
-  color: #4fc3f7;
+  color: $primary;
   font-weight: 500;
 }

@@ -1,19 +1,21 @@
+@import '../../styles/variables';
+
 .page {
   min-height: 100vh;
   padding: 24px;
-  background: #f5f7fa;
+  background: $bg;
 }
 
 .title {
   font-size: 36px;
   font-weight: bold;
-  color: #333;
+  color: $text;
   margin-bottom: 24px;
 }
 
 .detail {
   margin-top: 24px;
-  background: #fff;
+  background: $white;
   border-radius: 16px;
   padding: 24px;
 }
@@ -28,8 +30,8 @@
   height: 72px;
   padding: 0 48px;
   border-radius: 36px;
-  background: linear-gradient(135deg, #66bb6a, #43a047);
-  color: #fff;
+  background: linear-gradient(135deg, $success, $success-dark);
+  color: $white;
   font-size: 28px;
   border: none;
   display: flex;
@@ -44,14 +46,14 @@
 .detailTitle {
   font-size: 30px;
   font-weight: bold;
-  color: #333;
+  color: $text;
   margin-bottom: 16px;
 }
 
 .recordCard {
   margin-bottom: 16px;
   padding-bottom: 8px;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid $border-light;
 
   &:last-child {
     border-bottom: none;
@@ -62,7 +64,7 @@
 .recordSession {
   font-size: 26px;
   font-weight: bold;
-  color: #4fc3f7;
+  color: $primary;
   margin-bottom: 8px;
 }
 
@@ -71,16 +73,16 @@
   justify-content: space-between;
   padding: 12px 0;
   font-size: 28px;
-  color: #666;
-  border-bottom: 1px solid #f5f5f5;
+  color: $text-tertiary;
+  border-bottom: 1px solid $border-lighter;
 }
 
 .detailLabel {
-  color: #999;
+  color: $text-secondary;
 }
 
 .detailValue {
-  color: #333;
+  color: $text;
   font-weight: 500;
 }
 

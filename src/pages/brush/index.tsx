@@ -7,22 +7,25 @@ import BrushTimer from '../../components/BrushTimer'
 import StepIndicator from '../../components/StepIndicator'
 import {
   createSession,
-  startSession,
+  startCountdown,
+  tickCountdown,
   pauseSession,
   resumeSession,
   tick,
   skipStep,
   getCurrentStep,
+  getTotalTimeRemaining,
   type BrushingSession,
 } from '../../services/brushing'
-import { getCurrentStreak, getRecordsByDate, formatDate } from '../../services/storage'
+import { getCurrentStreak, getRecordsByDate, formatDate, hasSeenOnboarding, markOnboardingSeen } from '../../services/storage'
 import {
-  COMPLETION_MESSAGE,
+  getRandomCompletionMessage,
   MILESTONES,
   MILESTONE_MESSAGES,
   TOTAL_STEPS,
 } from '../../constants/brushing-steps'
 import { generateShareMessage } from '../../services/share'
+import { playStepSound } from '../../services/audio'
 import styles from './index.module.scss'
 
 export default function BrushPage() {
@@ -31,6 +34,7 @@ export default function BrushPage() {
   const [morningDone, setMorningDone] = useState(false)
   const [eveningDone, setEveningDone] = useState(false)
   const [milestone, setMilestone] = useState<string | null>(null)
+  const [completionMessage, setCompletionMessage] = useState('')
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   const refreshTodayStatus = useCallback(() => {
@@ -43,6 +47,17 @@ export default function BrushPage() {
   useDidShow(() => {
     setStreak(getCurrentStreak())
     refreshTodayStatus()
+
+    if (!hasSeenOnboarding()) {
+      Taro.showModal({
+        title: '欢迎使用刷了吗',
+        content:
+          '本应用基于巴氏（Bass）刷牙法，将口腔分为15个区域，每个区域停留约10秒。牙刷45度角对准牙龈线，小幅水平震颤，科学刷牙从今天开始！',
+        showCancel: false,
+        confirmText: '开始使用',
+      })
+      markOnboardingSeen()
+    }
   })
 
   const clearTimer = useCallback(() => {
@@ -54,11 +69,21 @@ export default function BrushPage() {
 
   const handleStart = () => {
     Taro.vibrateShort({ type: 'light' }).catch(() => {})
-    const s = startSession(createSession())
+    const s = startCountdown(createSession())
     setSession(s)
     clearTimer()
     timerRef.current = setInterval(() => {
-      setSession((prev) => tick(prev))
+      setSession((prev) => {
+        if (prev.state === 'countdown') {
+          const next = tickCountdown(prev)
+          if (next.state === 'brushing') {
+            // countdown finished, switch to brushing tick
+            return next
+          }
+          return next
+        }
+        return tick(prev)
+      })
     }, 1000)
   }
 
@@ -91,10 +116,11 @@ export default function BrushPage() {
     return () => clearTimer()
   }, [clearTimer])
 
-  // 步骤切换震动
+  // 步骤切换震动 + 提示音
   useEffect(() => {
     if (session.state === 'brushing' && session.currentStepIndex > 0) {
       Taro.vibrateShort({ type: 'medium' }).catch(() => {})
+      playStepSound()
     }
   }, [session.currentStepIndex, session.state])
 
@@ -103,6 +129,7 @@ export default function BrushPage() {
     if (session.state === 'completed') {
       clearTimer()
       Taro.vibrateLong().catch(() => {})
+      setCompletionMessage(getRandomCompletionMessage())
       const newStreak = getCurrentStreak()
       setStreak(newStreak)
       refreshTodayStatus()
@@ -115,7 +142,7 @@ export default function BrushPage() {
 
   // 保持屏幕常亮
   useEffect(() => {
-    if (session.state === 'brushing') {
+    if (session.state === 'brushing' || session.state === 'countdown') {
       Taro.setKeepScreenOn({ keepScreenOn: true })
     } else {
       Taro.setKeepScreenOn({ keepScreenOn: false })
@@ -126,6 +153,15 @@ export default function BrushPage() {
 
   return (
     <View className={styles.page}>
+      {/* 倒计时覆盖层 */}
+      {session.state === 'countdown' && (
+        <View className={styles.countdownOverlay}>
+          <Text key={session.countdownRemaining} className={styles.countdownNumber}>
+            {session.countdownRemaining}
+          </Text>
+        </View>
+      )}
+
       {/* 顶部状态 */}
       <View className={styles.statusBar}>
         <View className={styles.streakBadge}>
@@ -147,7 +183,7 @@ export default function BrushPage() {
           <View className={styles.completedIconCircle}>
             <Text className={styles.completedCheck}>✓</Text>
           </View>
-          <Text className={styles.completedTitle}>{COMPLETION_MESSAGE}</Text>
+          <Text className={styles.completedTitle}>{completionMessage}</Text>
           <View className={styles.completedStats}>
             <View className={styles.completedStatItem}>
               <Text className={styles.completedStatValue}>
@@ -190,8 +226,8 @@ export default function BrushPage() {
 
           {/* 控制区域 */}
           <View className={styles.controls}>
-            {session.state === 'idle' ? (
-              <Button className={styles.startBtn} onClick={handleStart}>
+            {session.state === 'idle' || session.state === 'countdown' ? (
+              <Button className={styles.startBtn} onClick={handleStart} disabled={session.state === 'countdown'}>
                 开始刷牙
               </Button>
             ) : (
@@ -201,6 +237,7 @@ export default function BrushPage() {
                   stepDuration={session.stepDuration}
                   prompt={step.prompt}
                   stepName={step.name}
+                  totalRemaining={getTotalTimeRemaining(session)}
                 />
                 <StepIndicator currentStep={session.currentStepIndex} />
                 <View className={styles.actionRow}>

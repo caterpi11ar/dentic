@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { View, Text, Button } from '@tarojs/components'
 import { useShareAppMessage } from '@tarojs/taro'
 import Calendar from '../../components/Calendar'
+import WeeklyStats from '../../components/WeeklyStats'
 import { getRecordsByDate } from '../../services/storage'
 import { generateShareMessage } from '../../services/share'
 import type { BrushingRecord } from '../../types'
@@ -22,6 +23,7 @@ export default function HistoryPage() {
 
   return (
     <View className={styles.page}>
+      <WeeklyStats />
       <Calendar onSelectDate={handleSelectDate} />
 
       <View className={styles.shareRow}>

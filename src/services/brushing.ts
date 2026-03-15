@@ -8,6 +8,7 @@ export interface BrushingSession {
   stepTimeLeft: number
   elapsedTime: number
   stepDuration: number
+  countdownRemaining: number
 }
 
 export function createSession(): BrushingSession {
@@ -18,11 +19,25 @@ export function createSession(): BrushingSession {
     stepTimeLeft: stepDuration || DEFAULT_STEP_DURATION,
     elapsedTime: 0,
     stepDuration: stepDuration || DEFAULT_STEP_DURATION,
+    countdownRemaining: 0,
   }
 }
 
 export function getCurrentStep(session: BrushingSession): BrushingStep {
   return BRUSHING_STEPS[session.currentStepIndex]
+}
+
+export function startCountdown(session: BrushingSession): BrushingSession {
+  return { ...session, state: 'countdown', countdownRemaining: 3 }
+}
+
+export function tickCountdown(session: BrushingSession): BrushingSession {
+  if (session.state !== 'countdown') return session
+  const next = session.countdownRemaining - 1
+  if (next <= 0) {
+    return startSession({ ...session, countdownRemaining: 0 })
+  }
+  return { ...session, countdownRemaining: next }
 }
 
 export function startSession(session: BrushingSession): BrushingSession {
@@ -120,4 +135,10 @@ export function getProgress(session: BrushingSession): number {
       (TOTAL_STEPS * session.stepDuration)) *
     100
   )
+}
+
+/** 返回总剩余时间（秒） */
+export function getTotalTimeRemaining(session: BrushingSession): number {
+  const remainingSteps = TOTAL_STEPS - session.currentStepIndex - 1
+  return session.stepTimeLeft + remainingSteps * session.stepDuration
 }

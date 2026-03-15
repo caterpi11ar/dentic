@@ -1,11 +1,13 @@
+@import '../../styles/variables';
+
 .page {
   min-height: 100vh;
   padding: 24px;
-  background: #f5f7fa;
+  background: $bg;
 }
 
 .section {
-  background: #fff;
+  background: $white;
   border-radius: 16px;
   margin-bottom: 24px;
   overflow: hidden;
@@ -14,7 +16,7 @@
 .sectionTitle {
   font-size: 30px;
   font-weight: bold;
-  color: #333;
+  color: $text;
   padding: 24px 24px 0;
 }
 
@@ -23,17 +25,17 @@
   justify-content: space-between;
   align-items: center;
   padding: 24px;
-  border-bottom: 1px solid #f5f5f5;
+  border-bottom: 1px solid $border-lighter;
 }
 
 .itemLabel {
   font-size: 28px;
-  color: #333;
+  color: $text;
 }
 
 .itemDesc {
   font-size: 22px;
-  color: #999;
+  color: $text-secondary;
   margin-top: 4px;
 }
 
@@ -45,7 +47,7 @@
 
 .itemValue {
   font-size: 28px;
-  color: #999;
+  color: $text-secondary;
 }
 
 .durationOptions {
@@ -57,8 +59,8 @@
   padding: 8px 24px;
   border-radius: 24px;
   font-size: 26px;
-  background: #f5f5f5;
-  color: #666;
+  background: $border-lighter;
+  color: $text-tertiary;
   border: none;
 
   &::after {
@@ -67,21 +69,21 @@
 }
 
 .durationBtnActive {
-  background: #4fc3f7;
-  color: #fff;
+  background: $primary;
+  color: $white;
 }
 
 .switchTrack {
   width: 96px;
   height: 52px;
   border-radius: 26px;
-  background: #e0e0e0;
+  background: $gray-bg;
   position: relative;
   transition: background 0.3s;
 }
 
 .switchTrackOn {
-  background: #4fc3f7;
+  background: $primary;
 }
 
 .switchThumb {
@@ -91,7 +93,7 @@
   width: 44px;
   height: 44px;
   border-radius: 22px;
-  background: #fff;
+  background: $white;
   transition: left 0.3s;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -108,18 +110,38 @@
 .aboutTitle {
   font-size: 36px;
   font-weight: bold;
-  color: #333;
+  color: $text;
   margin-bottom: 8px;
 }
 
 .aboutVersion {
   font-size: 24px;
-  color: #999;
+  color: $text-secondary;
   margin-bottom: 16px;
 }
 
 .aboutDesc {
   font-size: 24px;
-  color: #666;
+  color: $text-tertiary;
   line-height: 1.6;
+}
+
+.dataNotice {
+  padding: 24px;
+  background: #fffde7;
+  border-radius: 16px;
+  margin-bottom: 24px;
+}
+
+.dataNoticeTitle {
+  font-size: 28px;
+  font-weight: bold;
+  color: $warning;
+  margin-bottom: 12px;
+}
+
+.dataNoticeText {
+  font-size: 24px;
+  color: $text-tertiary;
+  line-height: 1.8;
 }

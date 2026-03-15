@@ -35,6 +35,12 @@ export default function SettingsPage() {
     saveSettings({ reminderEnabled: updated.reminderEnabled })
   }
 
+  const handleSoundToggle = () => {
+    const updated = { ...settings, soundEnabled: !settings.soundEnabled }
+    setSettings(updated)
+    saveSettings({ soundEnabled: updated.soundEnabled })
+  }
+
   return (
     <View className={styles.page}>
       {/* 刷牙设置 */}
@@ -75,13 +81,38 @@ export default function SettingsPage() {
             </View>
           </View>
         </View>
+
+        <View className={styles.item}>
+          <View>
+            <Text className={styles.itemLabel}>步骤提示音</Text>
+            <Text className={styles.itemDesc}>切换刷牙区域时播放提示音</Text>
+          </View>
+          <View className={styles.itemRight}>
+            <View
+              className={`${styles.switchTrack} ${settings.soundEnabled ? styles.switchTrackOn : ''}`}
+              onClick={handleSoundToggle}
+            >
+              <View
+                className={`${styles.switchThumb} ${settings.soundEnabled ? styles.switchThumbOn : ''}`}
+              />
+            </View>
+          </View>
+        </View>
+      </View>
+
+      {/* 数据安全 */}
+      <View className={styles.dataNotice}>
+        <Text className={styles.dataNoticeTitle}>数据存储说明</Text>
+        <Text className={styles.dataNoticeText}>
+          所有刷牙记录和设置均保存在您的设备本地，不会上传至任何服务器。卸载小程序或清除缓存将导致数据丢失，请知悉。
+        </Text>
       </View>
 
       {/* 关于 */}
       <View className={styles.section}>
         <View className={styles.about}>
           <Text className={styles.aboutTitle}>刷了吗</Text>
-          <Text className={styles.aboutVersion}>v1.0.0</Text>
+          <Text className={styles.aboutVersion}>v1.2.0</Text>
           <Text className={styles.aboutDesc}>
             基于巴氏（Bass）刷牙法，科学引导你正确刷牙。每次2.5分钟，15个区域全覆盖，养成良好的口腔卫生习惯。
           </Text>

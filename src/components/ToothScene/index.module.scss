@@ -1,7 +1,9 @@
+@import '../../styles/variables';
+
 .container {
   width: 100%;
   position: relative;
-  background: linear-gradient(180deg, #e3f2fd 0%, #f5f7fa 100%);
+  background: linear-gradient(180deg, #e3f2fd 0%, $bg 100%);
   border-radius: 24px;
   overflow: hidden;
 }
@@ -16,7 +18,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: #999;
+  color: $text-secondary;
   font-size: 28px;
 }
 
@@ -26,7 +28,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(180deg, #e3f2fd 0%, #f5f7fa 100%);
+  background: linear-gradient(180deg, #e3f2fd 0%, $bg 100%);
   border-radius: 24px;
   padding: 32px;
 }
@@ -34,12 +36,12 @@
 .fallbackZone {
   font-size: 36px;
   font-weight: bold;
-  color: #333;
+  color: $text;
   margin-bottom: 16px;
 }
 
 .fallbackPrompt {
   font-size: 28px;
-  color: #666;
+  color: $text-tertiary;
   text-align: center;
 }

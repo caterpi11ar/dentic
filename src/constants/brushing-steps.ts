@@ -147,6 +147,23 @@ export const DEFAULT_STEP_DURATION = 10 // 秒
 
 export const COMPLETION_MESSAGE = '恭喜完成！今天又坚持了一次！'
 
+export const COMPLETION_MESSAGES = [
+  '恭喜完成！今天又坚持了一次！',
+  '太棒了！牙齿闪闪发光！',
+  '完美刷牙！口腔健康 +1！',
+  '坚持就是胜利！你做到了！',
+  '巴氏刷牙法 get！牙医都夸你！',
+  '好习惯养成中，继续加油！',
+  '每一次刷牙，都是对自己的关爱！',
+  '又一次完美刷牙，牙齿感谢你！',
+  '刷牙小达人，就是你！',
+  '今天的牙齿护理任务完成！',
+]
+
+export function getRandomCompletionMessage(): string {
+  return COMPLETION_MESSAGES[Math.floor(Math.random() * COMPLETION_MESSAGES.length)]
+}
+
 export const MILESTONES = [3, 7, 14, 30, 60, 100, 365]
 export const MILESTONE_MESSAGES: Record<number, string> = {
   3: '连续3天！好的开始！',

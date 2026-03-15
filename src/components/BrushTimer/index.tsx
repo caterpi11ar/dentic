@@ -6,22 +6,38 @@ interface Props {
   stepDuration: number
   prompt: string
   stepName: string
+  totalRemaining?: number
 }
 
-export default function BrushTimer({ seconds, stepDuration, prompt, stepName }: Props) {
+export default function BrushTimer({
+  seconds,
+  stepDuration,
+  prompt,
+  stepName,
+  totalRemaining,
+}: Props) {
   const progress = (stepDuration - seconds) / stepDuration
   const deg = Math.round(progress * 360)
+
+  const formatRemaining = (s: number) => {
+    const min = Math.floor(s / 60)
+    const sec = s % 60
+    return `${min}:${String(sec).padStart(2, '0')}`
+  }
 
   return (
     <View className={styles.timer}>
       <View
         className={styles.ring}
         style={{
-          background: `conic-gradient(#4FC3F7 ${deg}deg, #e8e8e8 ${deg}deg)`,
+          background: `conic-gradient(var(--color-primary) ${deg}deg, var(--color-border) ${deg}deg)`,
         }}
       >
         <View className={styles.ringInner}>
           <Text className={styles.seconds}>{seconds}</Text>
+          {totalRemaining !== undefined && (
+            <Text className={styles.remaining}>剩余 {formatRemaining(totalRemaining)}</Text>
+          )}
         </View>
       </View>
       <Text className={styles.label}>{stepName}</Text>

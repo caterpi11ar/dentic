@@ -1,14 +1,4 @@
-// 主题色
-$primary: #4fc3f7;
-$primary-dark: #0288d1;
-$success: #66bb6a;
-$warning: #ffa726;
-$danger: #ef5350;
-$text: #333333;
-$text-secondary: #999999;
-$bg: #f5f7fa;
-$white: #ffffff;
-$border: #e8e8e8;
+@import './styles/variables';
 
 page {
   font-family:

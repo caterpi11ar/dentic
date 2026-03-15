@@ -31,10 +31,11 @@ export interface UserSettings {
   stepDuration: number // 每步时长（秒），默认 10
   reminderEnabled: boolean
   reminderTime: string // HH:mm
+  soundEnabled: boolean // 步骤切换提示音
 }
 
 /** 刷牙状态 */
-export type BrushingState = 'idle' | 'brushing' | 'paused' | 'completed'
+export type BrushingState = 'idle' | 'countdown' | 'brushing' | 'paused' | 'completed'
 
 /** 月度统计 */
 export interface MonthlyStats {
