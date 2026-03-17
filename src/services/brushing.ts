@@ -115,9 +115,13 @@ export function skipStep(session: BrushingSession): BrushingSession {
   }
 }
 
+export function getSessionTypeForDate(date: Date): 'morning' | 'evening' {
+  return date.getHours() < 14 ? 'morning' : 'evening'
+}
+
 function saveBrushingRecord(session: BrushingSession) {
   const now = new Date()
-  const sessionType = now.getHours() < 14 ? 'morning' : 'evening'
+  const sessionType = getSessionTypeForDate(now)
   saveRecord({
     date: formatDate(now),
     session: sessionType,

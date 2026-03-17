@@ -3,32 +3,151 @@
 @tailwind utilities;
 
 page {
-  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica,
-    'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
-  background-color: #F8FAFC;
-  color: #1E293B;
+  min-height: 100%;
+  font-family: 'Avenir Next', 'SF Pro Text', 'PingFang SC', 'Hiragino Sans GB',
+    'Microsoft YaHei', sans-serif;
+  background-color: rgb(var(--twc-surface));
+  color: rgb(var(--twc-content));
   font-size: 28px;
   line-height: 1.5;
 }
 
-/* 微信小程序 button ::after 全局重置 */
+.theme-day {
+  --twc-primary: 11 155 205;
+  --twc-primary-dark: 8 128 170;
+  --twc-primary-light: 227 245 255;
+
+  --twc-success: 17 170 114;
+  --twc-success-dark: 11 130 89;
+  --twc-success-light: 229 250 242;
+  --twc-success-text: 9 96 67;
+
+  --twc-warning: 232 128 59;
+  --twc-warning-light: 255 244 233;
+  --twc-danger: 225 66 86;
+
+  --twc-content: 27 51 74;
+  --twc-content-secondary: 88 109 131;
+  --twc-content-tertiary: 112 132 151;
+  --twc-content-disabled: 165 180 196;
+
+  --twc-surface: 243 249 255;
+  --twc-surface-white: 255 255 255;
+
+  --twc-line: 211 224 236;
+  --twc-line-light: 229 238 247;
+  --twc-line-lighter: 242 248 252;
+
+  --app-gradient-start: #eef8ff;
+  --app-gradient-mid: #f7fcff;
+  --app-gradient-end: #f2fbf8;
+
+  --orb-main: rgba(91, 184, 228, 0.28);
+  --orb-accent: rgba(107, 209, 170, 0.2);
+
+  --color-primary: #0b9bcd;
+  --color-primary-dark: #0880aa;
+  --color-border: #d3e0ec;
+}
+
+.theme-night {
+  --twc-primary: 232 236 240;
+  --twc-primary-dark: 203 213 225;
+  --twc-primary-light: 28 28 34;
+
+  --twc-success: 110 231 183;
+  --twc-success-dark: 52 211 153;
+  --twc-success-light: 20 44 35;
+  --twc-success-text: 167 243 208;
+
+  --twc-warning: 251 191 36;
+  --twc-warning-light: 61 45 16;
+  --twc-danger: 252 165 165;
+
+  --twc-content: 245 245 245;
+  --twc-content-secondary: 212 212 216;
+  --twc-content-tertiary: 161 161 170;
+  --twc-content-disabled: 113 113 122;
+
+  --twc-surface: 10 10 12;
+  --twc-surface-white: 24 24 27;
+
+  --twc-line: 63 63 70;
+  --twc-line-light: 39 39 42;
+  --twc-line-lighter: 24 24 27;
+
+  --app-gradient-start: #09090b;
+  --app-gradient-mid: #111113;
+  --app-gradient-end: #17171a;
+
+  --orb-main: rgba(255, 255, 255, 0.06);
+  --orb-accent: rgba(168, 168, 176, 0.08);
+
+  --color-primary: #e8ecf0;
+  --color-primary-dark: #cbd5e1;
+  --color-border: #3f3f46;
+}
+
+.theme-page {
+  position: relative;
+  min-height: 100vh;
+  background-image: linear-gradient(
+    180deg,
+    var(--app-gradient-start) 0%,
+    var(--app-gradient-mid) 48%,
+    var(--app-gradient-end) 100%
+  );
+}
+
+.app-scroll {
+  min-height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.app-scroll::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+
+.theme-page::before,
+.theme-page::after {
+  content: '';
+  position: fixed;
+  border-radius: 9999px;
+  filter: blur(44px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.theme-page::before {
+  width: 380px;
+  height: 380px;
+  top: -120px;
+  left: -80px;
+  background: var(--orb-main);
+}
+
+.theme-page::after {
+  width: 320px;
+  height: 320px;
+  right: -120px;
+  bottom: 80px;
+  background: var(--orb-accent);
+}
+
 button::after {
   border: none;
 }
 
-/* 全局聚焦样式 */
 button:focus-visible,
 [role='button']:focus-visible,
 [role='switch']:focus-visible,
 [role='radio']:focus-visible {
-  outline: 4px solid #2DD4BF;
+  outline: 4px solid rgb(var(--twc-primary));
   outline-offset: 4px;
-  border-radius: 8px;
-}
-
-/* CSS 自定义属性（供内联样式使用） */
-:root {
-  --color-primary: #2DD4BF;
-  --color-primary-dark: #0D9488;
-  --color-border: #E2E8F0;
+  border-radius: 10px;
 }

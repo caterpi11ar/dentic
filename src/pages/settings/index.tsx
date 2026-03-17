@@ -1,10 +1,16 @@
 import { useState } from 'react'
 import { View, Text, Image } from '@tarojs/components'
 import Taro, { useDidShow } from '@tarojs/taro'
+import { useTimeTheme } from '../../hooks/useTimeTheme'
+import { getThemeClassName } from '../../services/theme'
 import { getSettings, saveSettings } from '../../services/storage'
+import ShadBadge from '../../components/ui/ShadBadge'
+import { ShadCard, ShadCardContent, ShadCardHeader } from '../../components/ui/ShadCard'
+import ShadSwitch from '../../components/ui/ShadSwitch'
 import type { UserSettings } from '../../types'
 
 export default function SettingsPage() {
+  const { themeMode } = useTimeTheme()
   const [settings, setSettings] = useState<UserSettings>(getSettings)
 
   useDidShow(() => {
@@ -32,103 +38,87 @@ export default function SettingsPage() {
   }
 
   return (
-    <View className="min-h-screen bg-surface pb-8">
-      {/* 顶部品牌区域 */}
-      <View className="bg-gradient-to-b from-primary-dark to-primary pt-10 pb-8 px-6 text-center">
-        <View className="w-24 h-24 rounded-3xl bg-surface-white bg-opacity-15 flex items-center justify-center mx-auto mb-3 shadow-card-lg p-2">
-          <Image className="w-full h-full" src="/logo.png" mode="aspectFit" />
-        </View>
-        <Text className="text-lg font-bold text-surface-white">刷了吗</Text>
-        <Text className="text-xs text-surface-white opacity-70 mt-1">v1.2.0</Text>
-      </View>
+    <View className={`theme-page app-scroll ${getThemeClassName(themeMode)}`}>
+      <View className="relative min-h-screen px-4 pt-3 pb-3">
+        <ShadCard className="rounded-3xl mb-3">
+          <ShadCardContent className="py-5 flex flex-col gap-3">
+            <View className="flex items-center gap-3">
+              <View className="size-14 rounded-2xl bg-surface border border-line flex items-center justify-center p-2">
+                <Image className="w-full h-full" src="/logo.png" mode="aspectFit" />
+              </View>
+              <View>
+                <Text className="text-base font-semibold text-content">刷了吗</Text>
+                <Text className="block mt-1 text-xs text-content-secondary">v1.2.0</Text>
+              </View>
+            </View>
+            <ShadBadge variant="secondary" className="self-start">
+              {themeMode === 'day' ? '日间' : '夜间'}
+            </ShadBadge>
+          </ShadCardContent>
+        </ShadCard>
 
-      <View className="px-4 -mt-4">
-        {/* 刷牙设置 */}
-        <View className="bg-surface-white rounded-2xl mb-3 overflow-hidden shadow-card-lg">
-          <View className="flex items-center gap-2 px-4 pt-4 pb-1">
+        <ShadCard className="rounded-3xl mb-3">
+          <ShadCardHeader>
             <Text className="text-xs text-content-secondary font-medium tracking-wide">偏好设置</Text>
-          </View>
-
-          <View className="flex justify-between items-center px-4 py-4">
-            <View className="flex items-center gap-3">
-              <View className="size-9 rounded-xl bg-primary-light flex items-center justify-center">
-                <Text className="text-base">⏰</Text>
+          </ShadCardHeader>
+          <ShadCardContent className="pt-2 flex flex-col gap-2">
+            <View className="rounded-xl border border-line-light bg-surface px-3 py-3 flex flex-col gap-3">
+              <View>
+                <Text className="text-sm text-content font-medium">刷牙提醒</Text>
+                <Text className="mt-1 text-xs text-content-secondary">提醒时间 {settings.reminderTime}</Text>
               </View>
-              <Text className="text-sm text-content font-medium">刷牙提醒</Text>
-            </View>
-            <View
-              className={`w-12 h-7 rounded-full relative transition-colors duration-300 motion-reduce:transition-none ${
-                settings.reminderEnabled ? 'bg-primary' : 'bg-line'
-              }`}
-              onClick={handleReminderToggle}
-              role="switch"
-              aria-checked={settings.reminderEnabled}
-              aria-label="刷牙提醒"
-            >
-              <View
-                className={`absolute top-0.5 size-6 rounded-full bg-surface-white shadow-card transition-[left] duration-300 motion-reduce:transition-none ${
-                  settings.reminderEnabled ? 'left-5' : 'left-0.5'
-                }`}
-              />
-            </View>
-          </View>
-
-          <View className="mx-4 h-px bg-line-light" />
-
-          <View className="flex justify-between items-center px-4 py-4">
-            <View className="flex items-center gap-3">
-              <View className="size-9 rounded-xl bg-primary-light flex items-center justify-center">
-                <Text className="text-base">🔔</Text>
+              <View className="self-start">
+                <ShadSwitch checked={settings.reminderEnabled} onClick={handleReminderToggle} ariaLabel="刷牙提醒" />
               </View>
-              <Text className="text-sm text-content font-medium">步骤提示音</Text>
             </View>
-            <View
-              className={`w-12 h-7 rounded-full relative transition-colors duration-300 motion-reduce:transition-none ${
-                settings.soundEnabled ? 'bg-primary' : 'bg-line'
-              }`}
-              onClick={handleSoundToggle}
-              role="switch"
-              aria-checked={settings.soundEnabled}
-              aria-label="步骤提示音"
-            >
-              <View
-                className={`absolute top-0.5 size-6 rounded-full bg-surface-white shadow-card transition-[left] duration-300 motion-reduce:transition-none ${
-                  settings.soundEnabled ? 'left-5' : 'left-0.5'
-                }`}
-              />
-            </View>
-          </View>
-        </View>
 
-        {/* 数据与隐私 */}
-        <View className="bg-surface-white rounded-2xl mb-3 overflow-hidden shadow-card-lg">
-          <View className="flex items-center gap-2 px-4 pt-4 pb-1">
+            <View className="rounded-xl border border-line-light bg-surface px-3 py-3 flex flex-col gap-3">
+              <View>
+                <Text className="text-sm text-content font-medium">步骤提示音</Text>
+                <Text className="mt-1 text-xs text-content-secondary">步骤切换时播放提示</Text>
+              </View>
+              <View className="self-start">
+                <ShadSwitch checked={settings.soundEnabled} onClick={handleSoundToggle} ariaLabel="步骤提示音" />
+              </View>
+            </View>
+          </ShadCardContent>
+        </ShadCard>
+
+        <ShadCard className="rounded-3xl mb-3">
+          <ShadCardHeader>
+            <Text className="text-xs text-content-secondary font-medium tracking-wide">主题规则</Text>
+          </ShadCardHeader>
+          <ShadCardContent className="pt-2">
+            <View className="rounded-xl border border-line-light bg-surface px-3 py-3">
+              <Text className="text-sm font-medium text-content">自动时间切换</Text>
+              <Text className="text-xs text-content-secondary mt-1 leading-relaxed">
+                日间主题：06:00 - 17:59；夜间主题：18:00 - 次日05:59。主题随设备本地时间自动更新。
+              </Text>
+            </View>
+          </ShadCardContent>
+        </ShadCard>
+
+        <ShadCard className="rounded-3xl mb-3">
+          <ShadCardHeader>
             <Text className="text-xs text-content-secondary font-medium tracking-wide">数据与隐私</Text>
-          </View>
-          <View className="px-4 py-4">
-            <View className="flex items-center gap-3 mb-2">
-              <View className="size-9 rounded-xl bg-success-light flex items-center justify-center shrink-0">
-                <Text className="text-base">🔒</Text>
-              </View>
-              <Text className="text-sm text-content font-medium">本地存储</Text>
-            </View>
+          </ShadCardHeader>
+          <ShadCardContent className="pt-2">
             <Text className="text-xs text-content-secondary leading-relaxed">
-              所有数据仅保存在您的设备本地，不会上传至任何服务器。卸载或清除缓存将导致数据丢失。
+              所有数据仅保存在本地设备，不上传服务器。
             </Text>
-          </View>
-        </View>
+          </ShadCardContent>
+        </ShadCard>
 
-        {/* 关于 */}
-        <View className="bg-surface-white rounded-2xl overflow-hidden shadow-card-lg">
-          <View className="flex items-center gap-2 px-4 pt-4 pb-1">
+        <ShadCard className="rounded-3xl">
+          <ShadCardHeader>
             <Text className="text-xs text-content-secondary font-medium tracking-wide">关于</Text>
-          </View>
-          <View className="px-4 py-4">
-            <Text className="text-xs text-content-tertiary leading-relaxed">
-              基于巴氏（Bass）刷牙法，科学引导你正确刷牙。每次2.5分钟，15个区域全覆盖，养成良好的口腔卫生习惯。
+          </ShadCardHeader>
+          <ShadCardContent className="pt-2">
+            <Text className="text-xs text-content-secondary leading-relaxed">
+              基于巴氏刷牙法，覆盖 15 个区域科学引导。
             </Text>
-          </View>
-        </View>
+          </ShadCardContent>
+        </ShadCard>
       </View>
     </View>
   )

@@ -6,12 +6,19 @@ import {
   getTotalBrushedDays,
   formatDate,
 } from '../../services/storage'
+import ShadButton from '../ui/ShadButton'
+import ShadBadge from '../ui/ShadBadge'
+import { ShadCard, ShadCardContent, ShadCardHeader } from '../ui/ShadCard'
 import type { BrushingRecord } from '../../types'
 
 const WEEKDAYS = ['日', '一', '二', '三', '四', '五', '六']
 
 interface Props {
   onSelectDate?: (date: string) => void
+}
+
+function formatMonth(year: number, month: number): string {
+  return `${year}年 ${month}月`
 }
 
 export default function Calendar({ onSelectDate }: Props) {
@@ -30,7 +37,7 @@ export default function Calendar({ onSelectDate }: Props) {
       .forEach((r: BrushingRecord) => {
         const entry = map.get(r.date) ?? { morning: false, evening: false }
         if (r.session === 'morning') entry.morning = true
-        else if (r.session === 'evening') entry.evening = true
+        if (r.session === 'evening') entry.evening = true
         map.set(r.date, entry)
       })
     return map
@@ -44,17 +51,24 @@ export default function Calendar({ onSelectDate }: Props) {
   // eslint-disable-next-line react-hooks/exhaustive-deps -- records triggers recompute
   const totalDays = useMemo(() => getTotalBrushedDays(), [records])
   const monthBrushed = useMemo(() => daySessionMap.size, [daySessionMap])
-
   const todayStr = formatDate(today)
 
   const goToPrevMonth = () => {
-    if (month === 1) { setYear(year - 1); setMonth(12) }
-    else setMonth(month - 1)
+    if (month === 1) {
+      setYear(year - 1)
+      setMonth(12)
+      return
+    }
+    setMonth(month - 1)
   }
 
   const goToNextMonth = () => {
-    if (month === 12) { setYear(year + 1); setMonth(1) }
-    else setMonth(month + 1)
+    if (month === 12) {
+      setYear(year + 1)
+      setMonth(1)
+      return
+    }
+    setMonth(month + 1)
   }
 
   const handleDayClick = (day: number) => {
@@ -64,50 +78,37 @@ export default function Calendar({ onSelectDate }: Props) {
   }
 
   return (
-    <View className="bg-surface-white rounded-2xl shadow-card-lg overflow-hidden">
-      {/* 统计条 */}
-      <View className="flex bg-surface">
-        <View className="flex-1 py-3 flex flex-col items-center">
-          <Text className="text-lg font-bold text-primary tabular-nums">{monthBrushed}</Text>
-          <Text className="text-xs text-content-secondary">本月</Text>
-        </View>
-        <View className="w-px bg-line-light my-2" />
-        <View className="flex-1 py-3 flex flex-col items-center">
-          <Text className="text-lg font-bold text-warning tabular-nums">{streak}</Text>
-          <Text className="text-xs text-content-secondary">连续</Text>
-        </View>
-        <View className="w-px bg-line-light my-2" />
-        <View className="flex-1 py-3 flex flex-col items-center">
-          <Text className="text-lg font-bold text-success-dark tabular-nums">{totalDays}</Text>
-          <Text className="text-xs text-content-secondary">总计</Text>
-        </View>
-      </View>
-
-      <View className="p-4">
-        {/* 月份导航 */}
-        <View className="flex items-center justify-between mb-3">
-          <View className="size-8 rounded-full bg-surface flex items-center justify-center" onClick={goToPrevMonth} role="button" aria-label="上个月">
-            <Text className="text-sm text-content-secondary font-bold">‹</Text>
-          </View>
-          <Text className="text-sm font-bold text-content">
-            {year}年{month}月
-          </Text>
-          <View className="size-8 rounded-full bg-surface flex items-center justify-center" onClick={goToNextMonth} role="button" aria-label="下个月">
-            <Text className="text-sm text-content-secondary font-bold">›</Text>
+    <ShadCard className="rounded-3xl bg-surface-white/95">
+      <ShadCardHeader className="pb-2">
+        <View className="flex items-center justify-between">
+          <Text className="text-sm font-semibold text-content">{formatMonth(year, month)}</Text>
+          <View className="flex items-center gap-2">
+            <ShadButton variant="ghost" fullWidth={false} className="min-h-9 min-w-9 px-0" onClick={goToPrevMonth} aria-label="上个月">
+              ‹
+            </ShadButton>
+            <ShadButton variant="ghost" fullWidth={false} className="min-h-9 min-w-9 px-0" onClick={goToNextMonth} aria-label="下个月">
+              ›
+            </ShadButton>
           </View>
         </View>
 
-        {/* 星期标题 */}
+        <View className="mt-3 flex flex-wrap items-center gap-2">
+          <ShadBadge variant="secondary">本月 {monthBrushed}</ShadBadge>
+          <ShadBadge variant="secondary">连续 {streak}</ShadBadge>
+          <ShadBadge variant="secondary">累计 {totalDays}</ShadBadge>
+        </View>
+      </ShadCardHeader>
+
+      <ShadCardContent className="pt-1">
         <View className="grid grid-cols-7 mb-1">
           {WEEKDAYS.map((w) => (
-            <Text key={w} className="text-center text-xs text-content-disabled py-1">
+            <Text key={w} className="text-center text-xs text-content-secondary py-1">
               {w}
             </Text>
           ))}
         </View>
 
-        {/* 日期格子 */}
-        <View className="grid grid-cols-7 gap-y-1">
+        <View className="grid grid-cols-7 gap-y-1.5">
           {Array.from({ length: firstDayOfWeek }, (_, i) => (
             <View key={`empty-${i}`} className="h-10" />
           ))}
@@ -129,31 +130,30 @@ export default function Calendar({ onSelectDate }: Props) {
                 aria-label={`${month}月${day}日${isBrushed ? '，已刷牙' : ''}`}
               >
                 <View
-                  className={`size-9 rounded-full flex items-center justify-center relative transition-colors duration-200 motion-reduce:transition-none ${
+                  className={`size-9 rounded-lg flex items-center justify-center relative border ${
                     isSelected
-                      ? 'bg-primary'
+                      ? 'bg-primary text-surface border-primary'
                       : isToday
-                        ? 'bg-primary-light'
-                        : ''
+                        ? 'bg-primary-light border-primary/40'
+                        : 'bg-surface-white border-line-light'
                   }`}
                 >
                   <Text
-                    className={`text-sm ${
+                    className={`text-xs ${
                       isSelected
-                        ? 'text-surface-white font-bold'
+                        ? 'text-surface font-semibold'
                         : isToday
-                          ? 'text-primary font-bold'
-                          : isBrushed
-                            ? 'text-content font-medium'
-                            : 'text-content'
+                          ? 'text-primary font-semibold'
+                          : 'text-content'
                     }`}
                   >
                     {day}
                   </Text>
-                  {isBrushed && !isSelected && (
-                    <View className="absolute -bottom-0.5 flex gap-0.5">
-                      {sessionInfo.morning && <View className="size-1 rounded-full bg-warning" />}
-                      {sessionInfo.evening && <View className="size-1 rounded-full bg-primary" />}
+
+                  {isBrushed && (
+                    <View className="absolute -bottom-1 left-1/2 -translate-x-1/2 flex items-center gap-1">
+                      {sessionInfo.morning && <View className="size-1.5 rounded-full bg-warning" />}
+                      {sessionInfo.evening && <View className="size-1.5 rounded-full bg-primary" />}
                     </View>
                   )}
                 </View>
@@ -161,7 +161,7 @@ export default function Calendar({ onSelectDate }: Props) {
             )
           })}
         </View>
-      </View>
-    </View>
+      </ShadCardContent>
+    </ShadCard>
   )
 }

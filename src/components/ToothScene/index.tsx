@@ -4,6 +4,7 @@ import { BRUSHING_STEPS } from '../../constants/brushing-steps'
 interface Props {
   currentStepIndex: number
   isActive: boolean
+  compact?: boolean
 }
 
 /**
@@ -74,86 +75,101 @@ const LOWER_TEETH: { x: number; y: number; w: number; h: number }[] = (() => {
   return teeth
 })()
 
-export default function ToothScene({ currentStepIndex, isActive }: Props) {
+export default function ToothScene({ currentStepIndex, isActive, compact = false }: Props) {
   const step = BRUSHING_STEPS[currentStepIndex]
   const activeZone = isActive ? step?.zone : null
   const highlightSet = new Set(activeZone ? ZONE_TOOTH_MAP[activeZone] ?? [] : [])
+  const scale = compact ? 0.84 : 1
+  const sceneHeight = compact ? 236 : 270
+  const sceneLeft = compact ? '22px' : '0px'
+  const sceneWrapperPadding = compact ? 'py-2' : 'py-3'
 
   return (
-    <View className="w-full flex flex-col items-center py-3">
+    <View className={`w-full flex flex-col items-center ${sceneWrapperPadding}`}>
       {/* 牙齿图容器 */}
-      <View className="relative" style={{ width: '280px', height: '270px' }}>
-        {/* 上排牙龈背景 */}
+      <View className="relative overflow-hidden" style={{ width: '280px', height: `${sceneHeight}px` }}>
         <View
-          className="absolute rounded-full"
+          className="absolute top-0"
           style={{
-            left: '15px',
-            top: '5px',
-            width: '250px',
-            height: '155px',
-            borderRadius: '125px 125px 60px 60px',
-            backgroundColor: 'rgba(255,176,196,0.25)',
+            left: sceneLeft,
+            width: '280px',
+            height: '270px',
+            transform: `scale(${scale})`,
+            transformOrigin: 'top left',
           }}
-        />
-        {/* 下排牙龈背景 */}
-        <View
-          className="absolute"
-          style={{
-            left: '20px',
-            top: '115px',
-            width: '240px',
-            height: '150px',
-            borderRadius: '60px 60px 120px 120px',
-            backgroundColor: 'rgba(255,176,196,0.25)',
-          }}
-        />
+        >
+          {/* 上排牙龈背景 */}
+          <View
+            className="absolute rounded-full"
+            style={{
+              left: '15px',
+              top: '5px',
+              width: '250px',
+              height: '155px',
+              borderRadius: '125px 125px 60px 60px',
+              backgroundColor: 'rgba(255,176,196,0.25)',
+            }}
+          />
+          {/* 下排牙龈背景 */}
+          <View
+            className="absolute"
+            style={{
+              left: '20px',
+              top: '115px',
+              width: '240px',
+              height: '150px',
+              borderRadius: '60px 60px 120px 120px',
+              backgroundColor: 'rgba(255,176,196,0.25)',
+            }}
+          />
 
-        {/* 上排牙齿 */}
-        {UPPER_TEETH.map((t, i) => {
-          const lit = highlightSet.has(i)
-          return (
-            <View
-              key={`u${i}`}
-              className="absolute"
-              style={{
-                left: `${t.x - t.w / 2}px`,
-                top: `${t.y - t.h / 2}px`,
-                width: `${t.w}px`,
-                height: `${t.h}px`,
-                borderRadius: '5px',
-                backgroundColor: lit ? '#2DD4BF' : '#fdfcfa',
-                border: lit ? '2px solid #0D9488' : '1.5px solid #e2ddd8',
-                transition: 'background-color 0.3s, border-color 0.3s',
-              }}
-            />
-          )
-        })}
+          {/* 上排牙齿 */}
+          {UPPER_TEETH.map((t, i) => {
+            const lit = highlightSet.has(i)
+            return (
+              <View
+                key={`u${i}`}
+                className="absolute"
+                style={{
+                  left: `${t.x - t.w / 2}px`,
+                  top: `${t.y - t.h / 2}px`,
+                  width: `${t.w}px`,
+                  height: `${t.h}px`,
+                  borderRadius: '5px',
+                  backgroundColor: lit ? 'var(--color-primary)' : 'rgb(var(--twc-surface-white))',
+                  border: lit ? '2px solid var(--color-primary-dark)' : '1.5px solid rgb(var(--twc-line))',
+                  transition: 'background-color 0.3s, border-color 0.3s',
+                }}
+              />
+            )
+          })}
 
-        {/* 下排牙齿 */}
-        {LOWER_TEETH.map((t, i) => {
-          const idx = i + 14
-          const lit = highlightSet.has(idx)
-          return (
-            <View
-              key={`l${i}`}
-              className="absolute"
-              style={{
-                left: `${t.x - t.w / 2}px`,
-                top: `${t.y - t.h / 2}px`,
-                width: `${t.w}px`,
-                height: `${t.h}px`,
-                borderRadius: '5px',
-                backgroundColor: lit ? '#2DD4BF' : '#fdfcfa',
-                border: lit ? '2px solid #0D9488' : '1.5px solid #e2ddd8',
-                transition: 'background-color 0.3s, border-color 0.3s',
-              }}
-            />
-          )
-        })}
+          {/* 下排牙齿 */}
+          {LOWER_TEETH.map((t, i) => {
+            const idx = i + 14
+            const lit = highlightSet.has(idx)
+            return (
+              <View
+                key={`l${i}`}
+                className="absolute"
+                style={{
+                  left: `${t.x - t.w / 2}px`,
+                  top: `${t.y - t.h / 2}px`,
+                  width: `${t.w}px`,
+                  height: `${t.h}px`,
+                  borderRadius: '5px',
+                  backgroundColor: lit ? 'var(--color-primary)' : 'rgb(var(--twc-surface-white))',
+                  border: lit ? '2px solid var(--color-primary-dark)' : '1.5px solid rgb(var(--twc-line))',
+                  transition: 'background-color 0.3s, border-color 0.3s',
+                }}
+              />
+            )
+          })}
+        </View>
       </View>
 
       {/* 当前区域名 */}
-      <Text className="text-sm text-content font-medium mt-1">
+      <Text className={`text-content font-medium mt-1 ${compact ? 'text-xs' : 'text-sm'}`}>
         {step?.name ?? '准备开始'}
       </Text>
     </View>

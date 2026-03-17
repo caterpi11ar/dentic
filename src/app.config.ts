@@ -1,9 +1,9 @@
 export default defineAppConfig({
   pages: ['pages/brush/index', 'pages/history/index', 'pages/settings/index'],
   tabBar: {
-    color: '#999999',
-    selectedColor: '#0D9488',
-    backgroundColor: '#ffffff',
+    color: '#5F7488',
+    selectedColor: '#0B9BCD',
+    backgroundColor: '#F7FBFF',
     borderStyle: 'white',
     list: [
       {
@@ -28,8 +28,8 @@ export default defineAppConfig({
   },
   window: {
     backgroundTextStyle: 'light',
-    navigationBarBackgroundColor: '#0D9488',
+    navigationBarBackgroundColor: '#EAF6FF',
     navigationBarTitleText: '刷了吗',
-    navigationBarTextStyle: 'white',
+    navigationBarTextStyle: 'black',
   },
 })
