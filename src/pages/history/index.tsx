@@ -6,7 +6,6 @@ import WeeklyStats from '../../components/WeeklyStats'
 import { getRecordsByDate } from '../../services/storage'
 import { generateShareMessage } from '../../services/share'
 import type { BrushingRecord } from '../../types'
-import styles from './index.module.scss'
 
 const SESSION_LABELS = { morning: '早上', evening: '晚上' } as const
 
@@ -22,48 +21,55 @@ export default function HistoryPage() {
   }
 
   return (
-    <View className={styles.page}>
-      <WeeklyStats />
-      <Calendar onSelectDate={handleSelectDate} />
+    <View className="min-h-screen bg-surface">
+      <View className="px-4 pt-3 pb-6">
+        <WeeklyStats />
+        <Calendar onSelectDate={handleSelectDate} />
 
-      <View className={styles.shareRow}>
-        <Button className={styles.shareBtn} openType="share" aria-label="分享本月成绩">
-          分享本月成绩
-        </Button>
-      </View>
+        {selectedDate && (
+          <View className="mt-3 bg-surface-white rounded-2xl p-4 shadow-card-lg">
+            <Text className="text-sm font-bold text-content mb-3">{selectedDate}</Text>
+            {selectedRecords.length > 0 ? (
+              selectedRecords.map((record) => (
+                <View key={`${record.date}-${record.session}`} className="mb-3 last:mb-0">
+                  <View className="flex items-center gap-2 mb-2">
+                    <View className={`size-2 rounded-full ${record.session === 'morning' ? 'bg-warning' : 'bg-primary'}`} />
+                    <Text className="text-sm font-medium text-content">
+                      {SESSION_LABELS[record.session] ?? record.session}
+                    </Text>
+                    <View className={`px-2 py-0.5 rounded-full ${record.completed ? 'bg-success-light' : 'bg-line'}`}>
+                      <Text className={`text-xs ${record.completed ? 'text-success-text' : 'text-content-secondary'}`}>
+                        {record.completed ? '已完成' : '未完成'}
+                      </Text>
+                    </View>
+                  </View>
+                  <View className="bg-surface rounded-xl p-3 flex justify-around">
+                    <View className="flex flex-col items-center">
+                      <Text className="text-base font-bold text-content tabular-nums">
+                        {Math.floor(record.duration / 60)}:{String(record.duration % 60).padStart(2, '0')}
+                      </Text>
+                      <Text className="text-xs text-content-secondary mt-0.5">用时</Text>
+                    </View>
+                    <View className="w-px bg-line-light" />
+                    <View className="flex flex-col items-center">
+                      <Text className="text-base font-bold text-content tabular-nums">{record.completedSteps}/15</Text>
+                      <Text className="text-xs text-content-secondary mt-0.5">步骤</Text>
+                    </View>
+                  </View>
+                </View>
+              ))
+            ) : (
+              <Text className="text-center text-content-disabled text-sm py-4">该日无刷牙记录</Text>
+            )}
+          </View>
+        )}
 
-      {selectedDate && (
-        <View className={styles.detail}>
-          <Text className={styles.detailTitle}>{selectedDate}</Text>
-          {selectedRecords.length > 0 ? (
-            selectedRecords.map((record) => (
-              <View key={`${record.date}-${record.session}`} className={styles.recordCard}>
-                <Text className={styles.recordSession}>
-                  {SESSION_LABELS[record.session] ?? record.session}
-                </Text>
-                <View className={styles.detailRow}>
-                  <Text className={styles.detailLabel}>状态</Text>
-                  <Text className={styles.detailValue}>
-                    {record.completed ? '已完成' : '未完成'}
-                  </Text>
-                </View>
-                <View className={styles.detailRow}>
-                  <Text className={styles.detailLabel}>用时</Text>
-                  <Text className={styles.detailValue}>
-                    {Math.floor(record.duration / 60)}分{record.duration % 60}秒
-                  </Text>
-                </View>
-                <View className={styles.detailRow}>
-                  <Text className={styles.detailLabel}>完成步骤</Text>
-                  <Text className={styles.detailValue}>{record.completedSteps}/15</Text>
-                </View>
-              </View>
-            ))
-          ) : (
-            <Text className={styles.noRecord}>该日无刷牙记录</Text>
-          )}
+        <View className="mt-4 flex justify-center">
+          <Button className="h-8 px-5 rounded-full bg-surface-white text-content-secondary text-xs border border-solid border-line flex items-center justify-center" openType="share" aria-label="分享本月成绩">
+            分享本月成绩
+          </Button>
         </View>
-      )}
+      </View>
     </View>
   )
 }

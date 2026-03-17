@@ -1,7 +1,6 @@
 import { Component } from 'react'
 import type { ReactNode } from 'react'
 import { View, Text } from '@tarojs/components'
-import styles from './index.module.scss'
 
 interface Props {
   children: ReactNode
@@ -27,8 +26,8 @@ export default class ErrorBoundary extends Component<Props, State> {
     if (this.state.hasError) {
       return (
         this.props.fallback ?? (
-          <View className={styles.fallback} role="alert">
-            <Text className={styles.fallbackText}>加载失败，请重试</Text>
+          <View className="flex items-center justify-center min-h-24 bg-gradient-to-b from-primary-light to-surface rounded-2xl" role="alert">
+            <Text className="text-sm text-content-secondary">加载失败，请重试</Text>
           </View>
         )
       )

@@ -1,6 +1,5 @@
 import { View, Text } from '@tarojs/components'
 import { BRUSHING_STEPS, TOTAL_STEPS } from '../../constants/brushing-steps'
-import styles from './index.module.scss'
 
 interface Props {
   currentStep: number
@@ -12,26 +11,33 @@ export default function StepIndicator({ currentStep, totalSteps = TOTAL_STEPS }:
 
   return (
     <View
-      className={styles.container}
+      className="flex flex-col items-center py-2 gap-1.5 w-full"
       role="progressbar"
       aria-valuenow={currentStep + 1}
       aria-valuemin={1}
       aria-valuemax={totalSteps}
       aria-label={`步骤 ${currentStep + 1} 共 ${totalSteps} 步`}
     >
-      <View className={styles.dotsRow}>
+      {/* 分段进度条 */}
+      <View className="flex items-center gap-0.5 w-full px-2">
         {Array.from({ length: totalSteps }, (_, i) => {
-          let cls = styles.dot
-          if (i < currentStep) cls += ` ${styles.dotDone}`
-          else if (i === currentStep) cls += ` ${styles.dotActive}`
-          return <View key={i} className={cls} />
+          const isDone = i < currentStep
+          const isActive = i === currentStep
+          return (
+            <View
+              key={i}
+              className={`h-1.5 flex-1 rounded-full transition-[background-color] duration-300 ease-in-out motion-reduce:transition-none ${
+                isDone ? 'bg-success' : isActive ? 'bg-primary animate-gentle-pulse' : 'bg-line'
+              }`}
+            />
+          )
         })}
       </View>
-      <View className={styles.infoRow}>
-        <Text className={styles.info}>
+      <View className="flex items-center justify-center gap-1.5">
+        <Text className="text-xs text-content-secondary tabular-nums">
           {currentStep + 1} / {totalSteps}
         </Text>
-        <Text className={styles.zoneName}>{stepName}</Text>
+        <Text className="text-xs text-primary font-medium">{stepName}</Text>
       </View>
     </View>
   )

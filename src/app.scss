@@ -1,21 +1,34 @@
-@import './styles/variables';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 page {
-  font-family:
-    -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, 'PingFang SC',
-    'Microsoft YaHei', Arial, sans-serif;
-  background-color: $bg;
-  color: $text;
+  font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica,
+    'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+  background-color: #F8FAFC;
+  color: #1E293B;
   font-size: 28px;
   line-height: 1.5;
 }
 
-// 全局聚焦样式
+/* 微信小程序 button ::after 全局重置 */
+button::after {
+  border: none;
+}
+
+/* 全局聚焦样式 */
 button:focus-visible,
-[role="button"]:focus-visible,
-[role="switch"]:focus-visible,
-[role="radio"]:focus-visible {
-  outline: 4px solid $primary;
+[role='button']:focus-visible,
+[role='switch']:focus-visible,
+[role='radio']:focus-visible {
+  outline: 4px solid #2DD4BF;
   outline-offset: 4px;
   border-radius: 8px;
+}
+
+/* CSS 自定义属性（供内联样式使用） */
+:root {
+  --color-primary: #2DD4BF;
+  --color-primary-dark: #0D9488;
+  --color-border: #E2E8F0;
 }

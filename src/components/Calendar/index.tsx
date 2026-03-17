@@ -1,5 +1,5 @@
 import { useState, useMemo, useRef } from 'react'
-import { View, Text, Button } from '@tarojs/components'
+import { View, Text } from '@tarojs/components'
 import {
   getRecordsByMonth,
   getCurrentStreak,
@@ -7,7 +7,6 @@ import {
   formatDate,
 } from '../../services/storage'
 import type { BrushingRecord } from '../../types'
-import styles from './index.module.scss'
 
 const WEEKDAYS = ['日', '一', '二', '三', '四', '五', '六']
 
@@ -24,7 +23,6 @@ export default function Calendar({ onSelectDate }: Props) {
 
   const records = useMemo(() => getRecordsByMonth(year, month), [year, month])
 
-  // 按日期索引早晚完成状态
   const daySessionMap = useMemo(() => {
     const map = new Map<string, { morning: boolean; evening: boolean }>()
     records
@@ -50,21 +48,13 @@ export default function Calendar({ onSelectDate }: Props) {
   const todayStr = formatDate(today)
 
   const goToPrevMonth = () => {
-    if (month === 1) {
-      setYear(year - 1)
-      setMonth(12)
-    } else {
-      setMonth(month - 1)
-    }
+    if (month === 1) { setYear(year - 1); setMonth(12) }
+    else setMonth(month - 1)
   }
 
   const goToNextMonth = () => {
-    if (month === 12) {
-      setYear(year + 1)
-      setMonth(1)
-    } else {
-      setMonth(month + 1)
-    }
+    if (month === 12) { setYear(year + 1); setMonth(1) }
+    else setMonth(month + 1)
   }
 
   const handleDayClick = (day: number) => {
@@ -74,81 +64,102 @@ export default function Calendar({ onSelectDate }: Props) {
   }
 
   return (
-    <View className={styles.calendar}>
-      {/* 月份导航 */}
-      <View className={styles.header}>
-        <Button className={styles.navBtn} onClick={goToPrevMonth} aria-label="上个月">
-          ‹
-        </Button>
-        <Text className={styles.monthTitle}>
-          {year}年{month}月
-        </Text>
-        <Button className={styles.navBtn} onClick={goToNextMonth} aria-label="下个月">
-          ›
-        </Button>
+    <View className="bg-surface-white rounded-2xl shadow-card-lg overflow-hidden">
+      {/* 统计条 */}
+      <View className="flex bg-surface">
+        <View className="flex-1 py-3 flex flex-col items-center">
+          <Text className="text-lg font-bold text-primary tabular-nums">{monthBrushed}</Text>
+          <Text className="text-xs text-content-secondary">本月</Text>
+        </View>
+        <View className="w-px bg-line-light my-2" />
+        <View className="flex-1 py-3 flex flex-col items-center">
+          <Text className="text-lg font-bold text-warning tabular-nums">{streak}</Text>
+          <Text className="text-xs text-content-secondary">连续</Text>
+        </View>
+        <View className="w-px bg-line-light my-2" />
+        <View className="flex-1 py-3 flex flex-col items-center">
+          <Text className="text-lg font-bold text-success-dark tabular-nums">{totalDays}</Text>
+          <Text className="text-xs text-content-secondary">总计</Text>
+        </View>
       </View>
 
-      {/* 星期标题 */}
-      <View className={styles.weekdays}>
-        {WEEKDAYS.map((w) => (
-          <Text key={w} className={styles.weekday}>
-            {w}
+      <View className="p-4">
+        {/* 月份导航 */}
+        <View className="flex items-center justify-between mb-3">
+          <View className="size-8 rounded-full bg-surface flex items-center justify-center" onClick={goToPrevMonth} role="button" aria-label="上个月">
+            <Text className="text-sm text-content-secondary font-bold">‹</Text>
+          </View>
+          <Text className="text-sm font-bold text-content">
+            {year}年{month}月
           </Text>
-        ))}
-      </View>
+          <View className="size-8 rounded-full bg-surface flex items-center justify-center" onClick={goToNextMonth} role="button" aria-label="下个月">
+            <Text className="text-sm text-content-secondary font-bold">›</Text>
+          </View>
+        </View>
 
-      {/* 日期格子 */}
-      <View className={styles.days}>
-        {Array.from({ length: firstDayOfWeek }, (_, i) => (
-          <View key={`empty-${i}`} className={`${styles.day} ${styles.dayEmpty}`} />
-        ))}
+        {/* 星期标题 */}
+        <View className="grid grid-cols-7 mb-1">
+          {WEEKDAYS.map((w) => (
+            <Text key={w} className="text-center text-xs text-content-disabled py-1">
+              {w}
+            </Text>
+          ))}
+        </View>
 
-        {Array.from({ length: daysInMonth }, (_, i) => {
-          const day = i + 1
-          const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`
-          const sessionInfo = daySessionMap.get(dateStr)
-          const isBrushed = !!sessionInfo
-          const isToday = dateStr === todayStr
-          const isSelected = dateStr === selectedDate
+        {/* 日期格子 */}
+        <View className="grid grid-cols-7 gap-y-1">
+          {Array.from({ length: firstDayOfWeek }, (_, i) => (
+            <View key={`empty-${i}`} className="h-10" />
+          ))}
 
-          let cls = styles.day
-          if (isBrushed) cls += ` ${styles.dayBrushed}`
-          if (isToday) cls += ` ${styles.dayToday}`
-          if (isSelected) cls += ` ${styles.daySelected}`
+          {Array.from({ length: daysInMonth }, (_, i) => {
+            const day = i + 1
+            const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+            const sessionInfo = daySessionMap.get(dateStr)
+            const isBrushed = !!sessionInfo
+            const isToday = dateStr === todayStr
+            const isSelected = dateStr === selectedDate
 
-          return (
-            <View
-              key={day}
-              className={cls}
-              onClick={() => handleDayClick(day)}
-              role="button"
-              aria-label={`${month}月${day}日${isBrushed ? '，已刷牙' : ''}`}
-            >
-              <Text>{day}</Text>
-              {isBrushed && (
-                <View className={styles.dots}>
-                  {sessionInfo.morning && <View className={styles.dotMorning} />}
-                  {sessionInfo.evening && <View className={styles.dotEvening} />}
+            return (
+              <View
+                key={day}
+                className="flex items-center justify-center h-10"
+                onClick={() => handleDayClick(day)}
+                role="button"
+                aria-label={`${month}月${day}日${isBrushed ? '，已刷牙' : ''}`}
+              >
+                <View
+                  className={`size-9 rounded-full flex items-center justify-center relative transition-colors duration-200 motion-reduce:transition-none ${
+                    isSelected
+                      ? 'bg-primary'
+                      : isToday
+                        ? 'bg-primary-light'
+                        : ''
+                  }`}
+                >
+                  <Text
+                    className={`text-sm ${
+                      isSelected
+                        ? 'text-surface-white font-bold'
+                        : isToday
+                          ? 'text-primary font-bold'
+                          : isBrushed
+                            ? 'text-content font-medium'
+                            : 'text-content'
+                    }`}
+                  >
+                    {day}
+                  </Text>
+                  {isBrushed && !isSelected && (
+                    <View className="absolute -bottom-0.5 flex gap-0.5">
+                      {sessionInfo.morning && <View className="size-1 rounded-full bg-warning" />}
+                      {sessionInfo.evening && <View className="size-1 rounded-full bg-primary" />}
+                    </View>
+                  )}
                 </View>
-              )}
-            </View>
-          )
-        })}
-      </View>
-
-      {/* 统计 */}
-      <View className={styles.stats}>
-        <View className={styles.statItem}>
-          <Text className={styles.statValue}>{monthBrushed}</Text>
-          <Text className={styles.statLabel}>本月</Text>
-        </View>
-        <View className={styles.statItem}>
-          <Text className={styles.statValue}>{streak}</Text>
-          <Text className={styles.statLabel}>连续</Text>
-        </View>
-        <View className={styles.statItem}>
-          <Text className={styles.statValue}>{totalDays}</Text>
-          <Text className={styles.statLabel}>总计</Text>
+              </View>
+            )
+          })}
         </View>
       </View>
     </View>

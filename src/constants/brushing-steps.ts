@@ -143,7 +143,7 @@ export const BRUSHING_STEPS: BrushingStep[] = [
 ]
 
 export const TOTAL_STEPS = BRUSHING_STEPS.length
-export const DEFAULT_STEP_DURATION = 10 // 秒
+export const DEFAULT_STEP_DURATION = 15 // 秒
 
 export const COMPLETION_MESSAGE = '恭喜完成！今天又坚持了一次！'
 

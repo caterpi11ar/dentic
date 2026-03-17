@@ -1,4 +1,6 @@
 import { defineConfig } from '@tarojs/cli'
+import tailwindcss from 'tailwindcss'
+import { UnifiedViteWeappTailwindcssPlugin as uvtw } from 'weapp-tailwindcss/vite'
 
 export default defineConfig({
   projectName: 'dentic',
@@ -24,13 +26,6 @@ export default defineConfig({
         enable: true,
         config: {},
       },
-      cssModules: {
-        enable: true,
-        config: {
-          namingPattern: 'module',
-          generateScopedName: '[name]__[local]___[hash:base64:5]',
-        },
-      },
     },
   },
   h5: {
@@ -41,14 +36,24 @@ export default defineConfig({
         enable: true,
         config: {},
       },
-      cssModules: {
-        enable: true,
-        config: {
-          namingPattern: 'module',
-          generateScopedName: '[name]__[local]___[hash:base64:5]',
-        },
-      },
     },
   },
-  compiler: 'vite',
+  compiler: {
+    type: 'vite',
+    vitePlugins: [
+      {
+        name: 'postcss-config-loader-plugin',
+        config(config) {
+          if (typeof config.css?.postcss === 'object') {
+            config.css?.postcss.plugins?.unshift(tailwindcss())
+          }
+        },
+      },
+      uvtw({
+        rem2rpx: true,
+        disabled: process.env.TARO_ENV === 'h5',
+        injectAdditionalCssVarScope: true,
+      }),
+    ],
+  },
 })

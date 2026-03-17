@@ -1,47 +1,29 @@
 import { View, Text } from '@tarojs/components'
-import styles from './index.module.scss'
 
 interface Props {
   seconds: number
   stepDuration: number
-  prompt: string
-  stepName: string
-  totalRemaining?: number
 }
 
-export default function BrushTimer({
-  seconds,
-  stepDuration,
-  prompt,
-  stepName,
-  totalRemaining,
-}: Props) {
+export default function BrushTimer({ seconds, stepDuration }: Props) {
   const progress = (stepDuration - seconds) / stepDuration
   const deg = Math.round(progress * 360)
 
-  const formatRemaining = (s: number) => {
-    const min = Math.floor(s / 60)
-    const sec = s % 60
-    return `${min}:${String(sec).padStart(2, '0')}`
-  }
-
   return (
-    <View className={styles.timer} role="timer" aria-label="刷牙计时器">
+    <View className="flex items-center justify-center py-3" role="timer" aria-label="刷牙计时器">
       <View
-        className={styles.ring}
+        className="relative size-ring rounded-full flex items-center justify-center"
         style={{
           background: `conic-gradient(var(--color-primary) ${deg}deg, var(--color-border) ${deg}deg)`,
+          transition: 'background 0.8s linear',
         }}
       >
-        <View className={styles.ringInner}>
-          <Text className={styles.seconds} aria-label={`${seconds}秒`}>{seconds}</Text>
-          {totalRemaining !== undefined && (
-            <Text className={styles.remaining} aria-live="polite">剩余 {formatRemaining(totalRemaining)}</Text>
-          )}
+        <View className="size-ring-inner rounded-full bg-surface-white flex items-center justify-center shadow-card">
+          <Text className="text-4xl leading-none font-bold text-content tabular-nums" aria-label={`${seconds}秒`}>
+            {seconds}
+          </Text>
         </View>
       </View>
-      <Text className={styles.label}>{stepName}</Text>
-      <Text className={styles.prompt}>{prompt}</Text>
     </View>
   )
 }
