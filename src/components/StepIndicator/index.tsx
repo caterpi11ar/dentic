@@ -11,7 +11,14 @@ export default function StepIndicator({ currentStep, totalSteps = TOTAL_STEPS }:
   const stepName = BRUSHING_STEPS[currentStep]?.name ?? ''
 
   return (
-    <View className={styles.container}>
+    <View
+      className={styles.container}
+      role="progressbar"
+      aria-valuenow={currentStep + 1}
+      aria-valuemin={1}
+      aria-valuemax={totalSteps}
+      aria-label={`步骤 ${currentStep + 1} 共 ${totalSteps} 步`}
+    >
       <View className={styles.dotsRow}>
         {Array.from({ length: totalSteps }, (_, i) => {
           let cls = styles.dot

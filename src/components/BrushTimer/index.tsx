@@ -26,7 +26,7 @@ export default function BrushTimer({
   }
 
   return (
-    <View className={styles.timer}>
+    <View className={styles.timer} role="timer" aria-label="刷牙计时器">
       <View
         className={styles.ring}
         style={{
@@ -34,9 +34,9 @@ export default function BrushTimer({
         }}
       >
         <View className={styles.ringInner}>
-          <Text className={styles.seconds}>{seconds}</Text>
+          <Text className={styles.seconds} aria-label={`${seconds}秒`}>{seconds}</Text>
           {totalRemaining !== undefined && (
-            <Text className={styles.remaining}>剩余 {formatRemaining(totalRemaining)}</Text>
+            <Text className={styles.remaining} aria-live="polite">剩余 {formatRemaining(totalRemaining)}</Text>
           )}
         </View>
       </View>

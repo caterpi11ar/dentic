@@ -23,6 +23,11 @@
   &::after {
     border: none;
   }
+
+  &:focus-visible {
+    outline: 4px solid $primary;
+    outline-offset: 4px;
+  }
 }
 
 .monthTitle {
@@ -60,6 +65,11 @@
   color: $text;
   border-radius: 50%;
   position: relative;
+
+  &:focus-visible {
+    outline: 4px solid $primary;
+    outline-offset: 2px;
+  }
 }
 
 .dayEmpty {
@@ -67,8 +77,8 @@
 }
 
 .dayBrushed {
-  background-color: #e8f5e9;
-  color: #2e7d32;
+  background-color: $success-light;
+  color: $success-text;
   font-weight: bold;
 }
 
@@ -77,7 +87,7 @@
 }
 
 .daySelected {
-  background-color: #e3f2fd;
+  background-color: $primary-light;
 }
 
 .dots {
@@ -119,6 +129,7 @@
   font-size: 40px;
   font-weight: bold;
   color: $primary;
+  font-variant-numeric: tabular-nums;
 }
 
 .statLabel {

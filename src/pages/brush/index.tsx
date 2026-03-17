@@ -155,7 +155,7 @@ export default function BrushPage() {
     <View className={styles.page}>
       {/* 倒计时覆盖层 */}
       {session.state === 'countdown' && (
-        <View className={styles.countdownOverlay}>
+        <View className={styles.countdownOverlay} aria-live="assertive">
           <Text key={session.countdownRemaining} className={styles.countdownNumber}>
             {session.countdownRemaining}
           </Text>
@@ -163,7 +163,7 @@ export default function BrushPage() {
       )}
 
       {/* 顶部状态 */}
-      <View className={styles.statusBar}>
+      <View className={styles.statusBar} role="status" aria-live="polite">
         <View className={styles.streakBadge}>
           <Text>{streak > 0 ? `${streak}天连续` : '开始打卡'}</Text>
         </View>
@@ -203,10 +203,10 @@ export default function BrushPage() {
           </View>
           {milestone && <Text className={styles.milestoneMessage}>{milestone}</Text>}
           <View className={styles.completedActions}>
-            <Button className={styles.shareBtn} openType="share">
+            <Button className={styles.shareBtn} openType="share" aria-label="分享刷牙成绩">
               分享
             </Button>
-            <Button className={styles.resetBtn} onClick={handleReset}>
+            <Button className={styles.resetBtn} onClick={handleReset} aria-label="返回首页">
               返回
             </Button>
           </View>

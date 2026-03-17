@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef } from 'react'
 import { View, Text, Button } from '@tarojs/components'
 import {
   getRecordsByMonth,
@@ -16,7 +16,8 @@ interface Props {
 }
 
 export default function Calendar({ onSelectDate }: Props) {
-  const today = new Date()
+  const todayRef = useRef(new Date())
+  const today = todayRef.current
   const [year, setYear] = useState(today.getFullYear())
   const [month, setMonth] = useState(today.getMonth() + 1)
   const [selectedDate, setSelectedDate] = useState<string | null>(null)
@@ -76,13 +77,13 @@ export default function Calendar({ onSelectDate }: Props) {
     <View className={styles.calendar}>
       {/* 月份导航 */}
       <View className={styles.header}>
-        <Button className={styles.navBtn} onClick={goToPrevMonth}>
+        <Button className={styles.navBtn} onClick={goToPrevMonth} aria-label="上个月">
           ‹
         </Button>
         <Text className={styles.monthTitle}>
           {year}年{month}月
         </Text>
-        <Button className={styles.navBtn} onClick={goToNextMonth}>
+        <Button className={styles.navBtn} onClick={goToNextMonth} aria-label="下个月">
           ›
         </Button>
       </View>
@@ -116,7 +117,13 @@ export default function Calendar({ onSelectDate }: Props) {
           if (isSelected) cls += ` ${styles.daySelected}`
 
           return (
-            <View key={day} className={cls} onClick={() => handleDayClick(day)}>
+            <View
+              key={day}
+              className={cls}
+              onClick={() => handleDayClick(day)}
+              role="button"
+              aria-label={`${month}月${day}日${isBrushed ? '，已刷牙' : ''}`}
+            >
               <Text>{day}</Text>
               {isBrushed && (
                 <View className={styles.dots}>

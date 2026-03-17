@@ -27,7 +27,7 @@ export default function HistoryPage() {
       <Calendar onSelectDate={handleSelectDate} />
 
       <View className={styles.shareRow}>
-        <Button className={styles.shareBtn} openType="share">
+        <Button className={styles.shareBtn} openType="share" aria-label="分享本月成绩">
           分享本月成绩
         </Button>
       </View>

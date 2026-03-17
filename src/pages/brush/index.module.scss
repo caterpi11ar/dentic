@@ -64,6 +64,11 @@
   &::after {
     border: none;
   }
+
+  &:focus-visible {
+    outline: 4px solid $primary-dark;
+    outline-offset: 4px;
+  }
 }
 
 .startBtnDisabled {
@@ -88,6 +93,10 @@
   align-items: center;
   gap: 16px;
   animation: slideUp 0.3s ease-out;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
 }
 
 .actionRow {
@@ -111,6 +120,11 @@
   &::after {
     border: none;
   }
+
+  &:focus-visible {
+    outline: 4px solid $primary-dark;
+    outline-offset: 4px;
+  }
 }
 
 .skipBtn {
@@ -127,6 +141,11 @@
 
   &::after {
     border: none;
+  }
+
+  &:focus-visible {
+    outline: 4px solid $primary;
+    outline-offset: 4px;
   }
 }
 
@@ -162,6 +181,10 @@
   border-radius: 24px;
   margin: 24px;
   animation: fadeScaleIn 0.5s ease-out;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
 }
 
 .completedIconCircle {
@@ -174,6 +197,10 @@
   justify-content: center;
   margin-bottom: 24px;
   animation: bounce 1s ease-in-out infinite;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
 }
 
 .completedCheck {
@@ -209,6 +236,7 @@
   font-size: 40px;
   font-weight: bold;
   color: $primary;
+  font-variant-numeric: tabular-nums;
 }
 
 .completedStatLabel {
@@ -246,6 +274,11 @@
   &::after {
     border: none;
   }
+
+  &:focus-visible {
+    outline: 4px solid $success-dark;
+    outline-offset: 4px;
+  }
 }
 
 .resetBtn {
@@ -262,6 +295,11 @@
 
   &::after {
     border: none;
+  }
+
+  &:focus-visible {
+    outline: 4px solid $primary;
+    outline-offset: 4px;
   }
 }
 
@@ -299,4 +337,8 @@
   font-weight: bold;
   color: $white;
   animation: countdownPulse 0.8s ease-out;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
 }

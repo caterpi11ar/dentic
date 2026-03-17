@@ -79,9 +79,9 @@ export default function ToothScene({ currentStepIndex, isActive, height = 400 }:
         type="webgl"
         id="toothCanvas"
         className={styles.canvas}
-        style={{ width: '100%', height: '100%' }}
+        aria-label="牙齿3D模型"
       />
-      {!ready && <View className={styles.loading}>加载中...</View>}
+      {!ready && <View className={styles.loading}>加载中\u2026</View>}
     </View>
   )
 }

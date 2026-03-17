@@ -20,7 +20,11 @@
   height: 16px;
   border-radius: 50%;
   background-color: $border;
-  transition: all 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
 }
 
 .dotActive {
@@ -42,6 +46,7 @@
 .info {
   font-size: 24px;
   color: $text-secondary;
+  font-variant-numeric: tabular-nums;
 }
 
 .zoneName {

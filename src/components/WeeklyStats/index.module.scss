@@ -44,6 +44,10 @@
   background: $border;
   min-height: 8px;
   transition: height 0.3s ease;
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
 }
 
 .barFilled {
@@ -73,6 +77,7 @@
   font-size: 36px;
   font-weight: bold;
   color: $primary;
+  font-variant-numeric: tabular-nums;
 }
 
 .summaryLabel {

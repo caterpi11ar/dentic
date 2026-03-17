@@ -27,7 +27,7 @@ export default class ErrorBoundary extends Component<Props, State> {
     if (this.state.hasError) {
       return (
         this.props.fallback ?? (
-          <View className={styles.fallback}>
+          <View className={styles.fallback} role="alert">
             <Text className={styles.fallbackText}>加载失败，请重试</Text>
           </View>
         )

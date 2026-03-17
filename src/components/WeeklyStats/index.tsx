@@ -13,7 +13,23 @@ export default function WeeklyStats() {
     setStats(getWeeklyStats())
   })
 
-  if (!stats) return null
+  if (!stats) {
+    return (
+      <View className={styles.card}>
+        <Text className={styles.title}>本周概览</Text>
+        <View className={styles.chart}>
+          {WEEKDAY_LABELS.map((label) => (
+            <View key={label} className={styles.barCol}>
+              <View className={styles.barWrapper}>
+                <View className={styles.bar} style={{ height: '8%' }} />
+              </View>
+              <Text className={styles.barLabel}>{label}</Text>
+            </View>
+          ))}
+        </View>
+      </View>
+    )
+  }
 
   const maxCount = Math.max(...stats.days.map((d) => d.count), 1)
 
@@ -21,7 +37,7 @@ export default function WeeklyStats() {
     <View className={styles.card}>
       <Text className={styles.title}>本周概览</Text>
 
-      <View className={styles.chart}>
+      <View className={styles.chart} role="img" aria-label={`本周刷牙统计：共${stats.totalSessions}次`}>
         {stats.days.map((day, i) => (
           <View key={day.date} className={styles.barCol}>
             <View className={styles.barWrapper}>

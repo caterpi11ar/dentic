@@ -9,3 +9,13 @@ page {
   font-size: 28px;
   line-height: 1.5;
 }
+
+// 全局聚焦样式
+button:focus-visible,
+[role="button"]:focus-visible,
+[role="switch"]:focus-visible,
+[role="radio"]:focus-visible {
+  outline: 4px solid $primary;
+  outline-offset: 4px;
+  border-radius: 8px;
+}

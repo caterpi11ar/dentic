@@ -41,6 +41,11 @@
   &::after {
     border: none;
   }
+
+  &:focus-visible {
+    outline: 4px solid $success-dark;
+    outline-offset: 4px;
+  }
 }
 
 .detailTitle {
@@ -84,11 +89,12 @@
 .detailValue {
   color: $text;
   font-weight: 500;
+  font-variant-numeric: tabular-nums;
 }
 
 .noRecord {
   text-align: center;
-  color: #ccc;
+  color: $text-disabled;
   font-size: 28px;
   padding: 24px;
 }

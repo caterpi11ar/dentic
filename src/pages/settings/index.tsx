@@ -52,12 +52,13 @@ export default function SettingsPage() {
             <Text className={styles.itemLabel}>每步时长</Text>
             <Text className={styles.itemDesc}>每个刷牙区域的停留时间</Text>
           </View>
-          <View className={styles.durationOptions}>
+          <View className={styles.durationOptions} role="radiogroup" aria-label="每步时长">
             {DURATION_OPTIONS.map((d) => (
               <Button
                 key={d}
                 className={`${styles.durationBtn} ${settings.stepDuration === d ? styles.durationBtnActive : ''}`}
                 onClick={() => handleDurationChange(d)}
+                aria-label={`${d}秒${settings.stepDuration === d ? '，已选中' : ''}`}
               >
                 {d}秒
               </Button>
@@ -74,6 +75,9 @@ export default function SettingsPage() {
             <View
               className={`${styles.switchTrack} ${settings.reminderEnabled ? styles.switchTrackOn : ''}`}
               onClick={handleReminderToggle}
+              role="switch"
+              aria-checked={settings.reminderEnabled}
+              aria-label="刷牙提醒"
             >
               <View
                 className={`${styles.switchThumb} ${settings.reminderEnabled ? styles.switchThumbOn : ''}`}
@@ -91,6 +95,9 @@ export default function SettingsPage() {
             <View
               className={`${styles.switchTrack} ${settings.soundEnabled ? styles.switchTrackOn : ''}`}
               onClick={handleSoundToggle}
+              role="switch"
+              aria-checked={settings.soundEnabled}
+              aria-label="步骤提示音"
             >
               <View
                 className={`${styles.switchThumb} ${settings.soundEnabled ? styles.switchThumbOn : ''}`}
