@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { View, Text } from '@tarojs/components'
+import { View, Text, Image } from '@tarojs/components'
 import Taro, { useDidShow } from '@tarojs/taro'
 import { getSettings, saveSettings } from '../../services/storage'
 import type { UserSettings } from '../../types'
@@ -35,8 +35,8 @@ export default function SettingsPage() {
     <View className="min-h-screen bg-surface pb-8">
       {/* 顶部品牌区域 */}
       <View className="bg-gradient-to-b from-primary-dark to-primary pt-10 pb-8 px-6 text-center">
-        <View className="size-16 rounded-3xl bg-surface-white bg-opacity-20 flex items-center justify-center mx-auto mb-3 shadow-card-lg">
-          <Text className="text-4xl">🦷</Text>
+        <View className="w-24 h-24 rounded-3xl bg-surface-white bg-opacity-15 flex items-center justify-center mx-auto mb-3 shadow-card-lg p-2">
+          <Image className="w-full h-full" src="/logo.png" mode="aspectFit" />
         </View>
         <Text className="text-lg font-bold text-surface-white">刷了吗</Text>
         <Text className="text-xs text-surface-white opacity-70 mt-1">v1.2.0</Text>
