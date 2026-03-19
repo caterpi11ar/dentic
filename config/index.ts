@@ -14,6 +14,12 @@ export default defineConfig({
   },
   sourceRoot: 'src',
   outputRoot: 'dist',
+  copy: {
+    patterns: [
+      { from: 'src/assets/audio/', to: 'dist/assets/audio/' },
+    ],
+    options: {},
+  },
   framework: 'react',
   plugins: ['@tarojs/plugin-framework-react'],
   defineConstants: {},

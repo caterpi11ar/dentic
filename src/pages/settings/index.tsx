@@ -5,35 +5,18 @@ import { useTimeTheme } from '../../hooks/useTimeTheme'
 import { getThemeClassName } from '../../services/theme'
 import { getSettings, saveSettings } from '../../services/storage'
 import InPageTabBar from '../../components/InPageTabBar'
+import ShadSwitch from '../../components/ui/ShadSwitch'
 import { getPageTopPadding } from '../../utils/layout'
-import type { UserSettings } from '../../types'
+import type { UserSettings, ThemePreference } from '../../types'
 
-type ToggleProps = {
-  checked: boolean
-  onClick: () => void
-  ariaLabel: string
-}
-
-function ToggleSwitch({ checked, onClick, ariaLabel }: ToggleProps) {
-  return (
-    <View
-      className={`w-11 h-6 rounded-full relative ${checked ? 'bg-primary' : 'bg-line'}`}
-      onClick={onClick}
-      role="switch"
-      aria-checked={checked}
-      aria-label={ariaLabel}
-    >
-      <View
-        className={`absolute top-[2px] h-5 w-5 rounded-full bg-surface-white border border-line-light transition-[left] duration-200 ${
-          checked ? 'left-[22px]' : 'left-[2px]'
-        }`}
-      />
-    </View>
-  )
-}
+const THEME_OPTIONS: { value: ThemePreference; label: string }[] = [
+  { value: 'auto', label: '自动' },
+  { value: 'day', label: '白天' },
+  { value: 'night', label: '黑夜' },
+]
 
 export default function SettingsPage() {
-  const { themeMode } = useTimeTheme()
+  const { themeMode, refreshTheme } = useTimeTheme()
   const safeTopPadding = getPageTopPadding(20)
   const [settings, setSettings] = useState<UserSettings>(getSettings)
 
@@ -61,6 +44,19 @@ export default function SettingsPage() {
     saveSettings({ soundEnabled: updated.soundEnabled })
   }
 
+  const handleVoiceToggle = () => {
+    const updated = { ...settings, voiceEnabled: !settings.voiceEnabled }
+    setSettings(updated)
+    saveSettings({ voiceEnabled: updated.voiceEnabled })
+  }
+
+  const handleThemeChange = (value: ThemePreference) => {
+    const updated = { ...settings, themePreference: value }
+    setSettings(updated)
+    saveSettings({ themePreference: value })
+    refreshTheme()
+  }
+
   const handleSetAlarm = () => {
     Taro.showModal({
       title: '设置闹钟',
@@ -72,35 +68,64 @@ export default function SettingsPage() {
 
   return (
     <View className={`theme-page app-scroll ${getThemeClassName(themeMode)}`}>
-      <View className="pb-32 px-6 max-w-2xl mx-auto space-y-6" style={{ paddingTop: safeTopPadding }}>
-        <View className="bg-surface-white p-6 rounded-xl space-y-6 shadow-sm shadow-emerald-900/5 border border-line-light">
-          <Text className="text-sm font-bold tracking-[0.08em] text-content-secondary">习惯提醒</Text>
-
-          <View className="flex items-center gap-3 -mt-1">
-            <Text className="text-primary text-lg">🔔</Text>
-            <Text className="text-sm font-semibold text-content">提醒</Text>
+      <View className="pb-32 px-6 max-w-2xl mx-auto space-y-4" style={{ paddingTop: safeTopPadding }}>
+        {/* 主题切换 */}
+        <View className="bg-surface-white p-5 rounded-xl shadow-sm shadow-emerald-900/5 border border-line-light">
+          <Text className="text-sm font-bold tracking-[0.08em] text-content-secondary">外观</Text>
+          <View className="mt-4 flex items-center justify-between">
+            <Text className="text-sm font-semibold text-content">主题模式</Text>
+            <View className="flex rounded-lg overflow-hidden border border-line-light shrink-0">
+              {THEME_OPTIONS.map((opt) => (
+                <View
+                  key={opt.value}
+                  className={`px-4 py-1.5 ${
+                    settings.themePreference === opt.value
+                      ? 'bg-primary text-surface-white'
+                      : 'bg-surface text-content-secondary'
+                  }`}
+                  onClick={() => handleThemeChange(opt.value)}
+                >
+                  <Text className={`text-sm font-medium ${
+                    settings.themePreference === opt.value ? 'text-surface-white' : 'text-content-secondary'
+                  }`}>{opt.label}</Text>
+                </View>
+              ))}
+            </View>
           </View>
+        </View>
 
-          <View className="space-y-4">
+        {/* 提醒与音效 */}
+        <View className="bg-surface-white p-5 rounded-xl shadow-sm shadow-emerald-900/5 border border-line-light">
+          <Text className="text-sm font-bold tracking-[0.08em] text-content-secondary">提醒与音效</Text>
+
+          <View className="mt-4 space-y-4">
             <View className="flex items-center justify-between">
-              <View className="flex flex-col">
+              <View className="flex flex-col mr-3">
                 <Text className="text-sm font-semibold text-content">刷牙提醒</Text>
                 <Text className="text-sm font-medium text-content-tertiary">{settings.reminderTime}</Text>
               </View>
-              <ToggleSwitch checked={settings.reminderEnabled} onClick={handleReminderToggle} ariaLabel="刷牙提醒开关" />
+              <ShadSwitch checked={settings.reminderEnabled} onClick={handleReminderToggle} ariaLabel="刷牙提醒开关" />
             </View>
 
             <View className="flex items-center justify-between">
-              <View className="flex flex-col">
+              <View className="flex flex-col mr-3">
                 <Text className="text-sm font-semibold text-content">步骤提示音</Text>
                 <Text className="text-sm font-medium text-content-tertiary">步骤切换时播放提示音</Text>
               </View>
-              <ToggleSwitch checked={settings.soundEnabled} onClick={handleSoundToggle} ariaLabel="步骤提示音开关" />
+              <ShadSwitch checked={settings.soundEnabled} onClick={handleSoundToggle} ariaLabel="步骤提示音开关" />
+            </View>
+
+            <View className="flex items-center justify-between">
+              <View className="flex flex-col mr-3">
+                <Text className="text-sm font-semibold text-content">语音播报</Text>
+                <Text className="text-sm font-medium text-content-tertiary">步骤切换时朗读提示</Text>
+              </View>
+              <ShadSwitch checked={settings.voiceEnabled} onClick={handleVoiceToggle} ariaLabel="语音播报开关" />
             </View>
           </View>
 
           <View
-            className="w-full min-h-11 bg-surface text-content py-3.5 rounded-full text-base font-semibold flex items-center justify-center gap-2 active:scale-95"
+            className="mt-5 w-full min-h-11 bg-surface text-content py-3.5 rounded-full text-base font-semibold flex items-center justify-center gap-2 active:scale-95"
             onClick={handleSetAlarm}
           >
             <Text className="text-base">⏰</Text>

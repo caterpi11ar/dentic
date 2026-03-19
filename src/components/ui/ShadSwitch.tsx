@@ -16,8 +16,8 @@ export default function ShadSwitch({ checked, onClick, ariaLabel }: ShadSwitchPr
       aria-label={ariaLabel}
     >
       <View
-        className={`absolute top-0.5 size-6 rounded-full bg-surface-white border border-line-light shadow-card transition-[left] duration-200 ${
-          checked ? 'left-5' : 'left-0.5'
+        className={`absolute top-0.5 left-0.5 size-6 rounded-full bg-surface-white border border-line-light shadow-card transition-transform duration-200 ${
+          checked ? 'translate-x-5' : 'translate-x-0'
         }`}
       />
     </View>

@@ -10,6 +10,8 @@ const DEFAULT_SETTINGS: UserSettings = {
   reminderEnabled: false,
   reminderTime: '07:30',
   soundEnabled: true,
+  voiceEnabled: true,
+  themePreference: 'auto',
 }
 
 // ---- 记录缓存 ----

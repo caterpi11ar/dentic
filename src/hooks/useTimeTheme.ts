@@ -3,9 +3,10 @@ import { useDidShow } from '@tarojs/taro'
 import {
   applyThemeToChrome,
   getThemeChangeBoundary,
-  getThemeModeByDate,
+  resolveThemeMode,
   type ThemeMode,
 } from '../services/theme'
+import { getSettings } from '../services/storage'
 
 interface TimeThemeState {
   themeMode: ThemeMode
@@ -16,8 +17,9 @@ interface TimeThemeState {
 export function useTimeTheme(): TimeThemeState {
   const getSnapshot = useCallback(() => {
     const now = new Date()
+    const { themePreference } = getSettings()
     return {
-      themeMode: getThemeModeByDate(now),
+      themeMode: resolveThemeMode(themePreference, now),
       nextThemeChangeAt: getThemeChangeBoundary(now),
     }
   }, [])
@@ -51,5 +53,6 @@ export function useTimeTheme(): TimeThemeState {
     themeMode,
     isNight: themeMode === 'night',
     nextThemeChangeAt,
+    refreshTheme,
   }
 }

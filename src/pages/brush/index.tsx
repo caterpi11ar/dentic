@@ -36,7 +36,7 @@ import {
   TOTAL_STEPS,
 } from '../../constants/brushing-steps'
 import { generateShareMessage } from '../../services/share'
-import { playStepSound } from '../../services/audio'
+import { playStepSound, playVoice, playStepVoice } from '../../services/audio'
 
 function formatTodayHeading(date: Date): string {
   return `${date.getMonth() + 1}月${date.getDate()}日`
@@ -120,6 +120,7 @@ export default function BrushPage() {
     Taro.vibrateShort({ type: 'light' }).catch(() => {})
     const s = startCountdown(createSession())
     setSession(s)
+    playVoice('start.mp3')
     clearTimer()
     timerRef.current = setInterval(() => {
       setSession((prev) => {
@@ -164,6 +165,10 @@ export default function BrushPage() {
     if (session.state === 'brushing' && session.currentStepIndex > 0) {
       Taro.vibrateShort({ type: 'medium' }).catch(() => {})
       playStepSound()
+      playStepVoice(session.currentStepIndex)
+    }
+    if (session.state === 'brushing' && session.currentStepIndex === 0) {
+      playStepVoice(0)
     }
   }, [session.currentStepIndex, session.state])
 
@@ -171,6 +176,7 @@ export default function BrushPage() {
     if (session.state === 'completed') {
       clearTimer()
       Taro.vibrateLong().catch(() => {})
+      playVoice('complete.mp3')
       setCompletionMessage(getRandomCompletionMessage())
       const newStreak = getCurrentStreak()
       setStreak(newStreak)

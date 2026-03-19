@@ -1,4 +1,5 @@
 import Taro from '@tarojs/taro'
+import type { ThemePreference } from '../types'
 
 export type ThemeMode = 'day' | 'night'
 
@@ -34,6 +35,11 @@ const THEME_TAB_STYLE: Record<ThemeMode, { color: string; selectedColor: string;
 export function getThemeModeByDate(date: Date): ThemeMode {
   const hour = date.getHours()
   return hour >= DAY_START_HOUR && hour < NIGHT_START_HOUR ? 'day' : 'night'
+}
+
+export function resolveThemeMode(preference: ThemePreference, date: Date): ThemeMode {
+  if (preference === 'day' || preference === 'night') return preference
+  return getThemeModeByDate(date)
 }
 
 export function getThemeChangeBoundary(from: Date): Date {
