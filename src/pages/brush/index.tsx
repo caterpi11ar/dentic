@@ -84,6 +84,7 @@ function getTodayDailyStatus(): DailyStatus {
 
 export default function BrushPage() {
   const { themeMode } = useTimeTheme()
+  const isNight = themeMode === 'night'
   const safeTopPadding = getPageTopPadding(20)
   const [session, setSession] = useState<BrushingSession>(createSession)
   const [streak, setStreak] = useState(0)
@@ -208,10 +209,15 @@ export default function BrushPage() {
         style={{ paddingTop: safeTopPadding }}
       >
         {session.state === 'countdown' && (
-          <View className="fixed inset-0 flex items-center justify-center bg-black/65 z-[100]" aria-live="assertive">
+          <View
+            className={`fixed inset-0 flex items-center justify-center z-[120] ${isNight ? 'bg-black' : 'bg-white'}`}
+            aria-live="assertive"
+          >
             <Text
               key={session.countdownRemaining}
-              className="text-countdown font-bold text-surface-white animate-countdown-pulse motion-reduce:animate-none"
+              className={`text-countdown font-bold animate-countdown-pulse motion-reduce:animate-none ${
+                isNight ? 'text-white' : 'text-black'
+              }`}
             >
               {session.countdownRemaining}
             </Text>
@@ -220,46 +226,48 @@ export default function BrushPage() {
 
         {session.state === 'idle' && (
           <View className="h-full flex flex-col gap-4">
-            <View className="relative overflow-hidden rounded-xl bg-white border border-[#bccabb]/20 px-5 py-4">
+            <View className="relative overflow-hidden rounded-xl bg-surface-white border border-line-light px-5 py-4">
               <View className="relative z-10">
-                <Text className="text-sm tracking-[0.08em] text-[#006d36] font-bold">{todayHeading}</Text>
-                <Text className="block mt-1.5 text-[34px] leading-none font-bold tracking-tight text-[#191c1e]">{greeting}</Text>
-                <Text className="block mt-1.5 text-sm text-[#3d4a3e]">准备好继续守护你的口腔健康了吗？</Text>
+                <Text className="text-sm tracking-[0.08em] text-primary font-bold">{todayHeading}</Text>
+                <Text className="block mt-1.5 text-[34px] leading-none font-bold tracking-tight text-content">{greeting}</Text>
+                <Text className="block mt-1.5 text-sm text-content-secondary">准备好继续守护你的口腔健康了吗？</Text>
 
-                <View className="mt-4 pt-4 border-t border-[#bccabb]/25">
+                <View className="mt-4 pt-4 border-t border-line-light">
                   <View className="flex justify-around items-center">
                     <View
                       className={`w-12 h-12 rounded-full flex items-center justify-center relative ${
-                        dailyStatus.morningDone ? 'bg-[#4ade80]/10' : 'bg-[#e5e7eb]'
+                        dailyStatus.morningDone
+                          ? 'bg-primary-light/70 border border-primary/20'
+                          : 'bg-surface border border-line-light'
                       }`}
                     >
                       <Text className="text-2xl">☀️</Text>
                       <View
                         className={`absolute -bottom-1 -right-1 rounded-full h-4 w-4 flex items-center justify-center shadow-md ${
                           dailyStatus.morningDone
-                            ? 'bg-[#006d36] text-white'
-                            : 'bg-[#f5f7f5] border border-[#9aa79e] text-[#9aa79e]'
+                            ? 'bg-primary text-surface-white'
+                            : 'bg-surface border border-line text-content-disabled'
                         }`}
                       >
                         <Text className="text-[10px]">{dailyStatus.morningDone ? '✓' : '○'}</Text>
                       </View>
                     </View>
 
-                    <View className="h-6 w-[1px] bg-[#bccabb]/30" />
+                    <View className="h-6 w-[1px] bg-line-light" />
 
                     <View
                       className={`w-12 h-12 rounded-full flex items-center justify-center relative ${
                         dailyStatus.eveningDone
-                          ? 'bg-[#4ade80]/10 border border-[#4ade80]/20'
-                          : 'border-2 border-dashed border-[#6d7b6d]/40'
+                          ? 'bg-primary-light/70 border border-primary/20'
+                          : 'border-2 border-dashed border-line'
                       }`}
                     >
                       <Text className="text-2xl">🌙</Text>
                       <View
                         className={`absolute -bottom-1 -right-1 rounded-full h-4 w-4 flex items-center justify-center shadow-md ${
                           dailyStatus.eveningDone
-                            ? 'bg-[#006d36] text-white'
-                            : 'bg-[#f5f7f5] border border-[#9aa79e] text-[#9aa79e]'
+                            ? 'bg-primary text-surface-white'
+                            : 'bg-surface border border-line text-content-disabled'
                         }`}
                       >
                         <Text className="text-[10px]">{dailyStatus.eveningDone ? '✓' : '○'}</Text>
@@ -268,41 +276,47 @@ export default function BrushPage() {
                   </View>
                 </View>
 
-                <View className="mt-3.5 pt-3.5 border-t border-[#bccabb]/25">
+                <View className="mt-3.5 pt-3.5 border-t border-line-light">
                   <View className="flex items-center gap-3">
                     <View className="flex-1 min-w-0">
                       <View className="flex items-center gap-2">
-                        <Text className="text-sm font-bold tracking-[0.08em] text-[#006d36]">当前连续</Text>
+                        <Text className="text-sm font-bold tracking-[0.08em] text-primary">当前连续</Text>
                         <Text className="text-base">🔥</Text>
                       </View>
                       <View className="mt-1.5 flex items-baseline gap-1">
-                        <Text className="text-[40px] leading-none font-bold tracking-tighter text-[#006d36]">{streak}</Text>
-                        <Text className="text-lg font-bold text-[#006d36]">天</Text>
+                        <Text className="text-[40px] leading-none font-bold tracking-tighter text-primary">{streak}</Text>
+                        <Text className="text-lg font-bold text-primary">天</Text>
                       </View>
                     </View>
 
-                    <View className="flex-1 min-w-0 rounded-xl border border-[#bccabb]/30 bg-[#f3f4f6] px-3 py-2.5">
-                      <Text className="text-sm font-semibold text-[#191c1e]">下个里程碑：{nextMilestone} 天</Text>
-                      <View className="w-full h-1.5 bg-[#bccabb]/35 rounded-full mt-2 overflow-hidden">
-                        <View className="h-full bg-[#4ade80] rounded-full" style={{ width: `${milestoneProgress}%` }} />
+                    <View className="flex-1 min-w-0 rounded-xl border border-line-light bg-surface px-3 py-2.5">
+                      <Text className="text-sm font-semibold text-content">下个里程碑：{nextMilestone} 天</Text>
+                      <View className="w-full h-1.5 bg-line rounded-full mt-2 overflow-hidden">
+                        <View className="h-full bg-primary rounded-full" style={{ width: `${milestoneProgress}%` }} />
                       </View>
                     </View>
                   </View>
                 </View>
               </View>
-              <View className="absolute -right-10 -top-10 w-36 h-36 bg-[#4ade80]/20 rounded-full blur-3xl" />
+              <View className="absolute -right-10 -top-10 w-36 h-36 bg-primary/20 rounded-full blur-3xl" />
             </View>
 
             <View className="mt-auto pb-8 flex items-center justify-center">
               <View className="relative w-full max-w-[360px]">
-                <View className="absolute -inset-2 rounded-[999px] bg-[#7ddfa8]/35 blur-xl" />
                 <View
-                  className="relative min-h-14 px-6 py-3.5 rounded-[999px] border-2 border-[#89d9a8] bg-gradient-to-br from-[#dcf7e5] via-[#b7edca] to-[#94e2b3] shadow-xl shadow-[#198f53]/30 active:scale-95 flex items-center justify-center"
+                  className={`absolute -inset-2 rounded-[999px] blur-xl ${isNight ? 'bg-primary/20' : 'bg-primary/30'}`}
+                />
+                <View
+                  className={`relative min-h-14 px-6 py-3.5 rounded-[999px] border-2 active:scale-95 flex items-center justify-center ${
+                    isNight
+                      ? 'border-primary/45 bg-gradient-to-br from-primary-light via-primary-light/80 to-primary/35 shadow-card-lg'
+                      : 'border-[#89d9a8] bg-gradient-to-br from-[#dcf7e5] via-[#b7edca] to-[#94e2b3] shadow-xl shadow-[#198f53]/30'
+                  }`}
                   onClick={handleStart}
                 >
                   <View className="flex items-center gap-3">
-                    <Text className="text-2xl text-[#0a7f45]">🪥</Text>
-                    <Text className="text-[#005f2d] text-xl font-bold">开始刷牙</Text>
+                    <Text className={`text-2xl ${isNight ? 'text-primary' : 'text-[#0a7f45]'}`}>🪥</Text>
+                    <Text className={`text-xl font-bold ${isNight ? 'text-primary' : 'text-[#005f2d]'}`}>开始刷牙</Text>
                   </View>
                 </View>
               </View>

@@ -20,14 +20,14 @@ export default function InPageTabBar({ current }: InPageTabBarProps) {
   }
 
   return (
-    <View className="fixed bottom-0 left-0 right-0 z-50 flex justify-around items-center px-4 pb-8 pt-4 bg-surface-white rounded-t-[3rem] border-t border-primary/15">
+    <View className="fixed bottom-0 left-0 right-0 z-50 flex justify-around items-center px-4 pb-8 pt-4 bg-surface-white rounded-t-[3rem] border-t border-line">
       {TABS.map((tab) => {
         const active = tab.key === current
         return (
           <View
             key={tab.key}
             className={`flex flex-col items-center justify-center px-6 py-2.5 rounded-full ${
-              active ? 'bg-primary-light/80 text-primary' : 'text-content-tertiary'
+              active ? 'bg-primary-light text-primary' : 'text-content-tertiary'
             }`}
             onClick={() => handleNavigate(tab)}
           >
