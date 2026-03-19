@@ -5,6 +5,7 @@ interface Props {
   currentStepIndex: number
   isActive: boolean
   compact?: boolean
+  showStepName?: boolean
 }
 
 /**
@@ -75,7 +76,7 @@ const LOWER_TEETH: { x: number; y: number; w: number; h: number }[] = (() => {
   return teeth
 })()
 
-export default function ToothScene({ currentStepIndex, isActive, compact = false }: Props) {
+export default function ToothScene({ currentStepIndex, isActive, compact = false, showStepName = true }: Props) {
   const step = BRUSHING_STEPS[currentStepIndex]
   const activeZone = isActive ? step?.zone : null
   const highlightSet = new Set(activeZone ? ZONE_TOOTH_MAP[activeZone] ?? [] : [])
@@ -168,10 +169,11 @@ export default function ToothScene({ currentStepIndex, isActive, compact = false
         </View>
       </View>
 
-      {/* 当前区域名 */}
-      <Text className={`text-content font-medium mt-1 text-sm ${compact ? '' : 'text-base'}`}>
-        {step?.name ?? '准备开始'}
-      </Text>
+      {showStepName && (
+        <Text className={`text-content font-medium mt-1 text-sm ${compact ? '' : 'text-base'}`}>
+          {step?.name ?? '准备开始'}
+        </Text>
+      )}
     </View>
   )
 }

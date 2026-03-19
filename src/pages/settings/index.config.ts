@@ -1,3 +1,3 @@
 export default definePageConfig({
-  navigationBarTitleText: '设置',
+  navigationBarTitleText: '刷了吗 | 设置',
 })

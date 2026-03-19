@@ -13,5 +13,17 @@
     "newFeature": true
   },
   "compileType": "miniprogram",
-  "condition": {}
+  "condition": {
+    "miniprogram": {
+      "current": 0,
+      "list": [
+        {
+          "id": 0,
+          "name": "首页",
+          "pathName": "pages/index/index",
+          "query": ""
+        }
+      ]
+    }
+  }
 }

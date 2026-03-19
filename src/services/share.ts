@@ -24,6 +24,6 @@ export function generateShareMessage(stats?: Partial<ShareStats>): {
 
   return {
     title,
-    path: '/pages/brush/index',
+    path: '/pages/index/index',
   }
 }
