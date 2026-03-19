@@ -143,7 +143,6 @@ export const BRUSHING_STEPS: BrushingStep[] = [
 ]
 
 export const TOTAL_STEPS = BRUSHING_STEPS.length
-export const DEFAULT_STEP_DURATION = 15 // 秒
 
 export const COMPLETION_MESSAGE = '恭喜完成！今天又坚持了一次！'
 
@@ -152,7 +151,7 @@ export const COMPLETION_MESSAGES = [
   '太棒了！牙齿闪闪发光！',
   '完美刷牙！口腔健康 +1！',
   '坚持就是胜利！你做到了！',
-  '巴氏刷牙法 get！牙医都夸你！',
+  '巴氏刷牙法掌握啦！牙医都夸你！',
   '好习惯养成中，继续加油！',
   '每一次刷牙，都是对自己的关爱！',
   '又一次完美刷牙，牙齿感谢你！',

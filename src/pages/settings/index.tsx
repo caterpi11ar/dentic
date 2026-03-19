@@ -1,13 +1,35 @@
 import { useState } from 'react'
-import { View, Text, Image } from '@tarojs/components'
+import { View, Text } from '@tarojs/components'
 import Taro, { useDidShow } from '@tarojs/taro'
 import { useTimeTheme } from '../../hooks/useTimeTheme'
 import { getThemeClassName } from '../../services/theme'
 import { getSettings, saveSettings } from '../../services/storage'
-import ShadBadge from '../../components/ui/ShadBadge'
-import { ShadCard, ShadCardContent, ShadCardHeader } from '../../components/ui/ShadCard'
-import ShadSwitch from '../../components/ui/ShadSwitch'
+import InPageTabBar from '../../components/InPageTabBar'
 import type { UserSettings } from '../../types'
+
+type ToggleProps = {
+  checked: boolean
+  onClick: () => void
+  ariaLabel: string
+}
+
+function ToggleSwitch({ checked, onClick, ariaLabel }: ToggleProps) {
+  return (
+    <View
+      className={`w-11 h-6 rounded-full relative ${checked ? 'bg-primary' : 'bg-line'}`}
+      onClick={onClick}
+      role="switch"
+      aria-checked={checked}
+      aria-label={ariaLabel}
+    >
+      <View
+        className={`absolute top-[2px] h-5 w-5 rounded-full bg-surface-white border border-line-light transition-[left] duration-200 ${
+          checked ? 'left-[22px]' : 'left-[2px]'
+        }`}
+      />
+    </View>
+  )
+}
 
 export default function SettingsPage() {
   const { themeMode } = useTimeTheme()
@@ -37,89 +59,55 @@ export default function SettingsPage() {
     saveSettings({ soundEnabled: updated.soundEnabled })
   }
 
+  const handleSetAlarm = () => {
+    Taro.showModal({
+      title: '设置闹钟',
+      content: `建议在系统闹钟中设置：\n晨间 ${settings.reminderTime}\n晚间 22:00`,
+      showCancel: false,
+      confirmText: '知道了',
+    })
+  }
+
   return (
     <View className={`theme-page app-scroll ${getThemeClassName(themeMode)}`}>
-      <View className="relative min-h-screen px-4 pt-3 pb-3">
-        <ShadCard className="rounded-3xl mb-3">
-          <ShadCardContent className="py-5 flex flex-col gap-3">
-            <View className="flex items-center gap-3">
-              <View className="size-14 rounded-2xl bg-surface border border-line flex items-center justify-center p-2">
-                <Image className="w-full h-full" src="/logo.png" mode="aspectFit" />
-              </View>
-              <View>
-                <Text className="text-base font-semibold text-content">刷了吗</Text>
-                <Text className="block mt-1 text-xs text-content-secondary">v1.2.0</Text>
-              </View>
-            </View>
-            <ShadBadge variant="secondary" className="self-start">
-              {themeMode === 'day' ? '日间' : '夜间'}
-            </ShadBadge>
-          </ShadCardContent>
-        </ShadCard>
+      <View className="pt-6 pb-32 px-6 max-w-2xl mx-auto space-y-6">
+        <View className="bg-surface-white p-6 rounded-xl space-y-6 shadow-sm shadow-emerald-900/5 border border-line-light">
+          <Text className="text-sm font-bold tracking-[0.08em] text-content-secondary">习惯提醒</Text>
 
-        <ShadCard className="rounded-3xl mb-3">
-          <ShadCardHeader>
-            <Text className="text-xs text-content-secondary font-medium tracking-wide">偏好设置</Text>
-          </ShadCardHeader>
-          <ShadCardContent className="pt-2 flex flex-col gap-2">
-            <View className="rounded-xl border border-line-light bg-surface px-3 py-3 flex flex-col gap-3">
-              <View>
-                <Text className="text-sm text-content font-medium">刷牙提醒</Text>
-                <Text className="mt-1 text-xs text-content-secondary">提醒时间 {settings.reminderTime}</Text>
+          <View className="flex items-center gap-3 -mt-1">
+            <Text className="text-primary text-lg">🔔</Text>
+            <Text className="text-sm font-semibold text-content">提醒</Text>
+          </View>
+
+          <View className="space-y-4">
+            <View className="flex items-center justify-between">
+              <View className="flex flex-col">
+                <Text className="text-sm font-semibold text-content">刷牙提醒</Text>
+                <Text className="text-sm font-medium text-content-tertiary">{settings.reminderTime}</Text>
               </View>
-              <View className="self-start">
-                <ShadSwitch checked={settings.reminderEnabled} onClick={handleReminderToggle} ariaLabel="刷牙提醒" />
-              </View>
+              <ToggleSwitch checked={settings.reminderEnabled} onClick={handleReminderToggle} ariaLabel="刷牙提醒开关" />
             </View>
 
-            <View className="rounded-xl border border-line-light bg-surface px-3 py-3 flex flex-col gap-3">
-              <View>
-                <Text className="text-sm text-content font-medium">步骤提示音</Text>
-                <Text className="mt-1 text-xs text-content-secondary">步骤切换时播放提示</Text>
+            <View className="flex items-center justify-between">
+              <View className="flex flex-col">
+                <Text className="text-sm font-semibold text-content">步骤提示音</Text>
+                <Text className="text-sm font-medium text-content-tertiary">步骤切换时播放提示音</Text>
               </View>
-              <View className="self-start">
-                <ShadSwitch checked={settings.soundEnabled} onClick={handleSoundToggle} ariaLabel="步骤提示音" />
-              </View>
+              <ToggleSwitch checked={settings.soundEnabled} onClick={handleSoundToggle} ariaLabel="步骤提示音开关" />
             </View>
-          </ShadCardContent>
-        </ShadCard>
+          </View>
 
-        <ShadCard className="rounded-3xl mb-3">
-          <ShadCardHeader>
-            <Text className="text-xs text-content-secondary font-medium tracking-wide">主题规则</Text>
-          </ShadCardHeader>
-          <ShadCardContent className="pt-2">
-            <View className="rounded-xl border border-line-light bg-surface px-3 py-3">
-              <Text className="text-sm font-medium text-content">自动时间切换</Text>
-              <Text className="text-xs text-content-secondary mt-1 leading-relaxed">
-                日间主题：06:00 - 17:59；夜间主题：18:00 - 次日05:59。主题随设备本地时间自动更新。
-              </Text>
-            </View>
-          </ShadCardContent>
-        </ShadCard>
-
-        <ShadCard className="rounded-3xl mb-3">
-          <ShadCardHeader>
-            <Text className="text-xs text-content-secondary font-medium tracking-wide">数据与隐私</Text>
-          </ShadCardHeader>
-          <ShadCardContent className="pt-2">
-            <Text className="text-xs text-content-secondary leading-relaxed">
-              所有数据仅保存在本地设备，不上传服务器。
-            </Text>
-          </ShadCardContent>
-        </ShadCard>
-
-        <ShadCard className="rounded-3xl">
-          <ShadCardHeader>
-            <Text className="text-xs text-content-secondary font-medium tracking-wide">关于</Text>
-          </ShadCardHeader>
-          <ShadCardContent className="pt-2">
-            <Text className="text-xs text-content-secondary leading-relaxed">
-              基于巴氏刷牙法，覆盖 15 个区域科学引导。
-            </Text>
-          </ShadCardContent>
-        </ShadCard>
+          <View
+            className="w-full min-h-11 bg-surface text-content py-3.5 rounded-full text-base font-semibold flex items-center justify-center gap-2 active:scale-95"
+            onClick={handleSetAlarm}
+          >
+            <Text className="text-base">⏰</Text>
+            <Text>设置闹钟</Text>
+          </View>
+        </View>
       </View>
+
+      <InPageTabBar current="settings" />
     </View>
   )
 }

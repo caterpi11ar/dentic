@@ -169,7 +169,7 @@ export default function ToothScene({ currentStepIndex, isActive, compact = false
       </View>
 
       {/* 当前区域名 */}
-      <Text className={`text-content font-medium mt-1 ${compact ? 'text-xs' : 'text-sm'}`}>
+      <Text className={`text-content font-medium mt-1 text-sm ${compact ? '' : 'text-base'}`}>
         {step?.name ?? '准备开始'}
       </Text>
     </View>

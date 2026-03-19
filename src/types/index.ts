@@ -28,7 +28,6 @@ export interface CameraPosition {
 
 /** 用户设置 */
 export interface UserSettings {
-  stepDuration: number // 每步时长（秒），默认 10
   reminderEnabled: boolean
   reminderTime: string // HH:mm
   soundEnabled: boolean // 步骤切换提示音

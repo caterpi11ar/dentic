@@ -34,10 +34,10 @@ export default function StepIndicator({ currentStep, totalSteps = TOTAL_STEPS }:
         })}
       </View>
       <View className="flex items-center justify-center gap-1.5">
-        <Text className="text-xs text-content-secondary tabular-nums">
+        <Text className="text-sm text-content-secondary tabular-nums">
           {currentStep + 1} / {totalSteps}
         </Text>
-        <Text className="text-xs text-primary font-medium">{stepName}</Text>
+        <Text className="text-sm text-primary font-medium">{stepName}</Text>
       </View>
     </View>
   )

@@ -1,6 +1,9 @@
-import { BRUSHING_STEPS, TOTAL_STEPS, DEFAULT_STEP_DURATION } from '../constants/brushing-steps'
-import { saveRecord, formatDate, getSettings } from './storage'
+import { BRUSHING_STEPS, TOTAL_STEPS } from '../constants/brushing-steps'
+import { saveRecord, formatDate } from './storage'
 import type { BrushingState, BrushingStep } from '../types'
+
+const FIXED_STEP_DURATION_SECONDS = 15
+const EVENING_SESSION_START_HOUR = 18
 
 export interface BrushingSession {
   state: BrushingState
@@ -12,13 +15,12 @@ export interface BrushingSession {
 }
 
 export function createSession(): BrushingSession {
-  const { stepDuration } = getSettings()
   return {
     state: 'idle',
     currentStepIndex: 0,
-    stepTimeLeft: stepDuration || DEFAULT_STEP_DURATION,
+    stepTimeLeft: FIXED_STEP_DURATION_SECONDS,
     elapsedTime: 0,
-    stepDuration: stepDuration || DEFAULT_STEP_DURATION,
+    stepDuration: FIXED_STEP_DURATION_SECONDS,
     countdownRemaining: 0,
   }
 }
@@ -116,7 +118,7 @@ export function skipStep(session: BrushingSession): BrushingSession {
 }
 
 export function getSessionTypeForDate(date: Date): 'morning' | 'evening' {
-  return date.getHours() < 14 ? 'morning' : 'evening'
+  return date.getHours() < EVENING_SESSION_START_HOUR ? 'morning' : 'evening'
 }
 
 function saveBrushingRecord(session: BrushingSession) {

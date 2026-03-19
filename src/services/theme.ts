@@ -8,25 +8,25 @@ const NIGHT_START_HOUR = 18
 const THEME_NAV_STYLE: Record<ThemeMode, { frontColor: '#ffffff' | '#000000'; backgroundColor: string }> = {
   day: {
     frontColor: '#000000',
-    backgroundColor: '#EAF6FF',
+    backgroundColor: '#EFFAF3',
   },
   night: {
     frontColor: '#ffffff',
-    backgroundColor: '#09090B',
+    backgroundColor: '#07120D',
   },
 }
 
 const THEME_TAB_STYLE: Record<ThemeMode, { color: string; selectedColor: string; backgroundColor: string; borderStyle: 'white' | 'black' }> = {
   day: {
-    color: '#5F7488',
-    selectedColor: '#0B9BCD',
-    backgroundColor: '#F7FBFF',
+    color: '#6A7E6C',
+    selectedColor: '#006D36',
+    backgroundColor: '#F8FBF8',
     borderStyle: 'white',
   },
   night: {
     color: '#A1A1AA',
-    selectedColor: '#F4F4F5',
-    backgroundColor: '#111113',
+    selectedColor: '#6EE7B7',
+    backgroundColor: '#0B1611',
     borderStyle: 'black',
   },
 }

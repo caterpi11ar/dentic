@@ -7,7 +7,6 @@ const STORAGE_KEYS = {
 }
 
 const DEFAULT_SETTINGS: UserSettings = {
-  stepDuration: 10,
   reminderEnabled: false,
   reminderTime: '07:30',
   soundEnabled: true,

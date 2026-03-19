@@ -19,7 +19,7 @@ export default class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error) {
-    console.error('ErrorBoundary caught:', error)
+    console.error('错误边界捕获到异常：', error)
   }
 
   render() {
