@@ -4,6 +4,7 @@ import { useShareAppMessage } from '@tarojs/taro'
 import InPageTabBar from '../../components/InPageTabBar'
 import { useTimeTheme } from '../../hooks/useTimeTheme'
 import { getThemeClassName } from '../../services/theme'
+import { getPageTopPadding } from '../../utils/layout'
 import {
   formatDate,
   getCurrentStreak,
@@ -27,6 +28,7 @@ function formatCompletedTime(timestamp?: number): string {
 
 export default function HistoryPage() {
   const { themeMode } = useTimeTheme()
+  const safeTopPadding = getPageTopPadding(20)
   const [selectedDate, setSelectedDate] = useState<string | null>(null)
   const [selectedRecords, setSelectedRecords] = useState<BrushingRecord[]>([])
   const todayRef = useRef(new Date())
@@ -85,7 +87,10 @@ export default function HistoryPage() {
 
   return (
     <View className={`theme-page ${getThemeClassName(themeMode)} min-h-screen`}>
-      <View className="h-screen overflow-hidden pt-4 pb-24 px-5 max-w-2xl mx-auto flex flex-col gap-2">
+      <View
+        className="h-screen overflow-hidden pb-24 px-5 max-w-2xl mx-auto flex flex-col gap-2"
+        style={{ paddingTop: safeTopPadding }}
+      >
         <View className="bg-surface-white rounded-xl p-3 border border-line-light">
           <View className="flex justify-between items-center mb-2">
             <Text className="text-base font-bold tracking-tight text-content">

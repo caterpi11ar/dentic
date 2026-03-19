@@ -5,6 +5,7 @@ import { useTimeTheme } from '../../hooks/useTimeTheme'
 import { getThemeClassName } from '../../services/theme'
 import { getSettings, saveSettings } from '../../services/storage'
 import InPageTabBar from '../../components/InPageTabBar'
+import { getPageTopPadding } from '../../utils/layout'
 import type { UserSettings } from '../../types'
 
 type ToggleProps = {
@@ -33,6 +34,7 @@ function ToggleSwitch({ checked, onClick, ariaLabel }: ToggleProps) {
 
 export default function SettingsPage() {
   const { themeMode } = useTimeTheme()
+  const safeTopPadding = getPageTopPadding(20)
   const [settings, setSettings] = useState<UserSettings>(getSettings)
 
   useDidShow(() => {
@@ -70,7 +72,7 @@ export default function SettingsPage() {
 
   return (
     <View className={`theme-page app-scroll ${getThemeClassName(themeMode)}`}>
-      <View className="pt-6 pb-32 px-6 max-w-2xl mx-auto space-y-6">
+      <View className="pb-32 px-6 max-w-2xl mx-auto space-y-6" style={{ paddingTop: safeTopPadding }}>
         <View className="bg-surface-white p-6 rounded-xl space-y-6 shadow-sm shadow-emerald-900/5 border border-line-light">
           <Text className="text-sm font-bold tracking-[0.08em] text-content-secondary">习惯提醒</Text>
 

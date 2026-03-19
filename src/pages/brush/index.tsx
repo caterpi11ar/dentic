@@ -10,6 +10,7 @@ import { ShadCard } from '../../components/ui/ShadCard'
 import InPageTabBar from '../../components/InPageTabBar'
 import { useTimeTheme } from '../../hooks/useTimeTheme'
 import { getThemeClassName } from '../../services/theme'
+import { getPageTopPadding } from '../../utils/layout'
 import {
   createSession,
   startCountdown,
@@ -83,6 +84,7 @@ function getTodayDailyStatus(): DailyStatus {
 
 export default function BrushPage() {
   const { themeMode } = useTimeTheme()
+  const safeTopPadding = getPageTopPadding(20)
   const [session, setSession] = useState<BrushingSession>(createSession)
   const [streak, setStreak] = useState(0)
   const [milestone, setMilestone] = useState<string | null>(null)
@@ -201,8 +203,9 @@ export default function BrushPage() {
     <View className={`theme-page ${shouldEnableScroll ? 'app-scroll' : ''} ${getThemeClassName(themeMode)} min-h-screen`}>
       <View
         className={`relative px-5 max-w-2xl mx-auto ${
-          isIdle ? 'h-screen overflow-hidden pt-4 pb-28' : isBrushingFlow ? 'h-screen overflow-hidden pt-3 pb-24' : 'min-h-screen pt-6 pb-32'
+          isIdle ? 'h-screen overflow-hidden pb-28' : isBrushingFlow ? 'h-screen overflow-hidden pb-24' : 'min-h-screen pb-32'
         }`}
+        style={{ paddingTop: safeTopPadding }}
       >
         {session.state === 'countdown' && (
           <View className="fixed inset-0 flex items-center justify-center bg-black/65 z-[100]" aria-live="assertive">
