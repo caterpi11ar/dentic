@@ -137,7 +137,7 @@ export default function HistoryPage() {
             </Text>
           </View>
 
-          <View className="w-full bg-line-light h-1 rounded-full overflow-hidden mb-2">
+          <View className="w-full bg-line-light h-1 rounded-full overflow-hidden mb-4">
             <View className="bg-primary h-full" style={{ width: `${Math.min(100, monthGoalProgress)}%` }} />
           </View>
 
