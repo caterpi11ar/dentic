@@ -23,9 +23,9 @@ export const BRUSHING_STEPS: BrushingStep[] = [
   {
     id: 1,
     zone: 'upper-outer-right',
-    name: '上牙外侧右',
-    description: '右上外侧，牙刷45°对准牙龈线',
-    prompt: '刷右上方外侧，牙刷倾斜45度',
+    name: '上牙外侧左',
+    description: '左上外侧，牙刷45°对准牙龈线',
+    prompt: '刷左上方外侧，牙刷倾斜45度',
     camera: CAM.upperRight,
   },
   {
@@ -39,17 +39,17 @@ export const BRUSHING_STEPS: BrushingStep[] = [
   {
     id: 3,
     zone: 'upper-outer-left',
-    name: '上牙外侧左',
-    description: '左上外侧',
-    prompt: '刷左上方外侧',
+    name: '上牙外侧右',
+    description: '右上外侧',
+    prompt: '刷右上方外侧',
     camera: CAM.upperLeft,
   },
   {
     id: 4,
     zone: 'upper-inner-right',
-    name: '上牙内侧右',
-    description: '右上内侧',
-    prompt: '翻到内侧，刷右上方内侧',
+    name: '上牙内侧左',
+    description: '左上内侧',
+    prompt: '翻到内侧，刷左上方内侧',
     camera: CAM.upperRightInner,
   },
   {
@@ -63,9 +63,9 @@ export const BRUSHING_STEPS: BrushingStep[] = [
   {
     id: 6,
     zone: 'upper-inner-left',
-    name: '上牙内侧左',
-    description: '左上内侧',
-    prompt: '刷左上方内侧',
+    name: '上牙内侧右',
+    description: '右上内侧',
+    prompt: '刷右上方内侧',
     camera: CAM.upperLeftInner,
   },
   {
