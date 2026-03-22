@@ -1,35 +1,13 @@
-import { useState } from 'react'
 import { View, Text } from '@tarojs/components'
-import { useDidShow } from '@tarojs/taro'
-import { getWeeklyStats, type WeeklyStatsData } from '../../services/storage'
+import type { WeeklyStatsData } from '../../services/recordStatsService'
 
 const WEEKDAY_LABELS = ['一', '二', '三', '四', '五', '六', '日']
 
-export default function WeeklyStats() {
-  const [stats, setStats] = useState<WeeklyStatsData | null>(null)
+interface WeeklyStatsProps {
+  stats: WeeklyStatsData
+}
 
-  useDidShow(() => {
-    setStats(getWeeklyStats())
-  })
-
-  if (!stats) {
-    return (
-      <View className="bg-surface-white rounded-2xl p-4 mb-3 shadow-card-lg">
-        <Text className="text-xs text-content-secondary font-medium tracking-wide">本周概览</Text>
-        <View className="flex items-end gap-2 mt-3 h-24">
-          {WEEKDAY_LABELS.map((label) => (
-            <View key={label} className="flex-1 flex flex-col items-center gap-1.5">
-              <View className="w-full flex items-end justify-center h-16">
-                <View className="w-full rounded-lg bg-line" style={{ height: '20%' }} />
-              </View>
-              <Text className="text-xs text-content-disabled">{label}</Text>
-            </View>
-          ))}
-        </View>
-      </View>
-    )
-  }
-
+export default function WeeklyStats({ stats }: WeeklyStatsProps) {
   const maxCount = Math.max(...stats.days.map((d) => d.count), 1)
 
   return (

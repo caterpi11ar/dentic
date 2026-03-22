@@ -15,16 +15,17 @@
 - **历史日历**：月视图查看刷牙记录，统计连续天数、本月及总计，支持分享成绩
 - **连续打卡激励**：3 天、7 天、30 天等里程碑提示，完成界面展示详细统计
 - **分享功能**：刷牙完成后或历史页均可一键分享给好友
-- **可调设置**：每步时长（8/10/15 秒）、刷牙提醒开关（引导设置手机闹钟）
+- **可调设置**：刷牙提醒、步骤提示音、语音播报、主题模式
 
 ## 技术栈
 
 | 领域 | 方案 |
 |------|------|
 | 框架 | Taro 4 + React + TypeScript |
+| Hooks | React Hooks + ahooks |
 | 构建 | Vite |
 | 3D 渲染 | three-platformize（Three.js 微信小程序适配） |
-| 样式 | Sass + CSS Modules |
+| 样式 | Sass + Tailwind CSS |
 | 存储 | 微信本地存储 |
 | 代码质量 | ESLint + Prettier |
 
@@ -33,9 +34,15 @@
 ```
 src/
 ├── pages/
-│   ├── brush/          # 刷牙主页（3D 场景 + 计时器）
+│   ├── index/          # 刷牙主页（页面编排）
 │   ├── history/        # 历史记录（日历 + 统计 + 分享）
-│   └── settings/       # 设置（时长、提醒、关于）
+│   └── settings/       # 设置（提醒、音效、主题）
+├── domains/
+│   └── brush/
+│       ├── hooks/      # 刷牙会话：纯状态(state) + 副作用(effect) 编排
+│       ├── components/ # 刷牙流程分态组件（空闲/进行中/完成/倒计时）
+│       ├── effects/    # 领域副作用适配（音频/震动/亮屏）
+│       └── utils.ts    # 刷牙领域工具函数
 ├── components/
 │   ├── ToothScene/     # 3D 牙齿场景（含加载失败兜底）
 │   ├── BrushTimer/     # conic-gradient 环形倒计时

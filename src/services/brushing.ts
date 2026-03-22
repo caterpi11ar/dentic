@@ -1,5 +1,4 @@
 import { BRUSHING_STEPS, TOTAL_STEPS } from '../constants/brushing-steps'
-import { saveRecord, formatDate } from './storage'
 import type { BrushingState, BrushingStep } from '../types'
 
 const FIXED_STEP_DURATION_SECONDS = 10
@@ -82,7 +81,6 @@ export function tick(session: BrushingSession): BrushingSession {
       elapsedTime: newElapsed,
       currentStepIndex: session.currentStepIndex,
     }
-    saveBrushingRecord(completed)
     return completed
   }
 
@@ -106,7 +104,6 @@ export function skipStep(session: BrushingSession): BrushingSession {
       stepTimeLeft: 0,
       currentStepIndex: session.currentStepIndex,
     }
-    saveBrushingRecord(completed)
     return completed
   }
 
@@ -119,32 +116,4 @@ export function skipStep(session: BrushingSession): BrushingSession {
 
 export function getSessionTypeForDate(date: Date): 'morning' | 'evening' {
   return date.getHours() < EVENING_SESSION_START_HOUR ? 'morning' : 'evening'
-}
-
-function saveBrushingRecord(session: BrushingSession) {
-  const now = new Date()
-  const sessionType = getSessionTypeForDate(now)
-  saveRecord({
-    date: formatDate(now),
-    session: sessionType,
-    completed: true,
-    duration: session.elapsedTime,
-    completedSteps: TOTAL_STEPS,
-    timestamp: now.getTime(),
-  })
-}
-
-export function getProgress(session: BrushingSession): number {
-  return (
-    ((session.currentStepIndex * session.stepDuration +
-      (session.stepDuration - session.stepTimeLeft)) /
-      (TOTAL_STEPS * session.stepDuration)) *
-    100
-  )
-}
-
-/** 返回总剩余时间（秒） */
-export function getTotalTimeRemaining(session: BrushingSession): number {
-  const remainingSteps = TOTAL_STEPS - session.currentStepIndex - 1
-  return session.stepTimeLeft + remainingSteps * session.stepDuration
 }

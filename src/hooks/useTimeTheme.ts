@@ -1,37 +1,39 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useDidShow } from '@tarojs/taro'
+import { useInterval, useMemoizedFn } from 'ahooks'
 import {
   applyThemeToChrome,
   getThemeChangeBoundary,
   resolveThemeMode,
   type ThemeMode,
 } from '../services/theme'
-import { getSettings } from '../services/storage'
+import { getSettings } from '../services/settingsStorage'
 
 interface TimeThemeState {
   themeMode: ThemeMode
   isNight: boolean
   nextThemeChangeAt: Date
+  refreshTheme: () => void
 }
 
 export function useTimeTheme(): TimeThemeState {
-  const getSnapshot = useCallback(() => {
+  const getSnapshot = useMemoizedFn(() => {
     const now = new Date()
     const { themePreference } = getSettings()
     return {
       themeMode: resolveThemeMode(themePreference, now),
       nextThemeChangeAt: getThemeChangeBoundary(now),
     }
-  }, [])
+  })
 
   const [themeMode, setThemeMode] = useState<ThemeMode>(() => getSnapshot().themeMode)
   const [nextThemeChangeAt, setNextThemeChangeAt] = useState<Date>(() => getSnapshot().nextThemeChangeAt)
 
-  const refreshTheme = useCallback(() => {
+  const refreshTheme = useMemoizedFn(() => {
     const next = getSnapshot()
     setThemeMode(next.themeMode)
     setNextThemeChangeAt(next.nextThemeChangeAt)
-  }, [getSnapshot])
+  })
 
   useDidShow(() => {
     refreshTheme()
@@ -41,13 +43,7 @@ export function useTimeTheme(): TimeThemeState {
     applyThemeToChrome(themeMode)
   }, [themeMode])
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      refreshTheme()
-    }, 30000)
-
-    return () => clearInterval(timer)
-  }, [refreshTheme])
+  useInterval(refreshTheme, 30000)
 
   return {
     themeMode,

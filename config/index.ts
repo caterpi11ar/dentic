@@ -2,6 +2,14 @@ import { defineConfig } from '@tarojs/cli'
 import tailwindcss from 'tailwindcss'
 import { UnifiedViteWeappTailwindcssPlugin as uvtw } from 'weapp-tailwindcss/vite'
 
+type ViteCssConfig = {
+  css?: {
+    postcss?: {
+      plugins?: unknown[]
+    } | string
+  }
+}
+
 export default defineConfig({
   projectName: 'dentic',
   date: '2026-03-14',
@@ -49,9 +57,9 @@ export default defineConfig({
     vitePlugins: [
       {
         name: 'postcss-config-loader-plugin',
-        config(config) {
-          if (typeof config.css?.postcss === 'object') {
-            config.css?.postcss.plugins?.unshift(tailwindcss())
+        config(config: ViteCssConfig) {
+          if (typeof config.css?.postcss === 'object' && Array.isArray(config.css.postcss.plugins)) {
+            config.css.postcss.plugins.unshift(tailwindcss())
           }
         },
       },

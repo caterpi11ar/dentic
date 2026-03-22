@@ -1,5 +1,5 @@
 import Taro from '@tarojs/taro'
-import { getSettings } from './storage'
+import { getSettings } from './settingsStorage'
 
 let _audioCtx: Taro.InnerAudioContext | null = null
 

@@ -1,81 +1,48 @@
-import { useState, useMemo, useRef } from 'react'
 import { View, Text } from '@tarojs/components'
-import {
-  getRecordsByMonth,
-  getCurrentStreak,
-  getTotalBrushedDays,
-  formatDate,
-} from '../../services/storage'
 import ShadButton from '../ui/ShadButton'
 import ShadBadge from '../ui/ShadBadge'
 import { ShadCard, ShadCardContent, ShadCardHeader } from '../ui/ShadCard'
-import type { BrushingRecord } from '../../types'
 
 const WEEKDAYS = ['日', '一', '二', '三', '四', '五', '六']
 
-interface Props {
-  onSelectDate?: (date: string) => void
+type DaySessionInfo = {
+  morning: boolean
+  evening: boolean
+}
+
+interface CalendarProps {
+  year: number
+  month: number
+  todayStr: string
+  selectedDate: string | null
+  daySessionMap: Map<string, DaySessionInfo>
+  monthBrushed: number
+  streak: number
+  totalDays: number
+  onPrevMonth: () => void
+  onNextMonth: () => void
+  onSelectDate: (date: string) => void
 }
 
 function formatMonth(year: number, month: number): string {
   return `${year}年 ${month}月`
 }
 
-export default function Calendar({ onSelectDate }: Props) {
-  const todayRef = useRef(new Date())
-  const today = todayRef.current
-  const [year, setYear] = useState(today.getFullYear())
-  const [month, setMonth] = useState(today.getMonth() + 1)
-  const [selectedDate, setSelectedDate] = useState<string | null>(null)
-
-  const records = useMemo(() => getRecordsByMonth(year, month), [year, month])
-
-  const daySessionMap = useMemo(() => {
-    const map = new Map<string, { morning: boolean; evening: boolean }>()
-    records
-      .filter((r: BrushingRecord) => r.completed)
-      .forEach((r: BrushingRecord) => {
-        const entry = map.get(r.date) ?? { morning: false, evening: false }
-        if (r.session === 'morning') entry.morning = true
-        if (r.session === 'evening') entry.evening = true
-        map.set(r.date, entry)
-      })
-    return map
-  }, [records])
-
+export default function Calendar({
+  year,
+  month,
+  todayStr,
+  selectedDate,
+  daySessionMap,
+  monthBrushed,
+  streak,
+  totalDays,
+  onPrevMonth,
+  onNextMonth,
+  onSelectDate,
+}: CalendarProps) {
   const daysInMonth = new Date(year, month, 0).getDate()
   const firstDayOfWeek = new Date(year, month - 1, 1).getDay()
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- records triggers recompute
-  const streak = useMemo(() => getCurrentStreak(), [records])
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- records triggers recompute
-  const totalDays = useMemo(() => getTotalBrushedDays(), [records])
-  const monthBrushed = useMemo(() => daySessionMap.size, [daySessionMap])
-  const todayStr = formatDate(today)
-
-  const goToPrevMonth = () => {
-    if (month === 1) {
-      setYear(year - 1)
-      setMonth(12)
-      return
-    }
-    setMonth(month - 1)
-  }
-
-  const goToNextMonth = () => {
-    if (month === 12) {
-      setYear(year + 1)
-      setMonth(1)
-      return
-    }
-    setMonth(month + 1)
-  }
-
-  const handleDayClick = (day: number) => {
-    const dateStr = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`
-    setSelectedDate(dateStr)
-    onSelectDate?.(dateStr)
-  }
 
   return (
     <ShadCard className="rounded-3xl bg-surface-white/95">
@@ -83,10 +50,10 @@ export default function Calendar({ onSelectDate }: Props) {
         <View className="flex items-center justify-between">
           <Text className="text-sm font-semibold text-content">{formatMonth(year, month)}</Text>
           <View className="flex items-center gap-2">
-            <ShadButton variant="ghost" fullWidth={false} className="min-h-9 min-w-9 px-0" onClick={goToPrevMonth} aria-label="上个月">
+            <ShadButton variant="ghost" fullWidth={false} className="min-h-9 min-w-9 px-0" onClick={onPrevMonth} aria-label="上个月">
               ‹
             </ShadButton>
-            <ShadButton variant="ghost" fullWidth={false} className="min-h-9 min-w-9 px-0" onClick={goToNextMonth} aria-label="下个月">
+            <ShadButton variant="ghost" fullWidth={false} className="min-h-9 min-w-9 px-0" onClick={onNextMonth} aria-label="下个月">
               ›
             </ShadButton>
           </View>
@@ -101,9 +68,9 @@ export default function Calendar({ onSelectDate }: Props) {
 
       <ShadCardContent className="pt-1">
         <View className="grid grid-cols-7 mb-1">
-          {WEEKDAYS.map((w) => (
-            <Text key={w} className="text-center text-xs text-content-secondary py-1">
-              {w}
+          {WEEKDAYS.map((weekday) => (
+            <Text key={weekday} className="text-center text-xs text-content-secondary py-1">
+              {weekday}
             </Text>
           ))}
         </View>
@@ -123,9 +90,9 @@ export default function Calendar({ onSelectDate }: Props) {
 
             return (
               <View
-                key={day}
+                key={dateStr}
                 className="flex items-center justify-center h-10"
-                onClick={() => handleDayClick(day)}
+                onClick={() => onSelectDate(dateStr)}
                 role="button"
                 aria-label={`${month}月${day}日${isBrushed ? '，已刷牙' : ''}`}
               >
