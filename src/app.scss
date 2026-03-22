@@ -151,3 +151,83 @@ button:focus-visible,
   outline-offset: 4px;
   border-radius: 10px;
 }
+
+@keyframes brush-scrub-horizontal {
+  0%,
+  100% {
+    transform: translateX(-4px);
+  }
+  50% {
+    transform: translateX(4px);
+  }
+}
+
+@keyframes brush-scrub-vertical {
+  0%,
+  100% {
+    transform: translateY(-3px);
+  }
+  50% {
+    transform: translateY(3px);
+  }
+}
+
+@keyframes brush-scrub-diagonal-up {
+  0%,
+  100% {
+    transform: translate3d(-3px, 2px, 0);
+  }
+  50% {
+    transform: translate3d(3px, -2px, 0);
+  }
+}
+
+@keyframes brush-scrub-diagonal-down {
+  0%,
+  100% {
+    transform: translate3d(-3px, -2px, 0);
+  }
+  50% {
+    transform: translate3d(3px, 2px, 0);
+  }
+}
+
+@keyframes brush-sweep {
+  0%,
+  100% {
+    transform: translateX(-6px) rotate(-2deg);
+  }
+  50% {
+    transform: translateX(6px) rotate(2deg);
+  }
+}
+
+.brush-motion-horizontal {
+  animation: brush-scrub-horizontal 0.72s ease-in-out infinite;
+}
+
+.brush-motion-vertical {
+  animation: brush-scrub-vertical 0.68s ease-in-out infinite;
+}
+
+.brush-motion-diagonal-up {
+  animation: brush-scrub-diagonal-up 0.7s ease-in-out infinite;
+}
+
+.brush-motion-diagonal-down {
+  animation: brush-scrub-diagonal-down 0.7s ease-in-out infinite;
+}
+
+.brush-motion-sweep {
+  animation: brush-sweep 0.8s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brush-motion-horizontal,
+  .brush-motion-vertical,
+  .brush-motion-diagonal-up,
+  .brush-motion-diagonal-down,
+  .brush-motion-sweep {
+    animation: none;
+  }
+}

@@ -1,5 +1,4 @@
 import { View, Text } from '@tarojs/components'
-import ShadButton from '../../../components/ui/ShadButton'
 import type { DailyStatus } from '../utils'
 
 interface BrushIdleStateProps {
@@ -115,15 +114,6 @@ export default function BrushIdleState({
             </View>
           </View>
         </View>
-        <ShadButton
-          variant="outline"
-          fullWidth={false}
-          className="min-h-10 px-6 text-sm"
-          openType="share"
-          aria-label="转发小程序给好友"
-        >
-          转发给朋友
-        </ShadButton>
       </View>
     </View>
   )

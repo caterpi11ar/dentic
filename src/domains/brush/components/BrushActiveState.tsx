@@ -14,9 +14,12 @@ interface BrushActiveStateProps {
 }
 
 export default function BrushActiveState({ session, stepPrompt, onPause, onSkip }: BrushActiveStateProps) {
+  const toothSceneMode =
+    session.state === 'brushing' ? 'brushing' : session.state === 'paused' ? 'paused' : 'inactive'
+
   return (
     <View className="h-full min-h-0 pt-1 flex flex-col gap-2 overflow-hidden">
-      <View className="h-[42%] min-h-[210px] overflow-hidden">
+      <View className="h-[42%] min-h-[210px] overflow-visible">
         <View className="px-1 py-1">
           <ErrorBoundary>
             <ToothScene
@@ -24,6 +27,7 @@ export default function BrushActiveState({ session, stepPrompt, onPause, onSkip 
               isActive={session.state === 'brushing'}
               compact
               showStepName={false}
+              mode={toothSceneMode}
             />
           </ErrorBoundary>
         </View>
