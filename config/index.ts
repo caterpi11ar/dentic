@@ -1,4 +1,5 @@
 import { defineConfig } from '@tarojs/cli'
+import path from 'node:path'
 import tailwindcss from 'tailwindcss'
 import { UnifiedViteWeappTailwindcssPlugin as uvtw } from 'weapp-tailwindcss/vite'
 
@@ -32,7 +33,7 @@ export default defineConfig({
   plugins: ['@tarojs/plugin-framework-react'],
   defineConstants: {},
   alias: {
-    '@': 'src',
+    '@': path.resolve(process.cwd(), 'src'),
   },
   mini: {
     postcss: {
