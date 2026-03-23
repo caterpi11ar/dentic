@@ -6,8 +6,8 @@ import {
   getThemeChangeBoundary,
   resolveThemeMode,
   type ThemeMode,
-} from '../services/theme'
-import { getSettings } from '../services/settingsStorage'
+} from '@/services/theme'
+import { getSettings } from '@/services/settingsStorage'
 
 interface TimeThemeState {
   themeMode: ThemeMode

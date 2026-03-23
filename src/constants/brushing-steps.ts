@@ -1,4 +1,4 @@
-import type { BrushingStep, CameraPosition } from '../types'
+import type { BrushingStep, CameraPosition } from '@/types'
 
 // 相机位置预设
 const CAM = {

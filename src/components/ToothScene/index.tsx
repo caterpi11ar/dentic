@@ -1,5 +1,5 @@
 import { View, Text } from '@tarojs/components'
-import { BRUSHING_STEPS } from '../../constants/brushing-steps'
+import { BRUSHING_STEPS } from '@/constants/brushing-steps'
 
 type SceneMode = 'brushing' | 'paused' | 'inactive'
 type BrushPattern = 'horizontal' | 'vertical' | 'diagonal-up' | 'diagonal-down' | 'sweep'

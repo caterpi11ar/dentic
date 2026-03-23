@@ -1,5 +1,5 @@
 import { View, Text } from '@tarojs/components'
-import { BRUSHING_STEPS, TOTAL_STEPS } from '../../constants/brushing-steps'
+import { BRUSHING_STEPS, TOTAL_STEPS } from '@/constants/brushing-steps'
 
 interface Props {
   currentStep: number
