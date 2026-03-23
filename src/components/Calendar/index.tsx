@@ -56,7 +56,7 @@ function CalendarDayButton({
       variant="ghost"
       size="sm"
       className={cn(
-        'h-10 min-h-10 rounded-lg border px-0',
+        'h-10 min-h-10 rounded-xl border px-0 overflow-hidden',
         isSelected
           ? 'bg-primary text-surface border-primary'
           : isToday
@@ -81,9 +81,9 @@ function CalendarDayButton({
         </Text>
 
         {isBrushed && (
-          <View className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 flex items-center gap-1">
-            {sessionInfo?.morning && <View className="size-1.5 rounded-full bg-warning" />}
-            {sessionInfo?.evening && <View className="size-1.5 rounded-full bg-primary" />}
+          <View className="absolute bottom-0.5 left-1/2 -translate-x-1/2 flex items-center gap-1">
+            {sessionInfo?.morning && <View className="size-2 rounded-full bg-white border border-content/35" />}
+            {sessionInfo?.evening && <View className="size-2 rounded-full bg-black" />}
           </View>
         )}
       </View>
