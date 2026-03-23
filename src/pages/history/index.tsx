@@ -3,7 +3,6 @@ import { View, Text } from '@tarojs/components'
 import { showShareMenu, useDidShow, useShareAppMessage, useShareTimeline } from '@tarojs/taro'
 import InPageTabBar from '@/components/InPageTabBar'
 import Calendar from '@/components/Calendar'
-import WeeklyStats from '@/components/WeeklyStats'
 import { List, ListItem } from '@/components/ui/List'
 import Section from '@/components/ui/Section'
 import { useTimeTheme } from '@/hooks/useTimeTheme'
@@ -14,7 +13,7 @@ import {
   getRecordsByDate,
   getRecordsByMonth,
 } from '@/services/recordStorage'
-import { getCurrentStreak, getTotalBrushedDays, getWeeklyStats } from '@/services/recordStatsService'
+import { getCurrentStreak, getTotalBrushedDays } from '@/services/recordStatsService'
 import { generateShareMessage } from '@/services/share'
 import type { BrushingRecord } from '@/types'
 
@@ -70,7 +69,6 @@ export default function HistoryPage() {
 
   const streak = getCurrentStreak()
   const totalDays = getTotalBrushedDays()
-  const weeklyStats = getWeeklyStats()
   const monthBrushed = daySessionMap.size
   const todayStr = formatDate(today)
 
@@ -113,7 +111,6 @@ export default function HistoryPage() {
           onNextMonth={handleNextMonth}
           onSelectDate={setSelectedDate}
         />
-        <WeeklyStats stats={weeklyStats} />
 
         <Section
           title={selectedDate ? `${selectedDate} 记录` : '选择日期查看详情'}
