@@ -1,5 +1,8 @@
 import { View, Text } from '@tarojs/components'
-import type { DailyStatus } from '../utils'
+import { cn } from '@/components/ui/cn'
+import Button from '@/components/ui/Button'
+import Progress from '@/components/ui/Progress'
+import type { DailyStatus } from '@/domains/brush/utils'
 
 interface BrushIdleStateProps {
   isNight: boolean
@@ -87,9 +90,7 @@ export default function BrushIdleState({
 
               <View className="flex-1 min-w-0 rounded-xl border border-line-light bg-surface px-3 py-2.5">
                 <Text className="text-sm font-semibold text-content">下个里程碑：{nextMilestone} 天</Text>
-                <View className="w-full h-1.5 bg-line rounded-full mt-2 overflow-hidden">
-                  <View className="h-full bg-primary rounded-full" style={{ width: `${milestoneProgress}%` }} />
-                </View>
+                <Progress value={milestoneProgress} max={100} className="mt-0.5" />
               </View>
             </View>
           </View>
@@ -97,23 +98,19 @@ export default function BrushIdleState({
         <View className="absolute -right-10 -top-10 w-36 h-36 bg-primary/20 rounded-full blur-3xl" />
       </View>
 
-      <View className="mt-auto pb-8 flex flex-col items-center justify-center gap-3">
-        <View className="relative w-full max-w-[360px]">
-          <View className={`absolute -inset-2 rounded-[999px] blur-xl ${isNight ? 'bg-primary/20' : 'bg-primary/30'}`} />
-          <View
-            className={`relative min-h-14 px-6 py-3.5 rounded-[999px] border-2 active:scale-95 flex items-center justify-center ${
-              isNight
-                ? 'border-primary/45 bg-gradient-to-br from-primary-light via-primary-light/80 to-primary/35 shadow-card-lg'
-                : 'border-[#89d9a8] bg-gradient-to-br from-[#dcf7e5] via-[#b7edca] to-[#94e2b3] shadow-xl shadow-[#198f53]/30'
-            }`}
-            onClick={onStart}
-          >
-            <View className="flex items-center gap-3">
-              <Text className={`text-2xl ${isNight ? 'text-primary' : 'text-[#0a7f45]'}`}>🪥</Text>
-              <Text className={`text-xl font-bold ${isNight ? 'text-primary' : 'text-[#005f2d]'}`}>开始刷牙</Text>
-            </View>
-          </View>
-        </View>
+      <View className="mt-auto pb-8">
+        <Button
+          className={cn(
+            'w-full max-w-[360px] mx-auto min-h-14 rounded-[999px] text-xl font-bold',
+            isNight ? 'shadow-card' : 'shadow-card-lg'
+          )}
+          size="lg"
+          onClick={onStart}
+          aria-label="开始刷牙"
+        >
+          <Text className="text-2xl text-surface">🪥</Text>
+          <Text className="text-xl font-bold text-surface">开始刷牙</Text>
+        </Button>
       </View>
     </View>
   )

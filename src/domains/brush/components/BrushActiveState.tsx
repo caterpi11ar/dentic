@@ -1,10 +1,10 @@
 import { View, Text } from '@tarojs/components'
-import BrushTimer from '../../../components/BrushTimer'
-import ErrorBoundary from '../../../components/ErrorBoundary'
-import StepIndicator from '../../../components/StepIndicator'
-import ToothScene from '../../../components/ToothScene'
-import ShadButton from '../../../components/ui/ShadButton'
-import type { BrushingSession } from '../../../services/brushing'
+import BrushTimer from '@/components/BrushTimer'
+import ErrorBoundary from '@/components/ErrorBoundary'
+import StepIndicator from '@/components/StepIndicator'
+import ToothScene from '@/components/ToothScene'
+import Button from '@/components/ui/Button'
+import type { BrushingSession } from '@/services/brushing'
 
 interface BrushActiveStateProps {
   session: BrushingSession
@@ -41,12 +41,12 @@ export default function BrushActiveState({ session, stepPrompt, onPause, onSkip 
           </View>
           <StepIndicator currentStep={session.currentStepIndex} />
           <View className="w-full flex gap-2 pt-1">
-            <ShadButton variant="secondary" className="min-h-10 text-base flex-1" onClick={onPause}>
+            <Button variant="secondary" className="min-h-10 text-base flex-1" onClick={onPause}>
               {session.state === 'paused' ? '继续' : '暂停'}
-            </ShadButton>
-            <ShadButton variant="secondary" className="min-h-10 text-base flex-1" onClick={onSkip}>
+            </Button>
+            <Button variant="secondary" className="min-h-10 text-base flex-1" onClick={onSkip}>
               跳过此步
-            </ShadButton>
+            </Button>
           </View>
         </View>
       </View>

@@ -1,5 +1,6 @@
 import { View, Text } from '@tarojs/components'
-import type { WeeklyStatsData } from '../../services/recordStatsService'
+import type { WeeklyStatsData } from '@/services/recordStatsService'
+import Section from '@/components/ui/Section'
 
 const WEEKDAY_LABELS = ['一', '二', '三', '四', '五', '六', '日']
 
@@ -11,9 +12,10 @@ export default function WeeklyStats({ stats }: WeeklyStatsProps) {
   const maxCount = Math.max(...stats.days.map((d) => d.count), 1)
 
   return (
-    <View className="bg-surface-white rounded-2xl p-4 mb-3 shadow-card-lg">
-      <View className="flex justify-between items-center mb-3">
-        <Text className="text-xs text-content-secondary font-medium tracking-wide">本周概览</Text>
+    <Section
+      className="mb-3"
+      title="本周概览"
+      headerRight={(
         <View className="flex items-center gap-4">
           <View className="flex items-center gap-1">
             <Text className="text-sm font-bold text-primary tabular-nums">{stats.totalSessions}</Text>
@@ -28,7 +30,8 @@ export default function WeeklyStats({ stats }: WeeklyStatsProps) {
             <Text className="text-xs text-content-secondary">均时</Text>
           </View>
         </View>
-      </View>
+      )}
+    >
 
       <View className="flex items-end gap-2 h-24" role="img" aria-label={`本周刷牙统计：共${stats.totalSessions}次`}>
         {stats.days.map((day, i) => {
@@ -53,6 +56,6 @@ export default function WeeklyStats({ stats }: WeeklyStatsProps) {
           )
         })}
       </View>
-    </View>
+    </Section>
   )
 }

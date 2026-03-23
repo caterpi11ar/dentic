@@ -1,20 +1,22 @@
 import { useMemo, useRef, useState } from 'react'
 import { View, Text } from '@tarojs/components'
 import { showShareMenu, useDidShow, useShareAppMessage, useShareTimeline } from '@tarojs/taro'
-import InPageTabBar from '../../components/InPageTabBar'
-import Calendar from '../../components/Calendar'
-import WeeklyStats from '../../components/WeeklyStats'
-import { useTimeTheme } from '../../hooks/useTimeTheme'
-import { getThemeClassName } from '../../services/theme'
-import { getPageTopPadding } from '../../utils/layout'
+import InPageTabBar from '@/components/InPageTabBar'
+import Calendar from '@/components/Calendar'
+import WeeklyStats from '@/components/WeeklyStats'
+import { List, ListItem } from '@/components/ui/List'
+import Section from '@/components/ui/Section'
+import { useTimeTheme } from '@/hooks/useTimeTheme'
+import { getThemeClassName } from '@/services/theme'
+import { getPageTopPadding } from '@/utils/layout'
 import {
   formatDate,
   getRecordsByDate,
   getRecordsByMonth,
-} from '../../services/recordStorage'
-import { getCurrentStreak, getTotalBrushedDays, getWeeklyStats } from '../../services/recordStatsService'
-import { generateShareMessage } from '../../services/share'
-import type { BrushingRecord } from '../../types'
+} from '@/services/recordStorage'
+import { getCurrentStreak, getTotalBrushedDays, getWeeklyStats } from '@/services/recordStatsService'
+import { generateShareMessage } from '@/services/share'
+import type { BrushingRecord } from '@/types'
 
 const SESSION_LABELS = { morning: '晨间', evening: '夜间' } as const
 const SESSION_ICONS = { morning: '☀️', evening: '🌙' } as const
@@ -113,33 +115,30 @@ export default function HistoryPage() {
         />
         <WeeklyStats stats={weeklyStats} />
 
-        <View className="bg-surface-white rounded-xl p-4 border border-line-light min-h-[180px]">
-          <Text className="text-sm font-bold tracking-tight text-content">
-            {selectedDate ? `${selectedDate} 记录` : '选择日期查看详情'}
-          </Text>
-
+        <Section
+          title={selectedDate ? `${selectedDate} 记录` : '选择日期查看详情'}
+          className="min-h-[180px]"
+        >
           {selectedDate ? (
             completedRecords.length > 0 ? (
-              <View className="mt-3 flex flex-col gap-2">
+              <List className="mt-1">
                 {completedRecords.map((record) => (
-                  <View key={`${record.date}-${record.session}`} className="rounded-xl border border-line-light bg-surface px-3 py-2.5">
-                    <View className="flex items-center justify-between">
-                      <View className="flex items-center gap-2">
-                        <Text className="text-base leading-none">{SESSION_ICONS[record.session]}</Text>
-                        <Text className="text-sm font-semibold text-content">{SESSION_LABELS[record.session] ?? '未知时段'}</Text>
-                      </View>
-                      <Text className="text-sm font-semibold text-primary">完成于 {formatCompletedTime(record.timestamp)}</Text>
-                    </View>
-                  </View>
+                  <ListItem
+                    key={`${record.date}-${record.session}`}
+                    title={SESSION_LABELS[record.session] ?? '未知时段'}
+                    left={<Text className="text-base leading-none">{SESSION_ICONS[record.session]}</Text>}
+                    right={<Text className="text-sm font-semibold text-primary">完成于 {formatCompletedTime(record.timestamp)}</Text>}
+                  />
                 ))}
-              </View>
+              </List>
             ) : (
-              <Text className="text-sm font-medium text-content-tertiary mt-3">当天暂无完成记录。</Text>
+              <Text className="text-sm font-medium text-content-tertiary mt-2">当天暂无完成记录。</Text>
             )
           ) : (
-            <Text className="text-sm font-medium text-content-tertiary mt-3">点击上方日历日期后展示晨间/夜间完成记录。</Text>
+            <Text className="text-sm font-medium text-content-tertiary mt-2">点击上方日历日期后展示晨间/夜间完成记录。</Text>
           )}
-        </View>
+        </Section>
+
       </View>
 
       <InPageTabBar current="history" />
