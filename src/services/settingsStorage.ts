@@ -1,5 +1,5 @@
 import Taro from '@tarojs/taro'
-import type { UserSettings } from '../types'
+import type { UserSettings } from '@/types'
 
 const SETTINGS_STORAGE_KEY = 'user_settings'
 

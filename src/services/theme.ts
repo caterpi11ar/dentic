@@ -1,5 +1,5 @@
 import Taro from '@tarojs/taro'
-import type { ThemePreference } from '../types'
+import type { ThemePreference } from '@/types'
 
 export type ThemeMode = 'day' | 'night'
 

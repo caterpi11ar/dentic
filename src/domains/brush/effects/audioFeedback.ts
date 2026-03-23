@@ -1,4 +1,4 @@
-import { destroyAudio, playStepSound, playStepVoice, playVoice } from '../../../services/audio'
+import { destroyAudio, playStepSound, playStepVoice, playVoice } from '@/services/audio'
 
 export function playBrushStartAudio(): void {
   playVoice('start.mp3')

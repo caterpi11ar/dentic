@@ -1,5 +1,5 @@
-import { BRUSHING_STEPS, TOTAL_STEPS } from '../constants/brushing-steps'
-import type { BrushingState, BrushingStep } from '../types'
+import { BRUSHING_STEPS, TOTAL_STEPS } from '@/constants/brushing-steps'
+import type { BrushingState, BrushingStep } from '@/types'
 
 const FIXED_STEP_DURATION_SECONDS = 10
 const EVENING_SESSION_START_HOUR = 18

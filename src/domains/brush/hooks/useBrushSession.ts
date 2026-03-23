@@ -1,6 +1,6 @@
 import { useMemoizedFn } from 'ahooks'
-import { useBrushSessionEffects } from './useBrushSessionEffects'
-import { useBrushSessionState } from './useBrushSessionState'
+import { useBrushSessionEffects } from '@/domains/brush/hooks/useBrushSessionEffects'
+import { useBrushSessionState } from '@/domains/brush/hooks/useBrushSessionState'
 
 export function useBrushSession() {
   const {

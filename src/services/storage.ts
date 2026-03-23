@@ -4,15 +4,15 @@ export {
   getRecordsByDate,
   getRecordsByMonth,
   formatDate,
-} from './recordStorage'
+} from '@/services/recordStorage'
 
 export {
   getCurrentStreak,
   getTotalBrushedDays,
   getWeeklyStats,
   type WeeklyStatsData,
-} from './recordStatsService'
+} from '@/services/recordStatsService'
 
-export { getSettings, saveSettings } from './settingsStorage'
+export { getSettings, saveSettings } from '@/services/settingsStorage'
 
-export { hasSeenOnboarding, markOnboardingSeen } from './onboardingStorage'
+export { hasSeenOnboarding, markOnboardingSeen } from '@/services/onboardingStorage'

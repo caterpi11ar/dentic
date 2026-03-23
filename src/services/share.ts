@@ -1,4 +1,4 @@
-import { getCurrentStreak, getTotalBrushedDays } from './recordStatsService'
+import { getCurrentStreak, getTotalBrushedDays } from '@/services/recordStatsService'
 
 interface ShareStats {
   streak: number

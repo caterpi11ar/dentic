@@ -10,9 +10,9 @@ import {
   tick,
   tickCountdown,
   type BrushingSession,
-} from '../../../services/brushing'
-import { MILESTONES, MILESTONE_MESSAGES, getRandomCompletionMessage } from '../../../constants/brushing-steps'
-import type { DailyStatus } from '../utils'
+} from '@/services/brushing'
+import { MILESTONES, MILESTONE_MESSAGES, getRandomCompletionMessage } from '@/constants/brushing-steps'
+import type { DailyStatus } from '@/domains/brush/utils'
 
 export type BrushInteractionAction = 'start' | 'pauseToggle' | 'skip'
 

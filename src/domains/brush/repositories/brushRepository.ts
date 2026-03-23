@@ -1,13 +1,13 @@
-import { TOTAL_STEPS } from '../../../constants/brushing-steps'
-import { getSessionTypeForDate } from '../../../services/brushing'
-import { hasSeenOnboarding, markOnboardingSeen } from '../../../services/onboardingStorage'
+import { TOTAL_STEPS } from '@/constants/brushing-steps'
+import { getSessionTypeForDate } from '@/services/brushing'
+import { hasSeenOnboarding, markOnboardingSeen } from '@/services/onboardingStorage'
 import {
   formatDate,
   getRecordsByDate,
   saveRecord,
-} from '../../../services/recordStorage'
-import { getCurrentStreak } from '../../../services/recordStatsService'
-import type { DailyStatus } from '../utils'
+} from '@/services/recordStorage'
+import { getCurrentStreak } from '@/services/recordStatsService'
+import type { DailyStatus } from '@/domains/brush/utils'
 
 const EVENING_SESSION_START_HOUR = 18
 

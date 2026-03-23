@@ -1,27 +1,27 @@
 import { useEffect, useRef } from 'react'
 import Taro, { useDidShow } from '@tarojs/taro'
 import { useInterval, useUnmount } from 'ahooks'
-import type { BrushingSession } from '../../../services/brushing'
+import type { BrushingSession } from '@/services/brushing'
 import {
   destroyBrushAudio,
   playBrushCompleteAudio,
   playBrushStartAudio,
   playBrushStepAudio,
-} from '../effects/audioFeedback'
-import { setBrushScreenWakeLock } from '../effects/screenWakeLock'
+} from '@/domains/brush/effects/audioFeedback'
+import { setBrushScreenWakeLock } from '@/domains/brush/effects/screenWakeLock'
 import {
   getBrushOverview,
   markBrushOnboardingSeen,
   saveBrushCompletionRecord,
   shouldShowBrushOnboarding,
-} from '../repositories/brushRepository'
+} from '@/domains/brush/repositories/brushRepository'
 import {
   vibrateBrushTap,
   vibrateBrushComplete,
   vibrateBrushStepChange,
-} from '../effects/vibrationFeedback'
-import type { DailyStatus } from '../utils'
-import type { BrushInteractionAction } from './useBrushSessionState'
+} from '@/domains/brush/effects/vibrationFeedback'
+import type { DailyStatus } from '@/domains/brush/utils'
+import type { BrushInteractionAction } from '@/domains/brush/hooks/useBrushSessionState'
 
 interface UseBrushSessionEffectsParams {
   session: BrushingSession

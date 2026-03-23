@@ -1,4 +1,4 @@
-import { formatDate, getRecords } from './recordStorage'
+import { formatDate, getRecords } from '@/services/recordStorage'
 
 export interface WeeklyStatsData {
   days: { date: string; count: number; totalDuration: number }[]

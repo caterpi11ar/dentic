@@ -1,5 +1,5 @@
 import Taro from '@tarojs/taro'
-import type { BrushingRecord } from '../types'
+import type { BrushingRecord } from '@/types'
 
 const RECORDS_STORAGE_KEY = 'brushing_records'
 
