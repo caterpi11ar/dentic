@@ -1,8 +1,8 @@
 import { BRUSHING_STEPS, TOTAL_STEPS } from '@/constants/brushing-steps'
+import { isMorningSessionHour } from '@/services/dateBoundary'
 import type { BrushingState, BrushingStep } from '@/types'
 
 const FIXED_STEP_DURATION_SECONDS = 10
-const EVENING_SESSION_START_HOUR = 18
 
 export interface BrushingSession {
   state: BrushingState
@@ -115,5 +115,5 @@ export function skipStep(session: BrushingSession): BrushingSession {
 }
 
 export function getSessionTypeForDate(date: Date): 'morning' | 'evening' {
-  return date.getHours() < EVENING_SESSION_START_HOUR ? 'morning' : 'evening'
+  return isMorningSessionHour(date.getHours()) ? 'morning' : 'evening'
 }
