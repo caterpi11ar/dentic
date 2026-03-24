@@ -1,3 +1,4 @@
+import { getBusinessAnchorDate, getBusinessDateOffset } from '@/services/dateBoundary'
 import { formatDate, getRecords } from '@/services/recordStorage'
 
 export interface WeeklyStatsData {
@@ -12,8 +13,9 @@ export function getCurrentStreak(): number {
 
   if (brushedDates.length === 0) return 0
 
-  const today = formatDate(new Date())
-  const yesterday = formatDate(new Date(Date.now() - 86400000))
+  const now = new Date()
+  const today = getBusinessDateOffset(now, 0)
+  const yesterday = getBusinessDateOffset(now, -1)
 
   if (brushedDates[0] !== today && brushedDates[0] !== yesterday) return 0
 
@@ -38,7 +40,7 @@ export function getTotalBrushedDays(): number {
 
 /** 本周统计（周一到周日） */
 export function getWeeklyStats(): WeeklyStatsData {
-  const now = new Date()
+  const now = getBusinessAnchorDate(new Date())
   const dayOfWeek = now.getDay()
   const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek
   const monday = new Date(now)
