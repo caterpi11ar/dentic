@@ -109,6 +109,22 @@ const BRUSH_ZONE_OFFSET_MAP: Record<string, { dx: number; dy: number; angle: num
   'lower-inner-left': { dx: 8, dy: -10, angle: 35, pattern: 'diagonal-up' },
   'lower-occlusal': { dx: 0, dy: 0, angle: 0, pattern: 'horizontal' },
 }
+const BRUSH_ZONE_VISUAL_SHIFT_MAP: Record<string, { dx: number; dy: number }> = {
+  'upper-outer-right': { dx: 2, dy: 34 },
+  'upper-outer-front': { dx: 0, dy: 32 },
+  'upper-outer-left': { dx: -2, dy: 34 },
+  'upper-inner-right': { dx: 3, dy: 16 },
+  'upper-inner-front': { dx: 0, dy: 17 },
+  'upper-inner-left': { dx: -3, dy: 16 },
+  'upper-occlusal': { dx: 0, dy: 20 },
+  'lower-outer-right': { dx: -2, dy: -34 },
+  'lower-outer-front': { dx: 0, dy: -32 },
+  'lower-outer-left': { dx: 2, dy: -34 },
+  'lower-inner-right': { dx: -3, dy: -16 },
+  'lower-inner-front': { dx: 0, dy: -9 },
+  'lower-inner-left': { dx: 3, dy: -16 },
+  'lower-occlusal': { dx: 0, dy: -20 },
+}
 
 const BRUSH_MOTION_CLASS_MAP: Record<BrushPattern, string> = {
   horizontal: 'brush-motion-horizontal',
@@ -119,13 +135,17 @@ const BRUSH_MOTION_CLASS_MAP: Record<BrushPattern, string> = {
 }
 
 const BRISTLE_COLUMNS: BristleConfig[] = [
-  { left: 16, width: 3, height: 8, opacity: 0.84 },
-  { left: 20, width: 3, height: 9, opacity: 0.9 },
-  { left: 24, width: 3, height: 10, opacity: 0.96 },
-  { left: 28, width: 3, height: 10, opacity: 0.96 },
-  { left: 32, width: 3, height: 9, opacity: 0.9 },
-  { left: 36, width: 3, height: 8, opacity: 0.84 },
+  { left: 14, width: 2, height: 7, opacity: 0.84 },
+  { left: 17, width: 2, height: 8, opacity: 0.9 },
+  { left: 20, width: 2, height: 9, opacity: 0.95 },
+  { left: 23, width: 2, height: 9, opacity: 0.98 },
+  { left: 26, width: 2, height: 9, opacity: 0.98 },
+  { left: 29, width: 2, height: 9, opacity: 0.95 },
+  { left: 32, width: 2, height: 8, opacity: 0.9 },
+  { left: 35, width: 2, height: 7, opacity: 0.84 },
 ]
+const BRUSH_VISUAL_SCALE = 0.8
+const LOWER_ZONE_EXTRA_DOWN_SHIFT = 20
 
 function getZoneCenter(zone: string): { x: number; y: number } | null {
   const indexes = ZONE_TOOTH_MAP[zone]
@@ -143,8 +163,24 @@ function getZoneCenter(zone: string): { x: number; y: number } | null {
 }
 
 function getBrushPose(zone: string): { x: number; y: number; angle: number; pattern: BrushPattern } | null {
+  const tonguePose = { x: 140, y: 256 + LOWER_ZONE_EXTRA_DOWN_SHIFT, angle: 0, pattern: 'sweep' as const }
+
+  if (zone === 'lower-occlusal') {
+    return { ...tonguePose, pattern: 'horizontal' }
+  }
+
   if (zone === 'tongue') {
-    return { x: 140, y: 248, angle: 0, pattern: 'sweep' }
+    const lowerOcclusalCenter = getZoneCenter('lower-occlusal')
+    const lowerOcclusalOffset = BRUSH_ZONE_OFFSET_MAP['lower-occlusal']
+    const lowerOcclusalVisualShift = BRUSH_ZONE_VISUAL_SHIFT_MAP['lower-occlusal'] ?? { dx: 0, dy: 0 }
+    if (!lowerOcclusalCenter || !lowerOcclusalOffset) return tonguePose
+
+    return {
+      x: lowerOcclusalCenter.x + lowerOcclusalOffset.dx + lowerOcclusalVisualShift.dx,
+      y: lowerOcclusalCenter.y + lowerOcclusalOffset.dy + lowerOcclusalVisualShift.dy + LOWER_ZONE_EXTRA_DOWN_SHIFT,
+      angle: 0,
+      pattern: 'sweep',
+    }
   }
 
   const center = getZoneCenter(zone)
@@ -152,10 +188,12 @@ function getBrushPose(zone: string): { x: number; y: number; angle: number; patt
 
   const offset = BRUSH_ZONE_OFFSET_MAP[zone]
   if (!offset) return { x: center.x, y: center.y, angle: 0, pattern: 'horizontal' }
+  const visualShift = BRUSH_ZONE_VISUAL_SHIFT_MAP[zone] ?? { dx: 0, dy: 0 }
+  const lowerZoneExtraY = zone.startsWith('lower-') ? LOWER_ZONE_EXTRA_DOWN_SHIFT : 0
 
   return {
-    x: center.x + offset.dx,
-    y: center.y + offset.dy,
+    x: center.x + offset.dx + visualShift.dx,
+    y: center.y + offset.dy + visualShift.dy + lowerZoneExtraY,
     angle: offset.angle,
     pattern: offset.pattern,
   }
@@ -270,129 +308,109 @@ export default function ToothScene({ currentStepIndex, isActive, compact = false
             >
               <View className={`relative ${brushMotionClass}`} style={{ width: '140px', height: '52px' }}>
                 <View
-                  className="absolute rounded-full"
+                  className="relative"
                   style={{
-                    left: '48px',
-                    top: '38px',
-                    width: '84px',
-                    height: '9px',
-                    backgroundColor: 'rgba(20,34,58,0.2)',
-                    filter: 'blur(1.6px)',
+                    width: '140px',
+                    height: '52px',
+                    transform: `scale(${BRUSH_VISUAL_SCALE})`,
+                    transformOrigin: 'center center',
                   }}
-                />
-                <View
-                  className="absolute rounded-full"
-                  style={{
-                    left: '56px',
-                    top: '14px',
-                    width: '78px',
-                    height: '24px',
-                    backgroundImage: 'linear-gradient(90deg, #67e8f9 0%, #60a5fa 52%, #3b82f6 100%)',
-                    border: '2px solid #0b3d91',
-                  }}
-                />
-                <View
-                  className="absolute rounded-full"
-                  style={{
-                    left: '67px',
-                    top: '20px',
-                    width: '48px',
-                    height: '6px',
-                    backgroundColor: 'rgba(255,255,255,0.62)',
-                  }}
-                />
-                <View
-                  className="absolute rounded-full"
-                  style={{
-                    left: '89px',
-                    top: '20px',
-                    width: '10px',
-                    height: '10px',
-                    border: '2px solid #dbeafe',
-                    backgroundColor: '#60a5fa',
-                  }}
-                />
-                <View
-                  className="absolute rounded-full"
-                  style={{
-                    left: '50px',
-                    top: '18px',
-                    width: '14px',
-                    height: '14px',
-                    backgroundColor: '#1e40af',
-                    border: '2px solid #0b3d91',
-                  }}
-                />
-                <View
-                  className="absolute rounded-full"
-                  style={{
-                    left: '36px',
-                    top: '20px',
-                    width: '18px',
-                    height: '12px',
-                    border: '2px solid #0b3d91',
-                    backgroundColor: '#bfdbfe',
-                  }}
-                />
-                <View
-                  className="absolute rounded-full"
-                  style={{
-                    left: '8px',
-                    top: '10px',
-                    width: '32px',
-                    height: '32px',
-                    backgroundColor: '#ffffff',
-                    border: '2px solid #0b3d91',
-                  }}
-                />
-                <View
-                  className="absolute rounded-full"
-                  style={{
-                    left: '13px',
-                    top: '15px',
-                    width: '22px',
-                    height: '22px',
-                    backgroundColor: '#e0f2fe',
-                    border: '1px solid rgba(56, 189, 248, 0.6)',
-                  }}
-                />
-                {BRISTLE_COLUMNS.map((bristle) => (
+                >
                   <View
-                    key={bristle.left}
-                    className="absolute"
+                    className="absolute rounded-full"
                     style={{
-                      left: `${bristle.left}px`,
-                      top: `${10 - bristle.height}px`,
-                      width: `${bristle.width}px`,
-                      height: `${bristle.height}px`,
-                      borderRadius: '4px 4px 0 0',
-                      backgroundColor: '#22d3ee',
+                      left: '56px',
+                      top: '20px',
+                      width: '78px',
+                      height: '12px',
+                      backgroundImage: 'linear-gradient(90deg, #93c5fd 0%, #60a5fa 56%, #3b82f6 100%)',
                       border: '1.5px solid #0b3d91',
-                      borderBottom: 'none',
-                      opacity: bristle.opacity,
                     }}
                   />
-                ))}
-                <View
-                  className="absolute rounded-full"
-                  style={{
-                    left: '17px',
-                    top: '13px',
-                    width: '14px',
-                    height: '2px',
-                    backgroundColor: 'rgba(255,255,255,0.7)',
-                  }}
-                />
-                <View
-                  className="absolute rounded-full"
-                  style={{
-                    left: '7px',
-                    top: '40px',
-                    width: '34px',
-                    height: '3px',
-                    backgroundColor: 'rgba(20,34,58,0.16)',
-                  }}
-                />
+                  <View
+                    className="absolute rounded-full"
+                    style={{
+                      left: '72px',
+                      top: '24px',
+                      width: '34px',
+                      height: '3px',
+                      backgroundColor: 'rgba(255,255,255,0.55)',
+                    }}
+                  />
+                  <View
+                    className="absolute rounded-full"
+                    style={{
+                      left: '40px',
+                      top: '22px',
+                      width: '18px',
+                      height: '8px',
+                      border: '1.5px solid #0b3d91',
+                      backgroundColor: '#bfdbfe',
+                    }}
+                  />
+                  <View
+                    className="absolute rounded-full"
+                    style={{
+                      left: '34px',
+                      top: '21px',
+                      width: '8px',
+                      height: '10px',
+                      border: '1.5px solid #0b3d91',
+                      backgroundColor: '#dbeafe',
+                    }}
+                  />
+                  <View
+                    className="absolute"
+                    style={{
+                      left: '10px',
+                      top: '16px',
+                      width: '30px',
+                      height: '16px',
+                      borderRadius: '3px',
+                      backgroundColor: '#ffffff',
+                      border: '1.5px solid #0b3d91',
+                    }}
+                  />
+                  <View
+                    className="absolute"
+                    style={{
+                      left: '13px',
+                      top: '18px',
+                      width: '24px',
+                      height: '12px',
+                      borderRadius: '2px',
+                      backgroundColor: '#e0f2fe',
+                      border: '1px solid rgba(56, 189, 248, 0.45)',
+                    }}
+                  />
+                  {BRISTLE_COLUMNS.map((bristle) => (
+                    <View
+                      key={bristle.left}
+                      className="absolute"
+                      style={{
+                        left: `${bristle.left}px`,
+                        top: `${14 - bristle.height}px`,
+                        width: `${bristle.width}px`,
+                        height: `${bristle.height}px`,
+                        borderRadius: '3px 3px 0 0',
+                        backgroundColor: '#22d3ee',
+                        border: '1.2px solid #0b3d91',
+                        borderBottom: 'none',
+                        opacity: bristle.opacity,
+                      }}
+                    />
+                  ))}
+                  <View
+                    className="absolute rounded-full"
+                    style={{
+                      left: '15px',
+                      top: '20px',
+                      width: '20px',
+                      height: '2px',
+                      backgroundColor: 'rgba(255,255,255,0.62)',
+                    }}
+                  />
+                </View>
               </View>
             </View>
           )}
