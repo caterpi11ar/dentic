@@ -9,6 +9,7 @@ import BrushIdleState from '@/domains/brush/components/BrushIdleState'
 import { useBrushSession } from '@/domains/brush/hooks/useBrushSession'
 import { formatTodayHeading, getGreeting } from '@/domains/brush/utils'
 import { useTimeTheme } from '@/hooks/useTimeTheme'
+import { getBusinessAnchorDate } from '@/services/dateBoundary'
 import { generateShareMessage } from '@/services/share'
 import { getThemeClassName } from '@/services/theme'
 import { getPageTopPadding } from '@/utils/layout'
@@ -47,7 +48,8 @@ export default function IndexPage() {
   })
 
   const now = new Date()
-  const todayHeading = formatTodayHeading(now)
+  const businessNow = getBusinessAnchorDate(now)
+  const todayHeading = formatTodayHeading(businessNow)
   const greeting = getGreeting(now.getHours())
   const nextMilestone = MILESTONES.find((m) => m > streak) ?? streak + 3
   const milestoneProgress = nextMilestone > 0 ? Math.min(100, Math.round((streak / nextMilestone) * 100)) : 0

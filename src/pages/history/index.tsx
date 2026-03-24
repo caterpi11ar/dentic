@@ -6,10 +6,10 @@ import Calendar from '@/components/Calendar'
 import { List, ListItem } from '@/components/ui/List'
 import Section from '@/components/ui/Section'
 import { useTimeTheme } from '@/hooks/useTimeTheme'
+import { getBusinessAnchorDate, getBusinessDate } from '@/services/dateBoundary'
 import { getThemeClassName } from '@/services/theme'
 import { getPageTopPadding } from '@/utils/layout'
 import {
-  formatDate,
   getRecordsByDate,
   getRecordsByMonth,
 } from '@/services/recordStorage'
@@ -30,11 +30,12 @@ function formatCompletedTime(timestamp?: number): string {
 export default function HistoryPage() {
   const { themeMode } = useTimeTheme()
   const safeTopPadding = getPageTopPadding(20)
-  const todayRef = useRef(new Date())
-  const today = todayRef.current
+  const nowRef = useRef(new Date())
+  const now = nowRef.current
+  const businessToday = getBusinessAnchorDate(now)
 
-  const [year, setYear] = useState(today.getFullYear())
-  const [month, setMonth] = useState(today.getMonth() + 1)
+  const [year, setYear] = useState(businessToday.getFullYear())
+  const [month, setMonth] = useState(businessToday.getMonth() + 1)
   const [selectedDate, setSelectedDate] = useState<string | null>(null)
 
   const shareContent = generateShareMessage()
@@ -70,7 +71,7 @@ export default function HistoryPage() {
   const streak = getCurrentStreak()
   const totalDays = getTotalBrushedDays()
   const monthBrushed = daySessionMap.size
-  const todayStr = formatDate(today)
+  const todayStr = getBusinessDate(now)
 
   const selectedRecords: BrushingRecord[] = selectedDate ? getRecordsByDate(selectedDate) : []
   const completedRecords = selectedRecords.filter((record) => record.completed)
