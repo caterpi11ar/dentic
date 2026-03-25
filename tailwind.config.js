@@ -48,8 +48,8 @@ module.exports = {
         countdown: ['6.25rem', { lineHeight: '1' }],
       },
       boxShadow: {
-        card: '0 4px 14px rgba(20, 52, 84, 0.08)',
-        'card-lg': '0 10px 24px rgba(9, 34, 58, 0.14)',
+        card: '0 4px 14px rgba(45, 43, 42, 0.08)',
+        'card-lg': '0 10px 24px rgba(45, 43, 42, 0.14)',
       },
       keyframes: {
         slideUp: {
