@@ -7,6 +7,10 @@ module.exports = {
   },
   theme: {
     extend: {
+      fontFamily: {
+        heading: ['Poppins', 'Arial', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'sans-serif'],
+        body: ['Lora', 'Georgia', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'serif'],
+      },
       colors: {
         primary: {
           DEFAULT: 'rgb(var(--twc-primary) / <alpha-value>)',
@@ -22,6 +26,11 @@ module.exports = {
         warning: {
           DEFAULT: 'rgb(var(--twc-warning) / <alpha-value>)',
           light: 'rgb(var(--twc-warning-light) / <alpha-value>)',
+        },
+        info: {
+          DEFAULT: 'rgb(var(--twc-info) / <alpha-value>)',
+          dark: 'rgb(var(--twc-info-dark) / <alpha-value>)',
+          light: 'rgb(var(--twc-info-light) / <alpha-value>)',
         },
         danger: 'rgb(var(--twc-danger) / <alpha-value>)',
         content: {
@@ -48,21 +57,21 @@ module.exports = {
         countdown: ['6.25rem', { lineHeight: '1' }],
       },
       boxShadow: {
-        card: '0 4px 14px rgba(45, 43, 42, 0.08)',
-        'card-lg': '0 10px 24px rgba(45, 43, 42, 0.14)',
+        card: '0 4px 14px rgba(20, 20, 19, 0.06)',
+        'card-lg': '0 10px 24px rgba(20, 20, 19, 0.10)',
       },
       keyframes: {
         slideUp: {
-          from: { opacity: '0', transform: 'translateY(30px)' },
+          from: { opacity: '0', transform: 'translateY(20px)' },
           to: { opacity: '1', transform: 'translateY(0)' },
         },
         fadeScaleIn: {
-          from: { opacity: '0', transform: 'scale(0.92)' },
+          from: { opacity: '0', transform: 'scale(0.95)' },
           to: { opacity: '1', transform: 'scale(1)' },
         },
         bounce: {
           '0%, 100%': { transform: 'scale(1)' },
-          '50%': { transform: 'scale(1.08)' },
+          '50%': { transform: 'scale(1.05)' },
         },
         countdownPulse: {
           '0%': { transform: 'scale(0.5)', opacity: '0' },

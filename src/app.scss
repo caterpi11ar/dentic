@@ -2,10 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Poppins';
+  src: url('/assets/fonts/Poppins-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Poppins';
+  src: url('/assets/fonts/Poppins-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Lora';
+  src: url('/assets/fonts/Lora-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Lora';
+  src: url('/assets/fonts/Lora-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
 page {
   min-height: 100%;
-  font-family: 'Avenir Next', 'SF Pro Text', 'PingFang SC', 'Hiragino Sans GB',
-    'Microsoft YaHei', sans-serif;
+  font-family: 'Lora', Georgia, 'PingFang SC', 'Hiragino Sans GB',
+    'Microsoft YaHei', serif;
   background-color: rgb(var(--twc-surface));
   color: rgb(var(--twc-content));
   font-size: 28px;
@@ -13,79 +42,45 @@ page {
 }
 
 .theme-day {
-  --twc-primary: 232 113 58;
-  --twc-primary-dark: 196 90 42;
-  --twc-primary-light: 254 243 236;
+  --twc-primary: 217 119 87;
+  --twc-primary-dark: 191 97 65;
+  --twc-primary-light: 251 237 229;
 
-  --twc-success: 207 155 62;
-  --twc-success-dark: 180 130 40;
-  --twc-success-light: 254 248 235;
-  --twc-success-text: 140 100 25;
+  --twc-success: 120 140 93;
+  --twc-success-dark: 96 117 72;
+  --twc-success-light: 240 244 234;
+  --twc-success-text: 80 100 55;
 
-  --twc-warning: 232 128 59;
-  --twc-warning-light: 255 244 233;
-  --twc-danger: 225 66 86;
+  --twc-info: 106 155 204;
+  --twc-info-dark: 82 131 180;
+  --twc-info-light: 232 241 249;
 
-  --twc-content: 45 43 42;
-  --twc-content-secondary: 107 105 102;
-  --twc-content-tertiary: 155 152 149;
-  --twc-content-disabled: 197 194 191;
+  --twc-warning: 217 119 87;
+  --twc-warning-light: 251 237 229;
+  --twc-danger: 200 60 75;
 
-  --twc-surface: 250 249 247;
+  --twc-content: 20 20 19;
+  --twc-content-secondary: 143 141 133;
+  --twc-content-tertiary: 176 174 165;
+  --twc-content-disabled: 200 198 192;
+
+  --twc-surface: 250 249 245;
   --twc-surface-white: 255 255 255;
 
-  --twc-line: 229 224 219;
-  --twc-line-light: 240 236 231;
-  --twc-line-lighter: 245 242 238;
+  --twc-line: 232 230 220;
+  --twc-line-light: 240 238 231;
+  --twc-line-lighter: 246 245 240;
 
-  --app-gradient-start: #faf8f5;
+  --app-gradient-start: #faf9f5;
   --app-gradient-mid: #fdfcfa;
-  --app-gradient-end: #f8f5f0;
+  --app-gradient-end: #f5f3ed;
 
-  --orb-main: rgba(232, 113, 58, 0.12);
-  --orb-accent: rgba(196, 90, 42, 0.08);
+  --orb-main: rgba(217, 119, 87, 0.10);
+  --orb-accent: rgba(106, 155, 204, 0.08);
 
-  --color-primary: #e8713a;
-  --color-primary-dark: #c45a2a;
-  --color-border: #e5e0db;
-}
-
-.theme-night {
-  --twc-primary: 240 149 90;
-  --twc-primary-dark: 232 113 58;
-  --twc-primary-light: 61 42 30;
-
-  --twc-success: 240 195 100;
-  --twc-success-dark: 220 170 60;
-  --twc-success-light: 50 42 20;
-  --twc-success-text: 250 215 140;
-
-  --twc-warning: 251 191 36;
-  --twc-warning-light: 61 45 16;
-  --twc-danger: 252 165 165;
-
-  --twc-content: 245 244 243;
-  --twc-content-secondary: 184 181 178;
-  --twc-content-tertiary: 138 135 133;
-  --twc-content-disabled: 90 88 86;
-
-  --twc-surface: 26 25 24;
-  --twc-surface-white: 42 41 40;
-
-  --twc-line: 61 59 57;
-  --twc-line-light: 46 44 42;
-  --twc-line-lighter: 35 33 32;
-
-  --app-gradient-start: #1a1714;
-  --app-gradient-mid: #1e1b17;
-  --app-gradient-end: #211e19;
-
-  --orb-main: rgba(232, 113, 58, 0.08);
-  --orb-accent: rgba(240, 149, 90, 0.06);
-
-  --color-primary: #f0955a;
-  --color-primary-dark: #e8713a;
-  --color-border: #3d3b39;
+  --color-primary: #d97757;
+  --color-primary-dark: #bf6141;
+  --color-border: #e8e6dc;
 }
 
 .theme-page {
@@ -118,7 +113,7 @@ page {
   content: '';
   position: fixed;
   border-radius: 9999px;
-  filter: blur(44px);
+  filter: blur(60px);
   pointer-events: none;
   z-index: 0;
 }
@@ -147,7 +142,7 @@ button:focus-visible,
 [role='button']:focus-visible,
 [role='switch']:focus-visible,
 [role='radio']:focus-visible {
-  outline: 4px solid rgb(var(--twc-primary));
+  outline: 4px solid rgba(var(--twc-primary), 0.5);
   outline-offset: 4px;
   border-radius: 10px;
 }

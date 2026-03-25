@@ -26,6 +26,7 @@ export default defineConfig({
   copy: {
     patterns: [
       { from: 'src/assets/audio/', to: 'dist/assets/audio/' },
+      { from: 'src/assets/fonts/', to: 'dist/assets/fonts/' },
     ],
     options: {},
   },
