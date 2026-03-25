@@ -1,6 +1,7 @@
 import { View } from '@tarojs/components'
 import { showShareMenu, useDidShow, useShareAppMessage, useShareTimeline } from '@tarojs/taro'
 import InPageTabBar from '@/components/InPageTabBar'
+import { cn } from '@/components/ui/cn'
 import { MILESTONES } from '@/constants/brushing-steps'
 import BrushActiveState from '@/domains/brush/components/BrushActiveState'
 import BrushCompletedState from '@/domains/brush/components/BrushCompletedState'
@@ -8,15 +9,12 @@ import BrushCountdownOverlay from '@/domains/brush/components/BrushCountdownOver
 import BrushIdleState from '@/domains/brush/components/BrushIdleState'
 import { useBrushSession } from '@/domains/brush/hooks/useBrushSession'
 import { formatTodayHeading, getGreeting } from '@/domains/brush/utils'
-import { useTimeTheme } from '@/hooks/useTimeTheme'
 import { getBusinessAnchorDate } from '@/services/dateBoundary'
 import { generateShareMessage } from '@/services/share'
-import { getThemeClassName } from '@/services/theme'
+import { applyLightThemeToChrome } from '@/services/theme'
 import { getPageTopPadding } from '@/utils/layout'
 
 export default function IndexPage() {
-  const { themeMode } = useTimeTheme()
-  const isNight = themeMode === 'night'
   const safeTopPadding = getPageTopPadding(20)
 
   const {
@@ -37,6 +35,7 @@ export default function IndexPage() {
   useShareAppMessage(() => shareContent)
   useShareTimeline(() => ({ title: shareContent.title }))
   useDidShow(() => {
+    applyLightThemeToChrome()
     showShareMenu({
       withShareTicket: true,
       showShareItems: ['shareAppMessage', 'shareTimeline'],
@@ -59,20 +58,20 @@ export default function IndexPage() {
   const shouldEnableScroll = session.state === 'completed'
 
   return (
-    <View className={`theme-page ${shouldEnableScroll ? 'app-scroll' : ''} ${getThemeClassName(themeMode)} min-h-screen`}>
+    <View className={cn('theme-page theme-day min-h-screen', shouldEnableScroll && 'app-scroll')}>
       <View
-        className={`relative px-5 max-w-2xl mx-auto ${
+        className={cn(
+          'relative px-5 max-w-2xl mx-auto',
           isIdle ? 'h-screen overflow-hidden pb-28' : isBrushingFlow ? 'h-screen overflow-hidden pb-24' : 'min-h-screen pb-32'
-        }`}
+        )}
         style={{ paddingTop: safeTopPadding }}
       >
         {session.state === 'countdown' && (
-          <BrushCountdownOverlay remaining={session.countdownRemaining} isNight={isNight} />
+          <BrushCountdownOverlay remaining={session.countdownRemaining} />
         )}
 
         {isIdle && (
           <BrushIdleState
-            isNight={isNight}
             todayHeading={todayHeading}
             greeting={greeting}
             streak={streak}

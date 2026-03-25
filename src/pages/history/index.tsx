@@ -5,9 +5,8 @@ import InPageTabBar from '@/components/InPageTabBar'
 import Calendar from '@/components/Calendar'
 import { List, ListItem } from '@/components/ui/List'
 import Section from '@/components/ui/Section'
-import { useTimeTheme } from '@/hooks/useTimeTheme'
 import { getBusinessAnchorDate, getBusinessDate } from '@/services/dateBoundary'
-import { getThemeClassName } from '@/services/theme'
+import { applyLightThemeToChrome } from '@/services/theme'
 import { getPageTopPadding } from '@/utils/layout'
 import {
   getRecordsByDate,
@@ -28,7 +27,6 @@ function formatCompletedTime(timestamp?: number): string {
 }
 
 export default function HistoryPage() {
-  const { themeMode } = useTimeTheme()
   const safeTopPadding = getPageTopPadding(20)
   const nowRef = useRef(new Date())
   const now = nowRef.current
@@ -43,6 +41,7 @@ export default function HistoryPage() {
   useShareAppMessage(() => shareContent)
   useShareTimeline(() => ({ title: shareContent.title }))
   useDidShow(() => {
+    applyLightThemeToChrome()
     showShareMenu({
       withShareTicket: true,
       showShareItems: ['shareAppMessage', 'shareTimeline'],
@@ -97,7 +96,7 @@ export default function HistoryPage() {
   }
 
   return (
-    <View className={`theme-page app-scroll ${getThemeClassName(themeMode)} min-h-screen`}>
+    <View className="theme-page app-scroll theme-day min-h-screen">
       <View className="pb-28 px-5 max-w-2xl mx-auto flex flex-col gap-3" style={{ paddingTop: safeTopPadding }}>
         <Calendar
           year={year}

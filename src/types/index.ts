@@ -26,16 +26,12 @@ export interface CameraPosition {
   lookAtY: number // 相机看向的 Y 偏移
 }
 
-/** 主题偏好 */
-export type ThemePreference = 'auto' | 'day' | 'night'
-
 /** 用户设置 */
 export interface UserSettings {
   reminderEnabled: boolean
   reminderTime: string // HH:mm
   soundEnabled: boolean // 步骤切换提示音
   voiceEnabled: boolean // 语音播报
-  themePreference: ThemePreference // 主题切换
 }
 
 /** 刷牙状态 */

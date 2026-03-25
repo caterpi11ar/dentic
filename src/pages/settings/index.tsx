@@ -1,30 +1,22 @@
 import { useState } from 'react'
 import { View, Text } from '@tarojs/components'
 import Taro, { useDidShow } from '@tarojs/taro'
-import { useTimeTheme } from '@/hooks/useTimeTheme'
-import { getThemeClassName } from '@/services/theme'
 import { getSettings, saveSettings } from '@/services/settingsStorage'
+import { applyLightThemeToChrome } from '@/services/theme'
 import InPageTabBar from '@/components/InPageTabBar'
 import Button from '@/components/ui/Button'
 import { List, ListItem } from '@/components/ui/List'
 import Section from '@/components/ui/Section'
 import Switch from '@/components/ui/Switch'
-import Tabs, { type TabOption } from '@/components/ui/Tabs'
 import { getPageTopPadding } from '@/utils/layout'
-import type { UserSettings, ThemePreference } from '@/types'
-
-const THEME_OPTIONS: Array<TabOption<ThemePreference>> = [
-  { value: 'auto', label: '自动' },
-  { value: 'day', label: '白天' },
-  { value: 'night', label: '黑夜' },
-]
+import type { UserSettings } from '@/types'
 
 export default function SettingsPage() {
-  const { themeMode, refreshTheme } = useTimeTheme()
   const safeTopPadding = getPageTopPadding(20)
   const [settings, setSettings] = useState<UserSettings>(getSettings)
 
   useDidShow(() => {
+    applyLightThemeToChrome()
     setSettings(getSettings())
   })
 
@@ -54,13 +46,6 @@ export default function SettingsPage() {
     saveSettings({ voiceEnabled: updated.voiceEnabled })
   }
 
-  const handleThemeChange = (value: ThemePreference) => {
-    const updated = { ...settings, themePreference: value }
-    setSettings(updated)
-    saveSettings({ themePreference: value })
-    refreshTheme()
-  }
-
   const handleSetAlarm = () => {
     Taro.showModal({
       title: '设置闹钟',
@@ -71,23 +56,8 @@ export default function SettingsPage() {
   }
 
   return (
-    <View className={`theme-page app-scroll ${getThemeClassName(themeMode)} min-h-screen`}>
+    <View className="theme-page app-scroll theme-day min-h-screen">
       <View className="pb-32 px-5 max-w-2xl mx-auto flex flex-col gap-4" style={{ paddingTop: safeTopPadding }}>
-        <Section title="外观" className="rounded-2xl">
-          <List>
-            <ListItem
-              title="主题模式"
-              right={(
-                <Tabs
-                  value={settings.themePreference}
-                  options={THEME_OPTIONS}
-                  onValueChange={handleThemeChange}
-                />
-              )}
-            />
-          </List>
-        </Section>
-
         <Section title="提醒与音效" className="rounded-2xl">
           <List>
             <ListItem

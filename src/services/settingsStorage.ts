@@ -8,12 +8,14 @@ const DEFAULT_SETTINGS: UserSettings = {
   reminderTime: '07:30',
   soundEnabled: true,
   voiceEnabled: true,
-  themePreference: 'auto',
 }
 
 export function getSettings(): UserSettings {
   try {
-    return { ...DEFAULT_SETTINGS, ...Taro.getStorageSync(SETTINGS_STORAGE_KEY) }
+    const raw = Taro.getStorageSync(SETTINGS_STORAGE_KEY) ?? {}
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { themePreference: _, ...rest } = raw // strip legacy field
+    return { ...DEFAULT_SETTINGS, ...rest }
   } catch {
     return DEFAULT_SETTINGS
   }

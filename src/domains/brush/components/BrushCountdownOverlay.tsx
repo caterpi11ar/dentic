@@ -2,20 +2,17 @@ import { View, Text } from '@tarojs/components'
 
 interface BrushCountdownOverlayProps {
   remaining: number
-  isNight: boolean
 }
 
-export default function BrushCountdownOverlay({ remaining, isNight }: BrushCountdownOverlayProps) {
+export default function BrushCountdownOverlay({ remaining }: BrushCountdownOverlayProps) {
   return (
     <View
-      className={`fixed inset-0 flex items-center justify-center z-[120] ${isNight ? 'bg-black' : 'bg-white'}`}
+      className="fixed inset-0 flex items-center justify-center z-[120] bg-surface"
       aria-live="assertive"
     >
       <Text
         key={remaining}
-        className={`text-countdown font-bold animate-countdown-pulse motion-reduce:animate-none ${
-          isNight ? 'text-white' : 'text-black'
-        }`}
+        className="text-countdown font-heading font-bold animate-countdown-pulse motion-reduce:animate-none text-content"
       >
         {remaining}
       </Text>

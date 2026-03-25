@@ -3,7 +3,7 @@ export default defineAppConfig({
   window: {
     navigationStyle: 'custom',
     backgroundTextStyle: 'light',
-    navigationBarBackgroundColor: '#EFFAF3',
+    navigationBarBackgroundColor: '#faf9f5',
     navigationBarTitleText: '刷了吗 | 刷牙',
     navigationBarTextStyle: 'black',
   },
