@@ -28,7 +28,7 @@ export default function Tabs<T extends string>({
   size = 'sm',
 }: TabsProps<T>) {
   return (
-    <View className={cn('inline-flex items-center rounded-lg border border-line-light bg-surface p-0.5', className)} role="tablist">
+    <View className={cn('inline-flex items-center rounded-anthropic border border-content/[0.08] bg-content/[0.03] p-0.5', className)} role="tablist">
       {options.map((option) => {
         const active = value === option.value
         const disabled = option.disabled
@@ -40,8 +40,8 @@ export default function Tabs<T extends string>({
               'flex items-center justify-center min-w-[68px] transition-colors duration-150',
               SIZE_CLASS[size],
               active
-                ? 'bg-primary text-surface-white shadow-sm shadow-primary/25'
-                : 'bg-transparent text-content-secondary',
+                ? 'bg-surface-white text-content shadow-card'
+                : 'bg-transparent text-content/50',
               disabled ? 'opacity-45' : 'active:opacity-85'
             )}
             role="tab"
@@ -49,7 +49,7 @@ export default function Tabs<T extends string>({
             aria-disabled={disabled}
             onClick={!disabled ? () => onValueChange(option.value) : undefined}
           >
-            <Text className={cn('text-sm font-heading font-medium', active ? 'text-surface-white' : 'text-content-secondary')}>
+            <Text className={cn('text-paragraph-sm font-heading font-medium', active ? 'text-content' : 'text-content/50')}>
               {option.label}
             </Text>
           </View>

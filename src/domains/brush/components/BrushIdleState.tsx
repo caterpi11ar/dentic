@@ -1,8 +1,15 @@
-import { View, Text } from '@tarojs/components'
-import { cn } from '@/components/ui/cn'
-import Button from '@/components/ui/Button'
+import { View, Text, Image } from '@tarojs/components'
 import Progress from '@/components/ui/Progress'
 import type { DailyStatus } from '@/domains/brush/utils'
+import iconSun from '@/assets/icons/sun.svg'
+import iconMoon from '@/assets/icons/moon.svg'
+
+function formatTime(timestamp?: number): string {
+  if (typeof timestamp !== 'number') return '--:--'
+  const d = new Date(timestamp)
+  if (Number.isNaN(d.getTime())) return '--:--'
+  return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
+}
 
 interface BrushIdleStateProps {
   todayHeading: string
@@ -26,67 +33,71 @@ export default function BrushIdleState({
   return (
     <View className="h-full flex flex-col">
       {/* ── Hero ── */}
-      <View className="pt-2">
-        <Text className="text-xs font-heading font-semibold tracking-[0.12em] uppercase text-content-tertiary">
+      <View className="pt-4 animate-fade-up motion-reduce:animate-none">
+        <Text className="text-label-sm font-heading font-semibold tracking-[0.12em] uppercase text-content/50">
           {todayHeading}
         </Text>
 
-        <Text className="block mt-6 text-[52px] leading-[1.05] font-body font-medium tracking-tight text-content">
+        <Text className="block mt-8 text-display-xl font-body font-medium tracking-tight text-content animate-fade-up-delay-1 motion-reduce:animate-none">
           {greeting}
         </Text>
 
-        <Text className="block mt-3 text-base leading-relaxed text-content-secondary">
+        <Text className="block mt-4 text-paragraph-md leading-relaxed text-content/50 animate-fade-up-delay-2 motion-reduce:animate-none">
           准备好继续守护你的口腔健康了吗？
         </Text>
       </View>
 
       {/* ── Divider ── */}
-      <View className="my-6 h-[1px] bg-line" />
+      <View className="my-8 h-px bg-content/[0.1]" />
 
       {/* ── Daily status ── */}
-      <View className="flex flex-col gap-3">
+      <View className="flex flex-col gap-4 animate-fade-up-delay-2 motion-reduce:animate-none">
         <View className="flex items-center justify-between">
-          <Text className="text-sm font-heading font-semibold tracking-wide text-content">
-            晨间
-          </Text>
-          <Text
-            className={cn(
-              'text-sm font-heading font-semibold',
-              dailyStatus.morningDone ? 'text-primary' : 'text-content-tertiary'
-            )}
-          >
-            {dailyStatus.morningDone ? '已完成' : '待完成'}
-          </Text>
+          <View className="flex items-center gap-2">
+            <Image src={iconSun} className="size-4" mode="aspectFit" />
+            <Text className="text-paragraph-sm font-heading font-semibold tracking-wide text-content">
+              晨间
+            </Text>
+          </View>
+          {dailyStatus.morningDone ? (
+            <Text className="text-paragraph-sm font-heading font-semibold text-success tabular-nums">
+              {formatTime(dailyStatus.morningTime)}
+            </Text>
+          ) : (
+            <Text className="text-paragraph-sm font-heading font-medium text-content/25">待完成</Text>
+          )}
         </View>
 
         <View className="flex items-center justify-between">
-          <Text className="text-sm font-heading font-semibold tracking-wide text-content">
-            夜间
-          </Text>
-          <Text
-            className={cn(
-              'text-sm font-heading font-semibold',
-              dailyStatus.eveningDone ? 'text-primary' : 'text-content-tertiary'
-            )}
-          >
-            {dailyStatus.eveningDone ? '已完成' : '待完成'}
-          </Text>
+          <View className="flex items-center gap-2">
+            <Image src={iconMoon} className="size-4" mode="aspectFit" />
+            <Text className="text-paragraph-sm font-heading font-semibold tracking-wide text-content">
+              夜间
+            </Text>
+          </View>
+          {dailyStatus.eveningDone ? (
+            <Text className="text-paragraph-sm font-heading font-semibold text-success tabular-nums">
+              {formatTime(dailyStatus.eveningTime)}
+            </Text>
+          ) : (
+            <Text className="text-paragraph-sm font-heading font-medium text-content/25">待完成</Text>
+          )}
         </View>
       </View>
 
       {/* ── Divider ── */}
-      <View className="my-6 h-[1px] bg-line" />
+      <View className="my-8 h-px bg-content/[0.1]" />
 
       {/* ── Streak + Milestone ── */}
-      <View>
-        <View className="flex items-baseline gap-1.5">
-          <Text className="text-sm font-heading font-semibold tracking-wide text-content">
+      <View className="animate-fade-up-delay-3 motion-reduce:animate-none">
+        <View className="flex items-baseline gap-2">
+          <Text className="text-label-sm font-heading font-semibold tracking-wide text-content/50 uppercase">
             连续
           </Text>
-          <Text className="text-[28px] leading-none font-heading font-bold tabular-nums text-primary">
+          <Text className="text-display-md leading-none font-heading font-bold tabular-nums text-primary">
             {streak}
           </Text>
-          <Text className="text-sm font-heading font-semibold tracking-wide text-content">
+          <Text className="text-label-sm font-heading font-semibold tracking-wide text-content/50 uppercase">
             天
           </Text>
         </View>
@@ -95,21 +106,26 @@ export default function BrushIdleState({
           value={milestoneProgress}
           max={100}
           label={`距离 ${nextMilestone} 天里程碑`}
-          className="mt-3"
-          trackClassName="h-1 bg-line-light"
+          className="mt-4"
+          trackClassName="h-1 bg-content/[0.06]"
         />
       </View>
 
       {/* ── CTA ── */}
-      <View className="mt-auto pb-8">
-        <Button
-          className="w-full max-w-[360px] mx-auto min-h-14 rounded-[999px] text-lg font-bold shadow-card-lg"
-          size="lg"
+      <View className="mt-auto pb-10 flex justify-center">
+        <View
+          className="bg-surface-white rounded-full px-8 py-3.5 border border-content/[0.08] shadow-[0_1px_4px_rgba(20,20,19,0.06)] flex items-center gap-3 active:scale-[0.97] transition-transform"
+          role="button"
           onClick={onStart}
           aria-label="开始刷牙"
         >
-          开始刷牙
-        </Button>
+          <Text className="text-xl font-semibold text-primary tracking-wide">
+            开始刷牙
+          </Text>
+          <Text className="text-xl text-primary/70 animate-[arrowBounce_1.2s_ease-in-out_infinite]">
+            →
+          </Text>
+        </View>
       </View>
     </View>
   )

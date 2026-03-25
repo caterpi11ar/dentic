@@ -29,17 +29,17 @@ export default function StepIndicator({ currentStep, totalSteps = TOTAL_STEPS }:
               key={i}
               className={cn(
                 'h-1.5 flex-1 rounded-full transition-[background-color] duration-300 ease-in-out motion-reduce:transition-none',
-                isDone ? 'bg-primary' : isActive ? 'bg-primary animate-gentle-pulse' : 'bg-line'
+                isDone ? 'bg-primary' : isActive ? 'bg-primary animate-gentle-pulse' : 'bg-content/[0.08]'
               )}
             />
           )
         })}
       </View>
       <View className="flex items-center justify-center gap-1.5">
-        <Text className="text-sm font-heading text-content-secondary tabular-nums">
+        <Text className="text-label-sm font-heading text-content/50 tabular-nums">
           {currentStep + 1} / {totalSteps}
         </Text>
-        <Text className="text-sm font-heading text-primary font-medium">{stepName}</Text>
+        <Text className="text-paragraph-sm font-heading text-primary font-medium">{stepName}</Text>
       </View>
     </View>
   )

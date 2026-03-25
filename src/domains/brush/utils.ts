@@ -3,6 +3,8 @@ import { BUSINESS_DAY_START_HOUR, EVENING_SESSION_START_HOUR } from '@/services/
 export type DailyStatus = {
   morningDone: boolean
   eveningDone: boolean
+  morningTime?: number
+  eveningTime?: number
 }
 
 export function formatTodayHeading(date: Date): string {

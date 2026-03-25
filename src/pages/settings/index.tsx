@@ -57,8 +57,8 @@ export default function SettingsPage() {
 
   return (
     <View className="theme-page app-scroll theme-day min-h-screen">
-      <View className="pb-32 px-5 max-w-2xl mx-auto flex flex-col gap-4" style={{ paddingTop: safeTopPadding }}>
-        <Section title="提醒与音效" className="rounded-2xl">
+      <View className="pb-32 px-page-x max-w-2xl mx-auto flex flex-col gap-5" style={{ paddingTop: safeTopPadding }}>
+        <Section title="提醒与音效" className="rounded-anthropic">
           <List>
             <ListItem
               title="刷牙提醒"
@@ -97,11 +97,11 @@ export default function SettingsPage() {
 
           <Button
             variant="secondary"
-            className="mt-4 rounded-xl min-h-11"
+            className="mt-4 min-h-11"
             onClick={handleSetAlarm}
             aria-label="设置闹钟"
           >
-            <Text className="text-base">⏰ 设置闹钟</Text>
+            设置闹钟
           </Button>
         </Section>
       </View>

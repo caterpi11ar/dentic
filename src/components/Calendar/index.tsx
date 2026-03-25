@@ -52,24 +52,23 @@ function CalendarDayButton({
   const isBrushed = !!sessionInfo
 
   return (
-    <Button
-      variant="ghost"
-      size="sm"
+    <View
       className={cn(
-        'h-10 min-h-10 rounded-xl border px-0 overflow-hidden',
+        'h-10 rounded-md border overflow-hidden relative',
         isSelected
           ? 'bg-primary text-surface border-primary'
           : isToday
             ? 'bg-primary-light border-primary/40 text-primary'
-            : 'bg-surface-white border-line-light text-content'
+            : 'bg-surface-white border-content/[0.06] text-content'
       )}
       aria-label={`${month}月${day}日${isBrushed ? '，已刷牙' : ''}`}
+      role="button"
       onClick={() => onSelectDate(dateStr)}
     >
-      <View className="relative h-8 w-full flex items-center justify-center">
+      <View className="h-full w-full flex items-center justify-center">
         <Text
           className={cn(
-            'text-xs font-heading',
+            'text-label-xs font-heading',
             isSelected
               ? 'text-surface font-semibold'
               : isToday
@@ -79,15 +78,15 @@ function CalendarDayButton({
         >
           {day}
         </Text>
-
-        {isBrushed && (
-          <View className="absolute bottom-0.5 left-1/2 -translate-x-1/2 flex items-center gap-1">
-            {sessionInfo?.morning && <View className="size-2 rounded-full bg-white border border-content/35" />}
-            {sessionInfo?.evening && <View className="size-2 rounded-full bg-black" />}
-          </View>
-        )}
       </View>
-    </Button>
+
+      {isBrushed && (
+        <View className="absolute bottom-0 left-0 right-0 flex">
+          <View className={cn('h-1 w-1/2', sessionInfo?.morning ? 'bg-amber-400' : 'bg-transparent')} />
+          <View className={cn('h-1 w-1/2', sessionInfo?.evening ? 'bg-indigo-400' : 'bg-transparent')} />
+        </View>
+      )}
+    </View>
   )
 }
 
@@ -108,21 +107,21 @@ export default function Calendar({
   const firstDayOfWeek = new Date(year, month - 1, 1).getDay()
 
   return (
-    <Card className="rounded-3xl bg-surface-white/95">
+    <Card className="rounded-anthropic bg-surface-white border border-content/[0.06]">
       <CardHeader className="pb-2">
         <View className="flex items-center justify-between">
-          <Text className="text-sm font-heading font-semibold text-content">{formatMonth(year, month)}</Text>
+          <Text className="text-paragraph-sm font-heading font-semibold text-content">{formatMonth(year, month)}</Text>
           <View className="flex items-center gap-2">
             <IconButton
               icon="‹"
               ariaLabel="上个月"
-              className="border border-line-light bg-surface-white text-content"
+              className="border border-content/[0.06] bg-surface-white text-content"
               onClick={onPrevMonth}
             />
             <IconButton
               icon="›"
               ariaLabel="下个月"
-              className="border border-line-light bg-surface-white text-content"
+              className="border border-content/[0.06] bg-surface-white text-content"
               onClick={onNextMonth}
             />
           </View>
@@ -138,7 +137,7 @@ export default function Calendar({
       <CardContent className="pt-1">
         <View className="grid grid-cols-7 mb-1">
           {WEEKDAYS.map((weekday) => (
-            <Text key={weekday} className="text-center text-xs font-heading text-content-secondary py-1">
+            <Text key={weekday} className="text-center text-label-xs font-heading text-content/40 py-1.5 uppercase">
               {weekday}
             </Text>
           ))}

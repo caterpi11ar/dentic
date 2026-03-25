@@ -19,7 +19,7 @@ export default function BottomNav<T extends string>({ items, activeKey, onChange
   return (
     <View
       className={cn(
-        'fixed bottom-0 left-0 right-0 z-50 flex justify-around items-center px-4 pb-8 pt-4 bg-surface-white/98 rounded-t-[2.25rem] border-t border-line shadow-[0_-6px_24px_rgba(20,20,19,0.06)]',
+        'fixed bottom-0 left-0 right-0 z-50 flex justify-around items-center px-4 pb-8 pt-3.5 bg-surface-white/95 border-t border-content/[0.06] backdrop-blur-sm',
         className
       )}
       role="tablist"
@@ -32,8 +32,8 @@ export default function BottomNav<T extends string>({ items, activeKey, onChange
           <View
             key={item.key}
             className={cn(
-              'min-w-20 px-4 py-2.5 rounded-2xl flex flex-col items-center justify-center gap-0.5 transition-colors duration-150',
-              active ? 'bg-primary-light text-primary' : 'text-content-tertiary active:opacity-80'
+              'min-w-20 px-4 py-2.5 rounded-lg flex flex-col items-center justify-center gap-0.5 transition-colors duration-150',
+              active ? 'text-primary' : 'text-content/40 active:opacity-80'
             )}
             onClick={() => onChange(item.key)}
             role="tab"
@@ -41,7 +41,7 @@ export default function BottomNav<T extends string>({ items, activeKey, onChange
             aria-current={active ? 'page' : undefined}
           >
             <Text className="text-lg leading-none">{item.icon}</Text>
-            <Text className={cn('text-sm font-heading font-semibold tracking-[0.06em]', active ? 'text-primary' : 'text-content-tertiary')}>
+            <Text className={cn('text-label-xs font-heading font-semibold tracking-[0.06em]', active ? 'text-primary' : 'text-content/40')}>
               {item.label}
             </Text>
           </View>

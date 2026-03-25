@@ -61,7 +61,7 @@ export default function IndexPage() {
     <View className={cn('theme-page theme-day min-h-screen', shouldEnableScroll && 'app-scroll')}>
       <View
         className={cn(
-          'relative px-5 max-w-2xl mx-auto',
+          'relative px-page-x max-w-2xl mx-auto',
           isIdle ? 'h-screen overflow-hidden pb-28' : isBrushingFlow ? 'h-screen overflow-hidden pb-24' : 'min-h-screen pb-32'
         )}
         style={{ paddingTop: safeTopPadding }}

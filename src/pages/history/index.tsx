@@ -97,7 +97,7 @@ export default function HistoryPage() {
 
   return (
     <View className="theme-page app-scroll theme-day min-h-screen">
-      <View className="pb-28 px-5 max-w-2xl mx-auto flex flex-col gap-3" style={{ paddingTop: safeTopPadding }}>
+      <View className="pb-32 px-page-x max-w-2xl mx-auto flex flex-col gap-4" style={{ paddingTop: safeTopPadding }}>
         <Calendar
           year={year}
           month={month}
@@ -124,15 +124,15 @@ export default function HistoryPage() {
                     key={`${record.date}-${record.session}`}
                     title={SESSION_LABELS[record.session] ?? '未知时段'}
                     left={<Text className="text-base leading-none">{SESSION_ICONS[record.session]}</Text>}
-                    right={<Text className="text-sm font-semibold text-primary">完成于 {formatCompletedTime(record.timestamp)}</Text>}
+                    right={<Text className="text-paragraph-sm font-semibold text-primary">完成于 {formatCompletedTime(record.timestamp)}</Text>}
                   />
                 ))}
               </List>
             ) : (
-              <Text className="text-sm font-medium text-content-tertiary mt-2">当天暂无完成记录。</Text>
+              <Text className="text-paragraph-sm text-content/40 mt-3">当天暂无完成记录。</Text>
             )
           ) : (
-            <Text className="text-sm font-medium text-content-tertiary mt-2">点击上方日历日期后展示晨间/夜间完成记录。</Text>
+            <Text className="text-paragraph-sm text-content/40 mt-3">点击上方日历日期后展示晨间/夜间完成记录。</Text>
           )}
         </Section>
 

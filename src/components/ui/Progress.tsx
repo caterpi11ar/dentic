@@ -30,8 +30,8 @@ export default function Progress({
       aria-valuenow={Math.min(safeMax, Math.max(0, value))}
       aria-label={label || '进度'}
     >
-      {label ? <Text className="text-xs text-content-tertiary">{label}</Text> : null}
-      <View className={cn('mt-1.5 w-full h-1.5 rounded-full bg-line overflow-hidden', trackClassName)}>
+      {label ? <Text className="text-label-xs text-content/40">{label}</Text> : null}
+      <View className={cn('mt-2 w-full h-1 rounded-full bg-content/[0.06] overflow-hidden', trackClassName)}>
         <View
           className={cn('h-full rounded-full bg-primary transition-[width] duration-300 ease-out', indicatorClassName)}
           style={{ width: `${pct}%` }}

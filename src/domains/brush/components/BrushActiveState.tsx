@@ -36,15 +36,15 @@ export default function BrushActiveState({ session, stepPrompt, onPause, onSkip 
       <View className="flex-1 min-h-0 overflow-hidden px-1 pt-1">
         <View className="h-full min-h-0 flex flex-col items-center gap-1.5 animate-slide-up motion-reduce:animate-none">
           <BrushTimer seconds={session.stepTimeLeft} stepDuration={session.stepDuration} />
-          <View className="w-full rounded-2xl border border-primary/25 bg-primary-light/55 px-4 py-2.5">
-            <Text className="text-base font-medium text-content leading-relaxed">{stepPrompt}</Text>
+          <View className="w-full rounded-anthropic border border-primary/15 bg-primary/[0.06] px-5 py-3">
+            <Text className="text-paragraph-md font-medium text-content leading-relaxed">{stepPrompt}</Text>
           </View>
           <StepIndicator currentStep={session.currentStepIndex} />
           <View className="w-full flex gap-2 pt-1">
-            <Button variant="secondary" className="min-h-10 text-base flex-1" onClick={onPause}>
+            <Button variant="secondary" className="min-h-11 text-paragraph-sm flex-1" onClick={onPause}>
               {session.state === 'paused' ? '继续' : '暂停'}
             </Button>
-            <Button variant="secondary" className="min-h-10 text-base flex-1" onClick={onSkip}>
+            <Button variant="secondary" className="min-h-11 text-paragraph-sm flex-1" onClick={onSkip}>
               跳过此步
             </Button>
           </View>

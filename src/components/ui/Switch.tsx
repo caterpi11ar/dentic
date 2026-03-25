@@ -10,7 +10,7 @@ interface SwitchProps {
 export default function Switch({ checked, onClick, ariaLabel }: SwitchProps) {
   return (
     <View
-      className={cn('w-12 h-7 rounded-full relative transition-colors duration-200', checked ? 'bg-primary' : 'bg-line')}
+      className={cn('w-10 h-6 rounded-full relative transition-colors duration-300', checked ? 'bg-primary' : 'bg-content/[0.15]')}
       onClick={onClick}
       role="switch"
       aria-checked={checked}
@@ -18,8 +18,8 @@ export default function Switch({ checked, onClick, ariaLabel }: SwitchProps) {
     >
       <View
         className={cn(
-          'absolute top-0.5 left-0.5 size-6 rounded-full bg-surface-white border border-line-light shadow-card transition-transform duration-200',
-          checked ? 'translate-x-5' : 'translate-x-0'
+          'absolute top-0.5 left-0.5 size-5 rounded-full bg-surface-white shadow-sm transition-transform duration-300',
+          checked ? 'translate-x-4' : 'translate-x-0'
         )}
       />
     </View>

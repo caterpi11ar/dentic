@@ -52,13 +52,35 @@ module.exports = {
       spacing: {
         ring: '6.25rem',
         'ring-inner': '5.3125rem',
+        section: '3rem',
+        'section-lg': '4rem',
+        block: '2rem',
+        'block-sm': '1.5rem',
+        'page-x': '1.5rem',
       },
       fontSize: {
         countdown: ['6.25rem', { lineHeight: '1' }],
+        'display-xl': ['2.75rem', { lineHeight: '1.05', letterSpacing: '-0.02em' }],
+        'display-lg': ['2.25rem', { lineHeight: '1.1', letterSpacing: '-0.015em' }],
+        'display-md': ['1.75rem', { lineHeight: '1.15', letterSpacing: '-0.01em' }],
+        'display-sm': ['1.375rem', { lineHeight: '1.2', letterSpacing: '-0.005em' }],
+        'paragraph-lg': ['1.125rem', { lineHeight: '1.6' }],
+        'paragraph-md': ['1rem', { lineHeight: '1.6' }],
+        'paragraph-sm': ['0.875rem', { lineHeight: '1.55' }],
+        'label-md': ['0.8125rem', { lineHeight: '1.4', letterSpacing: '0.06em' }],
+        'label-sm': ['0.75rem', { lineHeight: '1.4', letterSpacing: '0.08em' }],
+        'label-xs': ['0.6875rem', { lineHeight: '1.35', letterSpacing: '0.1em' }],
+      },
+      borderRadius: {
+        anthropic: '0.375rem',
+        'anthropic-sm': '0.25rem',
+        'anthropic-lg': '0.75rem',
       },
       boxShadow: {
-        card: '0 4px 14px rgba(20, 20, 19, 0.06)',
-        'card-lg': '0 10px 24px rgba(20, 20, 19, 0.10)',
+        card: '0 1px 3px rgba(20, 20, 19, 0.04)',
+        'card-hover': '0 4px 12px rgba(20, 20, 19, 0.08)',
+        'card-lg': '0 8px 24px rgba(20, 20, 19, 0.06)',
+        nav: '0 -1px 0 rgba(20, 20, 19, 0.06)',
       },
       keyframes: {
         slideUp: {
@@ -86,6 +108,22 @@ module.exports = {
           '0%, 100%': { opacity: '1' },
           '50%': { opacity: '0.7' },
         },
+        fadeUp: {
+          from: { opacity: '0', transform: 'translateY(10%)' },
+          to: { opacity: '1', transform: 'translateY(0)' },
+        },
+        fadeIn: {
+          from: { opacity: '0' },
+          to: { opacity: '1' },
+        },
+        subtleScale: {
+          from: { opacity: '0', transform: 'scale(0.98)' },
+          to: { opacity: '1', transform: 'scale(1)' },
+        },
+        arrowBounce: {
+          '0%, 100%': { transform: 'translateX(0)' },
+          '50%': { transform: 'translateX(6px)' },
+        },
       },
       animation: {
         'slide-up': 'slideUp 0.3s ease-out',
@@ -94,6 +132,12 @@ module.exports = {
         'countdown-pulse': 'countdownPulse 0.8s ease-out',
         shimmer: 'shimmer 2s linear infinite',
         'gentle-pulse': 'gentlePulse 2s ease-in-out infinite',
+        'fade-up': 'fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both',
+        'fade-up-delay-1': 'fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both',
+        'fade-up-delay-2': 'fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both',
+        'fade-up-delay-3': 'fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both',
+        'fade-in': 'fadeIn 0.4s ease-out both',
+        'subtle-scale': 'subtleScale 0.5s ease-out both',
       },
     },
   },

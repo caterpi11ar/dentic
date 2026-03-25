@@ -18,8 +18,8 @@ export default function BrushTimer({ seconds, stepDuration }: Props) {
           transition: 'background 0.8s linear',
         }}
       >
-        <View className="size-ring-inner rounded-full bg-surface-white flex items-center justify-center shadow-card">
-          <Text className="text-4xl leading-none font-heading font-bold text-content tabular-nums" aria-label={`${seconds}秒`}>
+        <View className="size-ring-inner rounded-full bg-surface-white flex items-center justify-center shadow-sm">
+          <Text className="text-display-lg leading-none font-heading font-bold text-content tabular-nums" aria-label={`${seconds}秒`}>
             {seconds}
           </Text>
         </View>

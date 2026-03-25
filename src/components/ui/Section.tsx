@@ -22,13 +22,13 @@ export default function Section({
   const hasHeader = !!title || !!description || !!headerRight
 
   return (
-    <Card className={cn('rounded-2xl', className)}>
+    <Card className={cn('rounded-anthropic', className)}>
       {hasHeader && (
         <CardHeader className="pb-2.5">
           <View className="flex items-start justify-between gap-3">
             <View className="min-w-0">
-              {title && <Text className="text-sm font-heading font-bold tracking-[0.08em] text-content-secondary">{title}</Text>}
-              {description && <Text className="mt-1 text-sm text-content-tertiary">{description}</Text>}
+              {title && <Text className="text-label-sm font-heading font-semibold tracking-[0.1em] uppercase text-content/50">{title}</Text>}
+              {description && <Text className="mt-1.5 text-paragraph-sm text-content/40">{description}</Text>}
             </View>
             {headerRight ? <View className="shrink-0">{headerRight}</View> : null}
           </View>

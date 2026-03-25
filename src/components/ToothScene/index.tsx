@@ -115,8 +115,8 @@ export default function ToothScene({ currentStepIndex, isActive, compact = false
                   width: `${t.size}px`,
                   height: `${t.size}px`,
                   borderRadius: '50%',
-                  backgroundColor: lit ? '#fbede5' : '#ffffff',
-                  border: '1.5px solid #e8e6dc',
+                  backgroundColor: lit ? '#D97757' : '#ffffff',
+                  border: lit ? '1.5px solid #BF6141' : '1.5px solid #e8e6dc',
                   boxShadow: '0 2px 8px rgba(20,20,19,0.10)',
                   transition: 'background-color 0.3s',
                 }}
@@ -138,8 +138,8 @@ export default function ToothScene({ currentStepIndex, isActive, compact = false
                   width: `${t.size}px`,
                   height: `${t.size}px`,
                   borderRadius: '50%',
-                  backgroundColor: lit ? '#fbede5' : '#ffffff',
-                  border: '1.5px solid #e8e6dc',
+                  backgroundColor: lit ? '#D97757' : '#ffffff',
+                  border: lit ? '1.5px solid #BF6141' : '1.5px solid #e8e6dc',
                   boxShadow: '0 2px 8px rgba(20,20,19,0.10)',
                   transition: 'background-color 0.3s',
                 }}

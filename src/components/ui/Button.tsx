@@ -15,20 +15,20 @@ export interface ButtonProps extends Omit<TaroButtonProps, 'className' | 'size'>
 }
 
 const BASE_CLASS =
-  'border font-heading font-medium leading-none flex items-center justify-center gap-1.5 transition-[background-color,border-color,opacity,transform] duration-150 active:opacity-90'
+  'font-heading font-semibold leading-none flex items-center justify-center gap-1.5 transition-[background-color,border-color,opacity,transform] duration-200 active:scale-[0.98] active:opacity-90'
 
 const VARIANT_CLASS: Record<ButtonVariant, string> = {
-  default: 'bg-primary text-surface border-primary',
-  secondary: 'bg-surface-white text-content border-line',
-  outline: 'bg-transparent text-content border-line',
+  default: 'bg-primary text-surface-white border border-transparent',
+  secondary: 'bg-surface-white text-content border border-content/[0.12]',
+  outline: 'bg-transparent text-content border border-content/[0.2]',
   ghost: 'bg-transparent text-content-secondary border-transparent',
 }
 
 const SIZE_CLASS: Record<ButtonSize, string> = {
-  sm: 'min-h-9 rounded-lg px-3 text-sm',
-  md: 'min-h-11 rounded-xl px-4 text-sm',
-  lg: 'min-h-12 rounded-xl px-5 text-base',
-  icon: 'size-9 min-h-9 min-w-9 rounded-lg p-0',
+  sm: 'min-h-9 rounded-anthropic-sm px-3.5 text-paragraph-sm',
+  md: 'min-h-11 rounded-anthropic px-5 text-paragraph-sm',
+  lg: 'min-h-[3.25rem] rounded-anthropic px-6 text-paragraph-md',
+  icon: 'size-10 min-h-10 min-w-10 rounded-anthropic p-0',
 }
 
 export default function Button({

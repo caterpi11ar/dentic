@@ -23,19 +23,25 @@ export function getTodayDailyStatus(): DailyStatus {
   const today = getBusinessDate(new Date())
   const records = getRecordsByDate(today).filter((record) => record.completed)
 
+  const morningRecord = records.find((record) => {
+    if (record.session === 'morning') return true
+    if (record.session !== 'evening') return false
+    const hour = getRecordHour(record.timestamp)
+    return hour !== null && isMorningSessionHour(hour)
+  })
+
+  const eveningRecord = records.find((record) => {
+    if (record.session !== 'evening') return false
+    const hour = getRecordHour(record.timestamp)
+    if (hour === null) return true
+    return isEveningSessionHour(hour)
+  })
+
   return {
-    morningDone: records.some((record) => {
-      if (record.session === 'morning') return true
-      if (record.session !== 'evening') return false
-      const hour = getRecordHour(record.timestamp)
-      return hour !== null && isMorningSessionHour(hour)
-    }),
-    eveningDone: records.some((record) => {
-      if (record.session !== 'evening') return false
-      const hour = getRecordHour(record.timestamp)
-      if (hour === null) return true
-      return isEveningSessionHour(hour)
-    }),
+    morningDone: !!morningRecord,
+    eveningDone: !!eveningRecord,
+    morningTime: morningRecord?.timestamp,
+    eveningTime: eveningRecord?.timestamp,
   }
 }
 
