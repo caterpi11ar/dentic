@@ -25,26 +25,26 @@ export default function BrushCompletedState({
           <View className="size-16 rounded-full bg-gradient-to-br from-success to-success-dark flex items-center justify-center mb-4 animate-bounce-slow motion-reduce:animate-none">
             <Text className="text-5xl text-surface-white">✓</Text>
           </View>
-          <Text className="text-xl md:text-2xl leading-snug font-bold text-content max-w-[90%]">{completionMessage}</Text>
+          <Text className="text-xl md:text-2xl leading-snug font-heading font-bold text-content max-w-[90%]">{completionMessage}</Text>
           {milestone && (
-            <Text className="text-sm md:text-base leading-relaxed text-warning font-bold mt-2 max-w-[90%]">{milestone}</Text>
+            <Text className="text-sm md:text-base leading-relaxed text-info font-bold mt-2 max-w-[90%]">{milestone}</Text>
           )}
         </View>
 
         <View className="mt-4 flex flex-col gap-1.5">
           <View className="rounded-lg bg-surface border border-line-light px-3 py-2.5 min-h-10 flex items-center justify-between">
             <Text className="text-sm text-content-secondary">总用时</Text>
-            <Text className="text-base font-bold text-primary tabular-nums">
+            <Text className="text-base font-heading font-bold text-primary tabular-nums">
               {Math.floor(elapsedTime / 60)}:{String(elapsedTime % 60).padStart(2, '0')}
             </Text>
           </View>
           <View className="rounded-lg bg-surface border border-line-light px-3 py-2.5 min-h-10 flex items-center justify-between">
             <Text className="text-sm text-content-secondary">步骤数</Text>
-            <Text className="text-base font-bold text-success tabular-nums">{TOTAL_STEPS}</Text>
+            <Text className="text-base font-heading font-bold text-success tabular-nums">{TOTAL_STEPS}</Text>
           </View>
           <View className="rounded-lg bg-surface border border-line-light px-3 py-2.5 min-h-10 flex items-center justify-between">
             <Text className="text-sm text-content-secondary">连续天数</Text>
-            <Text className="text-base font-bold text-warning tabular-nums">{streak}</Text>
+            <Text className="text-base font-heading font-bold text-info tabular-nums">{streak}</Text>
           </View>
         </View>
 

@@ -15,7 +15,7 @@ export interface ButtonProps extends Omit<TaroButtonProps, 'className' | 'size'>
 }
 
 const BASE_CLASS =
-  'border font-medium leading-none flex items-center justify-center gap-1.5 transition-[background-color,border-color,opacity,transform] duration-150 active:opacity-90'
+  'border font-heading font-medium leading-none flex items-center justify-center gap-1.5 transition-[background-color,border-color,opacity,transform] duration-150 active:opacity-90'
 
 const VARIANT_CLASS: Record<ButtonVariant, string> = {
   default: 'bg-primary text-surface border-primary',

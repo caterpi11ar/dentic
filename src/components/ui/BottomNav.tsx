@@ -19,7 +19,7 @@ export default function BottomNav<T extends string>({ items, activeKey, onChange
   return (
     <View
       className={cn(
-        'fixed bottom-0 left-0 right-0 z-50 flex justify-around items-center px-4 pb-8 pt-4 bg-surface-white/98 rounded-t-[2.25rem] border-t border-line shadow-[0_-6px_24px_rgba(15,30,20,0.08)]',
+        'fixed bottom-0 left-0 right-0 z-50 flex justify-around items-center px-4 pb-8 pt-4 bg-surface-white/98 rounded-t-[2.25rem] border-t border-line shadow-[0_-6px_24px_rgba(20,20,19,0.06)]',
         className
       )}
       role="tablist"
@@ -41,7 +41,7 @@ export default function BottomNav<T extends string>({ items, activeKey, onChange
             aria-current={active ? 'page' : undefined}
           >
             <Text className="text-lg leading-none">{item.icon}</Text>
-            <Text className={cn('text-sm font-semibold tracking-[0.06em]', active ? 'text-primary' : 'text-content-tertiary')}>
+            <Text className={cn('text-sm font-heading font-semibold tracking-[0.06em]', active ? 'text-primary' : 'text-content-tertiary')}>
               {item.label}
             </Text>
           </View>

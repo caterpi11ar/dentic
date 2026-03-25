@@ -27,7 +27,7 @@ export default function Section({
         <CardHeader className="pb-2.5">
           <View className="flex items-start justify-between gap-3">
             <View className="min-w-0">
-              {title && <Text className="text-sm font-bold tracking-[0.08em] text-content-secondary">{title}</Text>}
+              {title && <Text className="text-sm font-heading font-bold tracking-[0.08em] text-content-secondary">{title}</Text>}
               {description && <Text className="mt-1 text-sm text-content-tertiary">{description}</Text>}
             </View>
             {headerRight ? <View className="shrink-0">{headerRight}</View> : null}

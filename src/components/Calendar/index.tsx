@@ -69,7 +69,7 @@ function CalendarDayButton({
       <View className="relative h-8 w-full flex items-center justify-center">
         <Text
           className={cn(
-            'text-xs',
+            'text-xs font-heading',
             isSelected
               ? 'text-surface font-semibold'
               : isToday
@@ -111,7 +111,7 @@ export default function Calendar({
     <Card className="rounded-3xl bg-surface-white/95">
       <CardHeader className="pb-2">
         <View className="flex items-center justify-between">
-          <Text className="text-sm font-semibold text-content">{formatMonth(year, month)}</Text>
+          <Text className="text-sm font-heading font-semibold text-content">{formatMonth(year, month)}</Text>
           <View className="flex items-center gap-2">
             <IconButton
               icon="‹"
@@ -138,7 +138,7 @@ export default function Calendar({
       <CardContent className="pt-1">
         <View className="grid grid-cols-7 mb-1">
           {WEEKDAYS.map((weekday) => (
-            <Text key={weekday} className="text-center text-xs text-content-secondary py-1">
+            <Text key={weekday} className="text-center text-xs font-heading text-content-secondary py-1">
               {weekday}
             </Text>
           ))}

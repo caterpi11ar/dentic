@@ -1,6 +1,7 @@
 import { View, Text } from '@tarojs/components'
 import type { WeeklyStatsData } from '@/services/recordStatsService'
 import Section from '@/components/ui/Section'
+import { cn } from '@/components/ui/cn'
 
 const WEEKDAY_LABELS = ['一', '二', '三', '四', '五', '六', '日']
 
@@ -18,11 +19,11 @@ export default function WeeklyStats({ stats }: WeeklyStatsProps) {
       headerRight={(
         <View className="flex items-center gap-4">
           <View className="flex items-center gap-1">
-            <Text className="text-sm font-bold text-primary tabular-nums">{stats.totalSessions}</Text>
+            <Text className="text-sm font-heading font-bold text-primary tabular-nums">{stats.totalSessions}</Text>
             <Text className="text-xs text-content-secondary">次</Text>
           </View>
           <View className="flex items-center gap-1">
-            <Text className="text-sm font-bold text-primary tabular-nums">
+            <Text className="text-sm font-heading font-bold text-primary tabular-nums">
               {stats.avgDuration > 0
                 ? `${Math.floor(stats.avgDuration / 60)}:${String(stats.avgDuration % 60).padStart(2, '0')}`
                 : '--'}
@@ -43,13 +44,14 @@ export default function WeeklyStats({ stats }: WeeklyStatsProps) {
                   <Text className="text-xs text-primary font-bold mb-1 tabular-nums">{day.count}</Text>
                 )}
                 <View
-                  className={`w-full rounded-lg transition-[height] duration-300 ease-in-out motion-reduce:transition-none ${
+                  className={cn(
+                    'w-full rounded-lg transition-[height] duration-300 ease-in-out motion-reduce:transition-none',
                     day.count > 0 ? 'bg-primary' : 'bg-line-light'
-                  }`}
+                  )}
                   style={{ height: `${pct}%` }}
                 />
               </View>
-              <Text className={`text-xs ${day.count > 0 ? 'text-content font-medium' : 'text-content-disabled'}`}>
+              <Text className={cn('text-xs', day.count > 0 ? 'text-content font-medium' : 'text-content-disabled')}>
                 {WEEKDAY_LABELS[i]}
               </Text>
             </View>

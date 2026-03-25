@@ -2,7 +2,7 @@ import { View, Text } from '@tarojs/components'
 import type { PropsWithChildren } from 'react'
 import { cn } from '@/components/ui/cn'
 
-type Variant = 'default' | 'secondary' | 'outline' | 'success' | 'warning'
+type Variant = 'default' | 'secondary' | 'outline' | 'success' | 'warning' | 'info'
 
 const VARIANT_CLASS: Record<Variant, string> = {
   default: 'bg-primary/15 text-primary border border-primary/25',
@@ -10,6 +10,7 @@ const VARIANT_CLASS: Record<Variant, string> = {
   outline: 'bg-transparent text-content-secondary border border-line',
   success: 'bg-success-light text-success-text border border-success/30',
   warning: 'bg-warning-light text-warning border border-warning/30',
+  info: 'bg-info-light text-info-dark border border-info/30',
 }
 
 interface BadgeProps extends PropsWithChildren {
@@ -20,7 +21,7 @@ interface BadgeProps extends PropsWithChildren {
 export default function Badge({ variant = 'default', className, children }: BadgeProps) {
   return (
     <View className={cn('rounded-full px-2.5 py-1', VARIANT_CLASS[variant], className)}>
-      <Text className="text-xs font-medium">{children}</Text>
+      <Text className="text-xs font-heading font-medium">{children}</Text>
     </View>
   )
 }
