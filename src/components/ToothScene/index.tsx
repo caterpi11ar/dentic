@@ -1,5 +1,6 @@
 import { View, Text } from '@tarojs/components'
 import { BRUSHING_STEPS } from '@/constants/brushing-steps'
+import { cn } from '@/components/ui/cn'
 
 type SceneMode = 'brushing' | 'paused' | 'inactive'
 type ToothCircle = { x: number; y: number; size: number }
@@ -88,7 +89,7 @@ export default function ToothScene({ currentStepIndex, isActive, compact = false
   const sceneWrapperPadding = compact ? 'py-2' : 'py-3'
 
   return (
-    <View className={`w-full flex flex-col items-center ${sceneWrapperPadding}`}>
+    <View className={cn('w-full flex flex-col items-center', sceneWrapperPadding)}>
       <View className="relative" style={{ width: '280px', height: `${sceneHeight}px` }}>
         <View
           className="absolute"
@@ -114,9 +115,9 @@ export default function ToothScene({ currentStepIndex, isActive, compact = false
                   width: `${t.size}px`,
                   height: `${t.size}px`,
                   borderRadius: '50%',
-                  backgroundColor: lit ? '#fddcb5' : '#ffffff',
-                  border: '1.5px solid #e5e0db',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+                  backgroundColor: lit ? '#fbede5' : '#ffffff',
+                  border: '1.5px solid #e8e6dc',
+                  boxShadow: '0 2px 8px rgba(20,20,19,0.10)',
                   transition: 'background-color 0.3s',
                 }}
               />
@@ -137,9 +138,9 @@ export default function ToothScene({ currentStepIndex, isActive, compact = false
                   width: `${t.size}px`,
                   height: `${t.size}px`,
                   borderRadius: '50%',
-                  backgroundColor: lit ? '#fddcb5' : '#ffffff',
-                  border: '1.5px solid #e5e0db',
-                  boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+                  backgroundColor: lit ? '#fbede5' : '#ffffff',
+                  border: '1.5px solid #e8e6dc',
+                  boxShadow: '0 2px 8px rgba(20,20,19,0.10)',
                   transition: 'background-color 0.3s',
                 }}
               />
@@ -149,7 +150,7 @@ export default function ToothScene({ currentStepIndex, isActive, compact = false
       </View>
 
       {showStepName && (
-        <Text className={`text-content font-medium mt-1 text-sm ${compact ? '' : 'text-base'}`}>
+        <Text className={cn('text-content font-medium mt-1 text-sm', !compact && 'text-base')}>
           {step?.name ?? '准备开始'}
         </Text>
       )}
