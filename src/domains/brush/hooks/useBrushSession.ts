@@ -14,7 +14,6 @@ export function useBrushSession() {
     interactionVersion,
     startFlow,
     pauseOrResume,
-    skipCurrentStep,
     resetFlow,
     tickFlow,
     syncOverview,
@@ -41,11 +40,6 @@ export function useBrushSession() {
     pauseOrResume()
   })
 
-  const handleSkip = useMemoizedFn(() => {
-    markInteraction('skip')
-    skipCurrentStep()
-  })
-
   return {
     session,
     streak,
@@ -55,7 +49,6 @@ export function useBrushSession() {
     stepPrompt,
     handleStart,
     handlePause,
-    handleSkip,
     handleReset: resetFlow,
   }
 }

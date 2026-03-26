@@ -26,7 +26,6 @@ export default function IndexPage() {
     stepPrompt,
     handleStart,
     handlePause,
-    handleSkip,
     handleReset,
   } = useBrushSession()
 
@@ -95,7 +94,6 @@ export default function IndexPage() {
             session={session}
             stepPrompt={stepPrompt}
             onPause={handlePause}
-            onSkip={handleSkip}
           />
         ) : null}
       </View>

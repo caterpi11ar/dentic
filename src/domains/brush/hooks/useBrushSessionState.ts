@@ -5,7 +5,6 @@ import {
   getCurrentStep,
   pauseSession,
   resumeSession,
-  skipStep,
   startCountdown,
   tick,
   tickCountdown,
@@ -14,7 +13,7 @@ import {
 import { MILESTONES, MILESTONE_MESSAGES, getRandomCompletionMessage } from '@/constants/brushing-steps'
 import type { DailyStatus } from '@/domains/brush/utils'
 
-export type BrushInteractionAction = 'start' | 'pauseToggle' | 'skip'
+export type BrushInteractionAction = 'start' | 'pauseToggle'
 
 interface UseBrushSessionStateResult {
   session: BrushingSession
@@ -27,7 +26,6 @@ interface UseBrushSessionStateResult {
   interactionVersion: number
   startFlow: () => void
   pauseOrResume: () => void
-  skipCurrentStep: () => void
   resetFlow: () => void
   tickFlow: () => void
   syncOverview: (nextStreak: number, nextStatus: DailyStatus) => void
@@ -58,10 +56,6 @@ export function useBrushSessionState(): UseBrushSessionStateResult {
       }
       return prev
     })
-  })
-
-  const skipCurrentStep = useMemoizedFn(() => {
-    setSession((prev) => skipStep(prev))
   })
 
   const resetFlow = useMemoizedFn(() => {
@@ -107,7 +101,6 @@ export function useBrushSessionState(): UseBrushSessionStateResult {
     interactionVersion,
     startFlow,
     pauseOrResume,
-    skipCurrentStep,
     resetFlow,
     tickFlow,
     syncOverview,

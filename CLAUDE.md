@@ -28,7 +28,7 @@ pnpm format               # Prettier 格式化（src/**/*.{ts,tsx,scss}）
 ### 分层领域结构
 
 ```
-pages/          → 页面编排层（3 个页面：index 刷牙主页、history 历史记录、settings 设置）
+pages/          → 页面编排层（3 个页面：index 刷牙主页、history 历史、settings 设置）
 domains/brush/  → 刷牙功能领域
   hooks/        → 状态与副作用分离：useBrushSessionState → useBrushSessionEffects → useBrushSession（门面）
   components/   → 按流程状态拆分的 UI：BrushIdleState、BrushActiveState、BrushCompletedState、BrushCountdownOverlay

@@ -9,7 +9,7 @@ function invalidateRecordCache() {
   cachedRecords = null
 }
 
-/** 迁移旧记录：缺少 session 字段的默认设为 morning */
+/** 迁移旧历史：缺少 session 字段的默认设为 morning */
 function migrateRecords(records: BrushingRecord[]): BrushingRecord[] {
   let migrated = false
   const result = records.map((record) => {
@@ -36,7 +36,7 @@ export function getRecords(): BrushingRecord[] {
   }
 }
 
-/** 保存记录，去重键为 date + session */
+/** 保存历史，去重键为 date + session */
 export function saveRecord(record: BrushingRecord): void {
   const records = getRecords()
   const idx = records.findIndex((r) => r.date === record.date && r.session === record.session)
@@ -49,7 +49,7 @@ export function saveRecord(record: BrushingRecord): void {
   invalidateRecordCache()
 }
 
-/** 返回某天所有记录（早/晚） */
+/** 返回某天所有历史（早/晚） */
 export function getRecordsByDate(date: string): BrushingRecord[] {
   return getRecords().filter((r) => r.date === date)
 }

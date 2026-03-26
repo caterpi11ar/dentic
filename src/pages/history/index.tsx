@@ -203,7 +203,7 @@ export default function HistoryPage() {
               ) : (
                 <View className="mt-6 py-8 flex flex-col items-center">
                   <Text className="text-display-md leading-none">🦷</Text>
-                  <Text className="mt-3 text-paragraph-sm text-content/30">当天暂无完成记录</Text>
+                  <Text className="mt-3 text-paragraph-sm text-content/30">当天暂无完成历史</Text>
                 </View>
               )}
             </View>

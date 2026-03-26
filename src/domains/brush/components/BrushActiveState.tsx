@@ -1,21 +1,22 @@
-import { View, Text } from '@tarojs/components'
+import { View, Text, Image } from '@tarojs/components'
 import BrushTimer from '@/components/BrushTimer'
 import ErrorBoundary from '@/components/ErrorBoundary'
 import StepIndicator from '@/components/StepIndicator'
 import ToothScene from '@/components/ToothScene'
-import Button from '@/components/ui/Button'
 import type { BrushingSession } from '@/services/brushing'
+import iconBrushPlay from '@/assets/icons/brush-play.svg'
+import iconBrushStop from '@/assets/icons/brush-stop.svg'
 
 interface BrushActiveStateProps {
   session: BrushingSession
   stepPrompt: string
   onPause: () => void
-  onSkip: () => void
 }
 
-export default function BrushActiveState({ session, stepPrompt, onPause, onSkip }: BrushActiveStateProps) {
+export default function BrushActiveState({ session, stepPrompt, onPause }: BrushActiveStateProps) {
   const toothSceneMode =
     session.state === 'brushing' ? 'brushing' : session.state === 'paused' ? 'paused' : 'inactive'
+  const isPaused = session.state === 'paused'
 
   return (
     <View className="h-full min-h-0 pt-1 flex flex-col gap-2 overflow-hidden">
@@ -40,13 +41,16 @@ export default function BrushActiveState({ session, stepPrompt, onPause, onSkip 
             <Text className="text-paragraph-md font-medium text-content leading-relaxed">{stepPrompt}</Text>
           </View>
           <StepIndicator currentStep={session.currentStepIndex} />
-          <View className="w-full flex gap-2 pt-2">
-            <Button variant="secondary" className="min-h-11 text-paragraph-sm flex-1" onClick={onPause}>
-              {session.state === 'paused' ? '继续' : '暂停'}
-            </Button>
-            <Button variant="secondary" className="min-h-11 text-paragraph-sm flex-1" onClick={onSkip}>
-              跳过此步
-            </Button>
+          <View className="w-full pt-2 flex justify-center">
+            <View
+              role="button"
+              hoverClass="none"
+              className="size-12 rounded-full bg-surface-white/95 shadow-[0_4px_10px_rgba(20,20,19,0.08)] flex items-center justify-center active:scale-[0.96] transition-transform"
+              onClick={onPause}
+              aria-label={isPaused ? '继续刷牙' : '暂停刷牙'}
+            >
+              <Image src={isPaused ? iconBrushPlay : iconBrushStop} className="size-9" mode="aspectFit" />
+            </View>
           </View>
         </View>
       </View>

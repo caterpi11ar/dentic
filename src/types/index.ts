@@ -1,4 +1,4 @@
-/** 刷牙记录 */
+/** 刷牙历史 */
 export interface BrushingRecord {
   date: string // YYYY-MM-DD
   session: 'morning' | 'evening' // 早/晚

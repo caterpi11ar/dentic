@@ -92,28 +92,6 @@ export function tick(session: BrushingSession): BrushingSession {
   }
 }
 
-/** 跳到下一步 */
-export function skipStep(session: BrushingSession): BrushingSession {
-  if (session.state !== 'brushing') return session
-
-  const nextIndex = session.currentStepIndex + 1
-  if (nextIndex >= TOTAL_STEPS) {
-    const completed: BrushingSession = {
-      ...session,
-      state: 'completed',
-      stepTimeLeft: 0,
-      currentStepIndex: session.currentStepIndex,
-    }
-    return completed
-  }
-
-  return {
-    ...session,
-    currentStepIndex: nextIndex,
-    stepTimeLeft: session.stepDuration,
-  }
-}
-
 export function getSessionTypeForDate(date: Date): 'morning' | 'evening' {
   return isMorningSessionHour(date.getHours()) ? 'morning' : 'evening'
 }
