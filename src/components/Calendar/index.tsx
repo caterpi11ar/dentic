@@ -24,6 +24,8 @@ interface CalendarProps {
   onPrevMonth: () => void
   onNextMonth: () => void
   onSelectDate: (date: string) => void
+  hideStats?: boolean
+  hideHeader?: boolean
 }
 
 interface CalendarDayButtonProps {
@@ -102,37 +104,43 @@ export default function Calendar({
   onPrevMonth,
   onNextMonth,
   onSelectDate,
+  hideStats,
+  hideHeader,
 }: CalendarProps) {
   const daysInMonth = new Date(year, month, 0).getDate()
   const firstDayOfWeek = new Date(year, month - 1, 1).getDay()
 
   return (
     <Card className="rounded-anthropic bg-surface-white border border-content/[0.06]">
-      <CardHeader className="pb-2">
-        <View className="flex items-center justify-between">
-          <Text className="text-paragraph-sm font-heading font-semibold text-content">{formatMonth(year, month)}</Text>
-          <View className="flex items-center gap-2">
-            <IconButton
-              icon="‹"
-              ariaLabel="上个月"
-              className="border border-content/[0.06] bg-surface-white text-content"
-              onClick={onPrevMonth}
-            />
-            <IconButton
-              icon="›"
-              ariaLabel="下个月"
-              className="border border-content/[0.06] bg-surface-white text-content"
-              onClick={onNextMonth}
-            />
+      {!hideHeader && (
+        <CardHeader className="pb-2">
+          <View className="flex items-center justify-between">
+            <Text className="text-paragraph-sm font-heading font-semibold text-content">{formatMonth(year, month)}</Text>
+            <View className="flex items-center gap-2">
+              <IconButton
+                icon="‹"
+                ariaLabel="上个月"
+                className="border border-content/[0.06] bg-surface-white text-content"
+                onClick={onPrevMonth}
+              />
+              <IconButton
+                icon="›"
+                ariaLabel="下个月"
+                className="border border-content/[0.06] bg-surface-white text-content"
+                onClick={onNextMonth}
+              />
+            </View>
           </View>
-        </View>
 
-        <View className="mt-3 flex flex-wrap items-center gap-2">
-          <Badge variant="secondary">本月 {monthBrushed}</Badge>
-          <Badge variant="secondary">连续 {streak}</Badge>
-          <Badge variant="secondary">累计 {totalDays}</Badge>
-        </View>
-      </CardHeader>
+          {!hideStats && (
+            <View className="mt-3 flex flex-wrap items-center gap-2">
+              <Badge variant="secondary">本月 {monthBrushed}</Badge>
+              <Badge variant="secondary">连续 {streak}</Badge>
+              <Badge variant="secondary">累计 {totalDays}</Badge>
+            </View>
+          )}
+        </CardHeader>
+      )}
 
       <CardContent className="pt-1">
         <View className="grid grid-cols-7 mb-1">

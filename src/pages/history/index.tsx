@@ -3,8 +3,7 @@ import { View, Text } from '@tarojs/components'
 import { showShareMenu, useDidShow, useShareAppMessage, useShareTimeline } from '@tarojs/taro'
 import InPageTabBar from '@/components/InPageTabBar'
 import Calendar from '@/components/Calendar'
-import { List, ListItem } from '@/components/ui/List'
-import Section from '@/components/ui/Section'
+import IconButton from '@/components/ui/IconButton'
 import { getBusinessAnchorDate, getBusinessDate } from '@/services/dateBoundary'
 import { applyLightThemeToChrome } from '@/services/theme'
 import { getPageTopPadding } from '@/utils/layout'
@@ -24,6 +23,12 @@ function formatCompletedTime(timestamp?: number): string {
   const date = new Date(timestamp)
   if (Number.isNaN(date.getTime())) return '--:--'
   return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
+}
+
+function formatSelectedDate(dateStr: string): string {
+  const parts = dateStr.split('-')
+  if (parts.length !== 3) return dateStr
+  return `${Number(parts[1])}月${Number(parts[2])}日`
 }
 
 export default function HistoryPage() {
@@ -70,6 +75,8 @@ export default function HistoryPage() {
   const streak = getCurrentStreak()
   const totalDays = getTotalBrushedDays()
   const monthBrushed = daySessionMap.size
+  const daysInMonth = new Date(year, month, 0).getDate()
+  const monthRate = daysInMonth > 0 ? Math.round((monthBrushed / daysInMonth) * 100) : 0
   const todayStr = getBusinessDate(now)
 
   const selectedRecords: BrushingRecord[] = selectedDate ? getRecordsByDate(selectedDate) : []
@@ -97,44 +104,116 @@ export default function HistoryPage() {
 
   return (
     <View className="theme-page app-scroll theme-day min-h-screen">
-      <View className="pb-32 px-page-x max-w-2xl mx-auto flex flex-col gap-4" style={{ paddingTop: safeTopPadding }}>
-        <Calendar
-          year={year}
-          month={month}
-          todayStr={todayStr}
-          selectedDate={selectedDate}
-          daySessionMap={daySessionMap}
-          monthBrushed={monthBrushed}
-          streak={streak}
-          totalDays={totalDays}
-          onPrevMonth={handlePrevMonth}
-          onNextMonth={handleNextMonth}
-          onSelectDate={setSelectedDate}
-        />
+      <View className="pb-bottom-safe px-page-x max-w-2xl mx-auto flex flex-col" style={{ paddingTop: safeTopPadding }}>
 
-        <Section
-          title={selectedDate ? `${selectedDate} 记录` : '选择日期查看详情'}
-          className="min-h-[180px]"
-        >
+        {/* ── 编辑式页面标题 ── */}
+        <Text className="text-display-sm font-body font-medium tracking-tight text-content">
+          历史
+        </Text>
+
+        {/* ── 三列统计网格 ── */}
+        <View className="mt-6 grid grid-cols-3 gap-3">
+          <View className="rounded-anthropic border border-content/[0.06] bg-surface-white p-4 flex flex-col items-center">
+            <Text className="text-display-md font-heading font-bold tabular-nums text-primary">{streak}</Text>
+            <Text className="mt-1 text-label-xs font-heading font-medium tracking-wider text-content/40 uppercase">连续</Text>
+          </View>
+          <View className="rounded-anthropic border border-content/[0.06] bg-surface-white p-4 flex flex-col items-center">
+            <Text className="text-display-md font-heading font-bold tabular-nums text-content">{totalDays}</Text>
+            <Text className="mt-1 text-label-xs font-heading font-medium tracking-wider text-content/40 uppercase">总天数</Text>
+          </View>
+          <View className="rounded-anthropic border border-content/[0.06] bg-surface-white p-4 flex flex-col items-center">
+            <Text className="text-display-md font-heading font-bold tabular-nums text-info">{monthRate}%</Text>
+            <Text className="mt-1 text-label-xs font-heading font-medium tracking-wider text-content/40 uppercase">本月</Text>
+          </View>
+        </View>
+
+        {/* ── 标签式月份导航 ── */}
+        <View className="mt-8 flex items-center gap-3">
+          <Text className="text-label-sm font-heading font-semibold tracking-[0.1em] uppercase text-content/50 shrink-0">
+            {month}月
+          </Text>
+          <View className="flex-1 h-px bg-content/[0.08]" />
+          <View className="flex items-center gap-1.5 shrink-0">
+            <IconButton
+              icon="‹"
+              ariaLabel="上个月"
+              className="border border-content/[0.06] bg-surface-white text-content"
+              onClick={handlePrevMonth}
+            />
+            <IconButton
+              icon="›"
+              ariaLabel="下个月"
+              className="border border-content/[0.06] bg-surface-white text-content"
+              onClick={handleNextMonth}
+            />
+          </View>
+        </View>
+
+        {/* ── 日历网格 ── */}
+        <View className="mt-4">
+          <Calendar
+            year={year}
+            month={month}
+            todayStr={todayStr}
+            selectedDate={selectedDate}
+            daySessionMap={daySessionMap}
+            monthBrushed={monthBrushed}
+            streak={streak}
+            totalDays={totalDays}
+            onPrevMonth={handlePrevMonth}
+            onNextMonth={handleNextMonth}
+            onSelectDate={setSelectedDate}
+            hideHeader
+          />
+        </View>
+
+        {/* ── 日期详情：时间线式 ── */}
+        <View className="mt-8">
           {selectedDate ? (
-            completedRecords.length > 0 ? (
-              <List className="mt-1">
-                {completedRecords.map((record) => (
-                  <ListItem
-                    key={`${record.date}-${record.session}`}
-                    title={SESSION_LABELS[record.session] ?? '未知时段'}
-                    left={<Text className="text-base leading-none">{SESSION_ICONS[record.session]}</Text>}
-                    right={<Text className="text-paragraph-sm font-semibold text-primary">完成于 {formatCompletedTime(record.timestamp)}</Text>}
-                  />
-                ))}
-              </List>
-            ) : (
-              <Text className="text-paragraph-sm text-content/40 mt-3">当天暂无完成记录。</Text>
-            )
+            <View>
+              {/* 大号日期标题 + 装饰线 */}
+              <Text className="text-display-sm font-body font-medium tracking-tight text-content">
+                {formatSelectedDate(selectedDate)}
+              </Text>
+              <View className="mt-2 w-8 h-0.5 bg-primary/60 rounded-full" />
+
+              {completedRecords.length > 0 ? (
+                <View className="mt-6 pl-4 border-l-2 border-content/[0.06] flex flex-col gap-5">
+                  {completedRecords.map((record) => (
+                    <View key={`${record.date}-${record.session}`} className="relative">
+                      {/* 时间线圆点 */}
+                      <View className="absolute -left-[1.3125rem] top-1 size-2.5 rounded-full bg-primary border-2 border-surface" />
+
+                      <View className="flex items-start gap-3">
+                        <Text className="text-xl leading-none mt-px">
+                          {SESSION_ICONS[record.session]}
+                        </Text>
+                        <View className="flex-1 min-w-0">
+                          <Text className="text-paragraph-sm font-heading font-semibold text-content">
+                            {SESSION_LABELS[record.session] ?? '未知时段'}
+                          </Text>
+                          <Text className="mt-1 text-paragraph-md font-heading font-bold tabular-nums text-primary">
+                            {formatCompletedTime(record.timestamp)}
+                          </Text>
+                        </View>
+                      </View>
+                    </View>
+                  ))}
+                </View>
+              ) : (
+                <View className="mt-6 py-8 flex flex-col items-center">
+                  <Text className="text-display-md leading-none">🦷</Text>
+                  <Text className="mt-3 text-paragraph-sm text-content/30">当天暂无完成记录</Text>
+                </View>
+              )}
+            </View>
           ) : (
-            <Text className="text-paragraph-sm text-content/40 mt-3">点击上方日历日期后展示晨间/夜间完成记录。</Text>
+            <View className="py-10 flex flex-col items-center">
+              <Text className="text-display-md leading-none text-content/15">📅</Text>
+              <Text className="mt-3 text-paragraph-sm text-content/30">点击日历中的日期查看详情</Text>
+            </View>
           )}
-        </Section>
+        </View>
 
       </View>
 

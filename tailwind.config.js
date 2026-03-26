@@ -57,6 +57,9 @@ module.exports = {
         block: '2rem',
         'block-sm': '1.5rem',
         'page-x': '1.5rem',
+        'page-gap': '1.25rem',
+        'section-gap': '2rem',
+        'bottom-safe': '7rem',
       },
       fontSize: {
         countdown: ['6.25rem', { lineHeight: '1' }],

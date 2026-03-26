@@ -62,7 +62,7 @@ export default function IndexPage() {
       <View
         className={cn(
           'relative px-page-x max-w-2xl mx-auto',
-          isIdle ? 'h-screen overflow-hidden pb-28' : isBrushingFlow ? 'h-screen overflow-hidden pb-24' : 'min-h-screen pb-32'
+          isIdle ? 'h-screen overflow-hidden pb-bottom-safe' : isBrushingFlow ? 'h-screen overflow-hidden pb-bottom-safe' : 'min-h-screen pb-bottom-safe'
         )}
         style={{ paddingTop: safeTopPadding }}
       >

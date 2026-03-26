@@ -24,7 +24,7 @@ export default function Section({
   return (
     <Card className={cn('rounded-anthropic', className)}>
       {hasHeader && (
-        <CardHeader className="pb-2.5">
+        <CardHeader className="pb-2">
           <View className="flex items-start justify-between gap-3">
             <View className="min-w-0">
               {title && <Text className="text-label-sm font-heading font-semibold tracking-[0.1em] uppercase text-content/50">{title}</Text>}

@@ -38,7 +38,7 @@ export default function BrushIdleState({
           {todayHeading}
         </Text>
 
-        <Text className="block mt-8 text-display-xl font-body font-medium tracking-tight text-content animate-fade-up-delay-1 motion-reduce:animate-none">
+        <Text className="block mt-6 text-display-xl font-body font-medium tracking-tight text-content animate-fade-up-delay-1 motion-reduce:animate-none">
           {greeting}
         </Text>
 
@@ -48,10 +48,10 @@ export default function BrushIdleState({
       </View>
 
       {/* ── Divider ── */}
-      <View className="my-8 h-px bg-content/[0.1]" />
+      <View className="my-section-gap h-px bg-content/[0.1]" />
 
       {/* ── Daily status ── */}
-      <View className="flex flex-col gap-4 animate-fade-up-delay-2 motion-reduce:animate-none">
+      <View className="flex flex-col gap-3 animate-fade-up-delay-2 motion-reduce:animate-none">
         <View className="flex items-center justify-between">
           <View className="flex items-center gap-2">
             <Image src={iconSun} className="size-4" mode="aspectFit" />
@@ -86,7 +86,7 @@ export default function BrushIdleState({
       </View>
 
       {/* ── Divider ── */}
-      <View className="my-8 h-px bg-content/[0.1]" />
+      <View className="my-section-gap h-px bg-content/[0.1]" />
 
       {/* ── Streak + Milestone ── */}
       <View className="animate-fade-up-delay-3 motion-reduce:animate-none">
