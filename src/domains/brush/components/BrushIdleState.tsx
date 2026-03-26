@@ -105,7 +105,7 @@ export default function BrushIdleState({
         <Progress
           value={milestoneProgress}
           max={100}
-          label={`距离 ${nextMilestone} 天里程碑`}
+          label={`下一个目标 连续 ${nextMilestone} 天`}
           className="mt-4"
           trackClassName="h-1 bg-content/[0.06]"
         />
