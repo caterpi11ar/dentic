@@ -1,6 +1,6 @@
 import { View, Text } from '@tarojs/components'
+import type { KeyboardEvent as ReactKeyboardEvent } from 'react'
 import Badge from '@/components/ui/Badge'
-import Button from '@/components/ui/Button'
 import { Card, CardContent, CardHeader } from '@/components/ui/Card'
 import IconButton from '@/components/ui/IconButton'
 import { cn } from '@/components/ui/cn'
@@ -52,11 +52,17 @@ function CalendarDayButton({
   onSelectDate,
 }: CalendarDayButtonProps) {
   const isBrushed = !!sessionInfo
+  const handleActivate = () => onSelectDate(dateStr)
+  const handleKeyDown = (event: ReactKeyboardEvent) => {
+    if (event.key !== 'Enter' && event.key !== ' ') return
+    event.preventDefault()
+    handleActivate()
+  }
 
   return (
     <View
       className={cn(
-        'h-10 rounded-md border overflow-hidden relative',
+        'h-9 rounded-md border overflow-hidden relative',
         isSelected
           ? 'bg-primary text-surface border-primary'
           : isToday
@@ -65,7 +71,10 @@ function CalendarDayButton({
       )}
       aria-label={`${month}月${day}日${isBrushed ? '，已刷牙' : ''}`}
       role="button"
-      onClick={() => onSelectDate(dateStr)}
+      aria-pressed={isSelected}
+      tabIndex={0}
+      onClick={handleActivate}
+      onKeyDown={handleKeyDown}
     >
       <View className="h-full w-full flex items-center justify-center">
         <Text
@@ -84,8 +93,8 @@ function CalendarDayButton({
 
       {isBrushed && (
         <View className="absolute bottom-0 left-0 right-0 flex">
-          <View className={cn('h-1 w-1/2', sessionInfo?.morning ? 'bg-amber-400' : 'bg-transparent')} />
-          <View className={cn('h-1 w-1/2', sessionInfo?.evening ? 'bg-indigo-400' : 'bg-transparent')} />
+          <View className={cn('h-0.5 w-1/2', sessionInfo?.morning ? 'bg-amber-400' : 'bg-transparent')} />
+          <View className={cn('h-0.5 w-1/2', sessionInfo?.evening ? 'bg-indigo-400' : 'bg-transparent')} />
         </View>
       )}
     </View>
@@ -113,27 +122,29 @@ export default function Calendar({
   return (
     <Card className="rounded-anthropic bg-surface-white border border-content/[0.06]">
       {!hideHeader && (
-        <CardHeader className="pb-2">
+        <CardHeader className="px-4 pt-4 pb-1.5">
           <View className="flex items-center justify-between">
-            <Text className="text-paragraph-sm font-heading font-semibold text-content">{formatMonth(year, month)}</Text>
+            <Text className="text-label-sm font-heading font-semibold tracking-[0.08em] uppercase text-content/60">
+              {formatMonth(year, month)}
+            </Text>
             <View className="flex items-center gap-2">
               <IconButton
                 icon="‹"
                 ariaLabel="上个月"
-                className="border border-content/[0.06] bg-surface-white text-content"
+                className="size-9 min-h-9 min-w-9 border border-content/[0.06] bg-surface-white text-content"
                 onClick={onPrevMonth}
               />
               <IconButton
                 icon="›"
                 ariaLabel="下个月"
-                className="border border-content/[0.06] bg-surface-white text-content"
+                className="size-9 min-h-9 min-w-9 border border-content/[0.06] bg-surface-white text-content"
                 onClick={onNextMonth}
               />
             </View>
           </View>
 
           {!hideStats && (
-            <View className="mt-3 flex flex-wrap items-center gap-2">
+            <View className="mt-2.5 flex flex-wrap items-center gap-2">
               <Badge variant="secondary">本月 {monthBrushed}</Badge>
               <Badge variant="secondary">连续 {streak}</Badge>
               <Badge variant="secondary">累计 {totalDays}</Badge>
@@ -142,18 +153,18 @@ export default function Calendar({
         </CardHeader>
       )}
 
-      <CardContent className="pt-1">
+      <CardContent className="pt-1 px-4 pb-4">
         <View className="grid grid-cols-7 mb-1">
           {WEEKDAYS.map((weekday) => (
-            <Text key={weekday} className="text-center text-label-xs font-heading text-content/40 py-1.5 uppercase">
+            <Text key={weekday} className="text-center text-label-xs font-heading text-content/40 py-1 uppercase">
               {weekday}
             </Text>
           ))}
         </View>
 
-        <View className="grid grid-cols-7 gap-y-1.5 gap-x-1">
+        <View className="grid grid-cols-7 gap-y-1 gap-x-1">
           {Array.from({ length: firstDayOfWeek }, (_, i) => (
-            <View key={`empty-${i}`} className="h-10" />
+            <View key={`empty-${i}`} className="h-9" />
           ))}
 
           {Array.from({ length: daysInMonth }, (_, i) => {

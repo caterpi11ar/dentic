@@ -1,5 +1,5 @@
 import { View, Text } from '@tarojs/components'
-import type { ReactNode } from 'react'
+import type { KeyboardEvent as ReactKeyboardEvent, ReactNode } from 'react'
 import { cn } from '@/components/ui/cn'
 
 export interface BottomNavItem<T extends string = string> {
@@ -16,6 +16,12 @@ interface BottomNavProps<T extends string = string> {
 }
 
 export default function BottomNav<T extends string>({ items, activeKey, onChange, className }: BottomNavProps<T>) {
+  const handleKeyDown = (event: ReactKeyboardEvent, key: T) => {
+    if (event.key !== 'Enter' && event.key !== ' ') return
+    event.preventDefault()
+    onChange(key)
+  }
+
   return (
     <View
       className={cn(
@@ -36,9 +42,12 @@ export default function BottomNav<T extends string>({ items, activeKey, onChange
               active ? 'text-primary' : 'text-content/40 active:opacity-80'
             )}
             onClick={() => onChange(item.key)}
+            onKeyDown={(event) => handleKeyDown(event, item.key)}
             role="tab"
             aria-selected={active}
             aria-current={active ? 'page' : undefined}
+            aria-label={item.label}
+            tabIndex={0}
           >
             <Text className="text-lg leading-none">{item.icon}</Text>
             <Text className={cn('text-label-xs font-heading font-semibold tracking-[0.06em]', active ? 'text-primary' : 'text-content/40')}>

@@ -1,9 +1,10 @@
 import { useMemo, useRef, useState } from 'react'
-import { View, Text } from '@tarojs/components'
+import { View, Text, Image } from '@tarojs/components'
 import { showShareMenu, useDidShow, useShareAppMessage, useShareTimeline } from '@tarojs/taro'
 import InPageTabBar from '@/components/InPageTabBar'
 import Calendar from '@/components/Calendar'
-import IconButton from '@/components/ui/IconButton'
+import iconSun from '@/assets/icons/sun.svg'
+import iconMoon from '@/assets/icons/moon.svg'
 import { getBusinessAnchorDate, getBusinessDate } from '@/services/dateBoundary'
 import { applyLightThemeToChrome } from '@/services/theme'
 import { getPageTopPadding } from '@/utils/layout'
@@ -16,19 +17,29 @@ import { generateShareMessage } from '@/services/share'
 import type { BrushingRecord } from '@/types'
 
 const SESSION_LABELS = { morning: '晨间', evening: '夜间' } as const
-const SESSION_ICONS = { morning: '☀️', evening: '🌙' } as const
+const SESSION_ICONS = { morning: iconSun, evening: iconMoon } as const
+const DATE_LABEL_FORMATTER = new Intl.DateTimeFormat('zh-CN', { month: 'numeric', day: 'numeric' })
+const TIME_FORMATTER = new Intl.DateTimeFormat('zh-CN', { hour: '2-digit', minute: '2-digit', hour12: false })
+
+function parseDateString(dateStr: string): Date | null {
+  const parts = dateStr.split('-').map(Number)
+  if (parts.length !== 3 || parts.some((part) => Number.isNaN(part))) return null
+  const [year, month, day] = parts
+  const date = new Date(year, month - 1, day)
+  return Number.isNaN(date.getTime()) ? null : date
+}
 
 function formatCompletedTime(timestamp?: number): string {
   if (typeof timestamp !== 'number') return '--:--'
   const date = new Date(timestamp)
   if (Number.isNaN(date.getTime())) return '--:--'
-  return `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
+  return TIME_FORMATTER.format(date)
 }
 
 function formatSelectedDate(dateStr: string): string {
-  const parts = dateStr.split('-')
-  if (parts.length !== 3) return dateStr
-  return `${Number(parts[1])}月${Number(parts[2])}日`
+  const date = parseDateString(dateStr)
+  if (!date) return dateStr
+  return DATE_LABEL_FORMATTER.format(date)
 }
 
 export default function HistoryPage() {
@@ -79,8 +90,21 @@ export default function HistoryPage() {
   const monthRate = daysInMonth > 0 ? Math.round((monthBrushed / daysInMonth) * 100) : 0
   const todayStr = getBusinessDate(now)
 
-  const selectedRecords: BrushingRecord[] = selectedDate ? getRecordsByDate(selectedDate) : []
-  const completedRecords = selectedRecords.filter((record) => record.completed)
+  const selectedRecords = useMemo<BrushingRecord[]>(
+    () => (selectedDate ? getRecordsByDate(selectedDate) : []),
+    [selectedDate]
+  )
+  const selectedTimes = useMemo(() => {
+    const result = { morning: '--:--', evening: '--:--' }
+    selectedRecords
+      .filter((record) => record.completed)
+      .forEach((record) => {
+        const time = formatCompletedTime(record.timestamp)
+        if (record.session === 'morning') result.morning = time
+        if (record.session === 'evening') result.evening = time
+      })
+    return result
+  }, [selectedRecords])
 
   const handlePrevMonth = () => {
     setSelectedDate(null)
@@ -103,54 +127,28 @@ export default function HistoryPage() {
   }
 
   return (
-    <View className="theme-page app-scroll theme-day min-h-screen">
-      <View className="pb-bottom-safe px-page-x max-w-2xl mx-auto flex flex-col" style={{ paddingTop: safeTopPadding }}>
-
-        {/* ── 编辑式页面标题 ── */}
+    <View className="theme-page theme-day h-screen overflow-hidden">
+      <View className="px-page-x max-w-2xl mx-auto h-full pb-bottom-safe flex flex-col" style={{ paddingTop: safeTopPadding }}>
         <Text className="text-display-sm font-body font-medium tracking-tight text-content">
           历史
         </Text>
 
-        {/* ── 三列统计网格 ── */}
-        <View className="mt-6 grid grid-cols-3 gap-3">
-          <View className="rounded-anthropic border border-content/[0.06] bg-surface-white p-4 flex flex-col items-center">
-            <Text className="text-display-md font-heading font-bold tabular-nums text-primary">{streak}</Text>
-            <Text className="mt-1 text-label-xs font-heading font-medium tracking-wider text-content/40 uppercase">连续</Text>
+        <View className="mt-4 rounded-anthropic border border-content/[0.06] bg-surface-white grid grid-cols-3 divide-x divide-content/[0.06]">
+          <View className="min-w-0 px-3 py-3.5 flex flex-col items-center justify-center text-center">
+            <Text className="text-label-xs font-heading font-semibold tracking-[0.08em] uppercase text-content/45">连续</Text>
+            <Text className="mt-1.5 text-paragraph-md font-heading font-bold tabular-nums text-primary leading-none">{streak} 天</Text>
           </View>
-          <View className="rounded-anthropic border border-content/[0.06] bg-surface-white p-4 flex flex-col items-center">
-            <Text className="text-display-md font-heading font-bold tabular-nums text-content">{totalDays}</Text>
-            <Text className="mt-1 text-label-xs font-heading font-medium tracking-wider text-content/40 uppercase">总天数</Text>
+          <View className="min-w-0 px-3 py-3.5 flex flex-col items-center justify-center text-center">
+            <Text className="text-label-xs font-heading font-semibold tracking-[0.08em] uppercase text-content/45">累计</Text>
+            <Text className="mt-1.5 text-paragraph-md font-heading font-bold tabular-nums text-content leading-none">{totalDays} 天</Text>
           </View>
-          <View className="rounded-anthropic border border-content/[0.06] bg-surface-white p-4 flex flex-col items-center">
-            <Text className="text-display-md font-heading font-bold tabular-nums text-info">{monthRate}%</Text>
-            <Text className="mt-1 text-label-xs font-heading font-medium tracking-wider text-content/40 uppercase">本月</Text>
-          </View>
-        </View>
-
-        {/* ── 标签式月份导航 ── */}
-        <View className="mt-8 flex items-center gap-3">
-          <Text className="text-label-sm font-heading font-semibold tracking-[0.1em] uppercase text-content/50 shrink-0">
-            {month}月
-          </Text>
-          <View className="flex-1 h-px bg-content/[0.08]" />
-          <View className="flex items-center gap-1.5 shrink-0">
-            <IconButton
-              icon="‹"
-              ariaLabel="上个月"
-              className="border border-content/[0.06] bg-surface-white text-content"
-              onClick={handlePrevMonth}
-            />
-            <IconButton
-              icon="›"
-              ariaLabel="下个月"
-              className="border border-content/[0.06] bg-surface-white text-content"
-              onClick={handleNextMonth}
-            />
+          <View className="min-w-0 px-3 py-3.5 flex flex-col items-center justify-center text-center">
+            <Text className="text-label-xs font-heading font-semibold tracking-[0.08em] uppercase text-content/45">本月</Text>
+            <Text className="mt-1.5 text-paragraph-md font-heading font-bold tabular-nums text-info leading-none">{monthRate}%</Text>
           </View>
         </View>
 
-        {/* ── 日历网格 ── */}
-        <View className="mt-4">
+        <View className="mt-4 flex-1 min-h-0 overflow-y-auto">
           <Calendar
             year={year}
             month={month}
@@ -163,58 +161,42 @@ export default function HistoryPage() {
             onPrevMonth={handlePrevMonth}
             onNextMonth={handleNextMonth}
             onSelectDate={setSelectedDate}
-            hideHeader
+            hideStats
           />
-        </View>
 
-        {/* ── 日期详情：时间线式 ── */}
-        <View className="mt-8">
-          {selectedDate ? (
-            <View>
-              {/* 大号日期标题 + 装饰线 */}
-              <Text className="text-display-sm font-body font-medium tracking-tight text-content">
-                {formatSelectedDate(selectedDate)}
-              </Text>
-              <View className="mt-2 w-8 h-0.5 bg-primary/60 rounded-full" />
-
-              {completedRecords.length > 0 ? (
-                <View className="mt-6 pl-4 border-l-2 border-content/[0.06] flex flex-col gap-5">
-                  {completedRecords.map((record) => (
-                    <View key={`${record.date}-${record.session}`} className="relative">
-                      {/* 时间线圆点 */}
-                      <View className="absolute -left-[1.3125rem] top-1 size-2.5 rounded-full bg-primary border-2 border-surface" />
-
-                      <View className="flex items-start gap-3">
-                        <Text className="text-xl leading-none mt-px">
-                          {SESSION_ICONS[record.session]}
-                        </Text>
-                        <View className="flex-1 min-w-0">
-                          <Text className="text-paragraph-sm font-heading font-semibold text-content">
-                            {SESSION_LABELS[record.session] ?? '未知时段'}
-                          </Text>
-                          <Text className="mt-1 text-paragraph-md font-heading font-bold tabular-nums text-primary">
-                            {formatCompletedTime(record.timestamp)}
-                          </Text>
-                        </View>
-                      </View>
-                    </View>
-                  ))}
-                </View>
-              ) : (
-                <View className="mt-6 py-8 flex flex-col items-center">
-                  <Text className="text-display-md leading-none">🦷</Text>
-                  <Text className="mt-3 text-paragraph-sm text-content/30">当天暂无完成历史</Text>
-                </View>
+          <View className="mt-3 rounded-anthropic border border-content/[0.06] bg-surface-white p-4">
+            <View className="flex items-baseline justify-between">
+              <Text className="text-label-xs font-heading font-semibold tracking-[0.1em] uppercase text-content/45">当天记录</Text>
+              {selectedDate && (
+                <Text className="text-paragraph-sm font-heading text-content-secondary">
+                  {formatSelectedDate(selectedDate)}
+                </Text>
               )}
             </View>
-          ) : (
-            <View className="py-10 flex flex-col items-center">
-              <Text className="text-display-md leading-none text-content/15">📅</Text>
-              <Text className="mt-3 text-paragraph-sm text-content/30">点击日历中的日期查看详情</Text>
-            </View>
-          )}
+            {selectedDate ? (
+              <View className="mt-3 grid grid-cols-2 gap-2">
+                {(['morning', 'evening'] as const).map((session) => (
+                  <View
+                    key={session}
+                    className="rounded-anthropic-sm border border-content/[0.06] bg-primary-light/70 px-3 py-2.5 flex items-center justify-between"
+                  >
+                    <View className="flex items-center gap-1.5">
+                      <Image src={SESSION_ICONS[session]} className="size-4" mode="aspectFit" />
+                      <Text className="text-label-xs font-heading font-semibold tracking-[0.08em] uppercase text-content/50">
+                        {SESSION_LABELS[session]}
+                      </Text>
+                    </View>
+                    <Text className="text-paragraph-md font-heading font-bold tabular-nums text-primary ml-2">
+                      {selectedTimes[session]}
+                    </Text>
+                  </View>
+                ))}
+              </View>
+            ) : (
+              <Text className="mt-2 text-paragraph-sm text-content/35">请选择日期查看晨间和夜间时间</Text>
+            )}
+          </View>
         </View>
-
       </View>
 
       <InPageTabBar current="history" />

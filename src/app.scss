@@ -124,6 +124,7 @@ button::after {
 
 button:focus-visible,
 [role='button']:focus-visible,
+[role='tab']:focus-visible,
 [role='switch']:focus-visible,
 [role='radio']:focus-visible {
   outline: 2px solid rgba(var(--twc-primary), 0.5);
@@ -134,4 +135,3 @@ button:focus-visible,
 ::selection {
   background: rgba(204, 120, 92, 0.5);
 }
-
