@@ -119,6 +119,7 @@ export default function ToothScene({ currentStepIndex, isActive, compact = false
                   border: lit ? '1.5px solid #BF6141' : '1.5px solid #e8e6dc',
                   boxShadow: '0 2px 8px rgba(20,20,19,0.10)',
                   transition: 'background-color 0.3s',
+                  zIndex: Math.round(7 - Math.abs(i - 6.5)),
                 }}
               />
             )
@@ -142,6 +143,7 @@ export default function ToothScene({ currentStepIndex, isActive, compact = false
                   border: lit ? '1.5px solid #BF6141' : '1.5px solid #e8e6dc',
                   boxShadow: '0 2px 8px rgba(20,20,19,0.10)',
                   transition: 'background-color 0.3s',
+                  zIndex: Math.round(7 - Math.abs(i - 6.5)),
                 }}
               />
             )
