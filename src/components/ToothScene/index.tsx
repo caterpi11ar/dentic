@@ -15,15 +15,15 @@ interface Props {
 
 /**
  * 牙齿区域 → 对应的 tooth index
- * 上排 0~13（右→左），下排 14~27（右→左）
+ * 上排 0~13（左→右），下排 14~27（右→左）
  */
 const ZONE_TOOTH_MAP: Record<string, number[]> = {
-  'upper-outer-right': [0, 1, 2, 3],
+  'upper-outer-right': [10, 11, 12, 13],
   'upper-outer-front': [4, 5, 6, 7, 8, 9],
-  'upper-outer-left': [10, 11, 12, 13],
-  'upper-inner-right': [0, 1, 2, 3],
+  'upper-outer-left': [0, 1, 2, 3],
+  'upper-inner-right': [10, 11, 12, 13],
   'upper-inner-front': [4, 5, 6, 7, 8, 9],
-  'upper-inner-left': [10, 11, 12, 13],
+  'upper-inner-left': [0, 1, 2, 3],
   'upper-occlusal': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
   'lower-outer-right': [14, 15, 16, 17],
   'lower-outer-front': [18, 19, 20, 21, 22, 23],
