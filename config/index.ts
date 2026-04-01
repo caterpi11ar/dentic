@@ -44,16 +44,6 @@ export default defineConfig({
       },
     },
   },
-  h5: {
-    publicPath: '/',
-    staticDirectory: 'static',
-    postcss: {
-      autoprefixer: {
-        enable: true,
-        config: {},
-      },
-    },
-  },
   compiler: {
     type: 'vite',
     vitePlugins: [
@@ -67,7 +57,6 @@ export default defineConfig({
       },
       uvtw({
         rem2rpx: true,
-        disabled: process.env.TARO_ENV === 'h5',
         injectAdditionalCssVarScope: true,
       }),
     ],

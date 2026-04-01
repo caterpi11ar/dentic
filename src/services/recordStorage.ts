@@ -10,15 +10,25 @@ function invalidateRecordCache() {
 }
 
 /** 迁移旧历史：缺少 session 字段的默认设为 morning */
-function migrateRecords(records: BrushingRecord[]): BrushingRecord[] {
+function migrateRecords(records: unknown): BrushingRecord[] {
+  if (!Array.isArray(records)) return []
   let migrated = false
   const result = records.map((record) => {
-    if (!record.session) {
+    if (!record || typeof record !== 'object') return null
+    const current = record as Partial<BrushingRecord>
+    if (typeof current.date !== 'string') return null
+    if (typeof current.completed !== 'boolean') return null
+    if (typeof current.duration !== 'number') return null
+    if (typeof current.completedSteps !== 'number') return null
+    if (typeof current.timestamp !== 'number') return null
+
+    if (!current.session) {
       migrated = true
-      return { ...record, session: 'morning' as const }
+      return { ...current, session: 'morning' as const } as BrushingRecord
     }
-    return record
-  })
+    if (current.session !== 'morning' && current.session !== 'evening') return null
+    return current as BrushingRecord
+  }).filter((record): record is BrushingRecord => !!record)
   if (migrated) {
     Taro.setStorageSync(RECORDS_STORAGE_KEY, result)
   }

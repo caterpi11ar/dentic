@@ -18,8 +18,10 @@ import type { BrushingRecord } from '@/types'
 
 const SESSION_LABELS = { morning: '晨间', evening: '夜间' } as const
 const SESSION_ICONS = { morning: iconSun, evening: iconMoon } as const
-const DATE_LABEL_FORMATTER = new Intl.DateTimeFormat('zh-CN', { month: 'numeric', day: 'numeric' })
-const TIME_FORMATTER = new Intl.DateTimeFormat('zh-CN', { hour: '2-digit', minute: '2-digit', hour12: false })
+
+function pad2(value: number): string {
+  return String(value).padStart(2, '0')
+}
 
 function parseDateString(dateStr: string): Date | null {
   const parts = dateStr.split('-').map(Number)
@@ -33,13 +35,13 @@ function formatCompletedTime(timestamp?: number): string {
   if (typeof timestamp !== 'number') return '--:--'
   const date = new Date(timestamp)
   if (Number.isNaN(date.getTime())) return '--:--'
-  return TIME_FORMATTER.format(date)
+  return `${pad2(date.getHours())}:${pad2(date.getMinutes())}`
 }
 
 function formatSelectedDate(dateStr: string): string {
   const date = parseDateString(dateStr)
   if (!date) return dateStr
-  return DATE_LABEL_FORMATTER.format(date)
+  return `${date.getMonth() + 1}月${date.getDate()}日`
 }
 
 export default function HistoryPage() {
