@@ -1,5 +1,6 @@
 import { View, Text, Image } from '@tarojs/components'
 import Progress from '@/components/ui/Progress'
+import { useWeather } from '@/hooks/useWeather'
 import type { DailyStatus } from '@/domains/brush/utils'
 import iconSun from '@/assets/icons/sun.svg'
 import iconMoon from '@/assets/icons/moon.svg'
@@ -30,15 +31,24 @@ export default function BrushIdleState({
   milestoneProgress,
   onStart,
 }: BrushIdleStateProps) {
+  const { weather } = useWeather()
+
   return (
     <View className="h-full flex flex-col">
       {/* ── Hero ── */}
       <View className="pt-4 animate-fade-up motion-reduce:animate-none">
-        <Text className="text-label-sm font-heading font-semibold tracking-[0.12em] uppercase text-content/50">
-          {todayHeading}
-        </Text>
+        <View className="flex items-baseline gap-3">
+          <Text className="text-paragraph-sm font-heading font-semibold tracking-[0.12em] uppercase text-content/60">
+            {todayHeading}
+          </Text>
+          {weather && (
+            <Text className="text-paragraph-sm font-heading font-semibold text-content/60">
+              {weather.temp}° {weather.description}
+            </Text>
+          )}
+        </View>
 
-        <Text className="block mt-6 text-display-xl font-body font-medium tracking-tight text-content animate-fade-up-delay-1 motion-reduce:animate-none">
+        <Text className="block mt-6 text-display-md font-body font-medium tracking-tight text-content animate-fade-up-delay-1 motion-reduce:animate-none">
           {greeting}
         </Text>
 

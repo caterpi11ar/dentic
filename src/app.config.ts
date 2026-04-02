@@ -7,4 +7,10 @@ export default defineAppConfig({
     navigationBarTitleText: '刷了吗 | 刷牙',
     navigationBarTextStyle: 'black',
   },
+  permission: {
+    'scope.userLocation': {
+      desc: '用于获取当地天气信息',
+    },
+  },
+  requiredPrivateInfos: ['getLocation'],
 })
