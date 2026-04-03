@@ -1,41 +1,48 @@
-# Dentic 微信小程序技术文档（基于 PRD V1.0）
+# Dentic 微信小程序技术文档（基于 PRD V1.1）
 
 ## 1. 文档目标
 
-本文档用于将 `docs/prd/wechat-miniapp-kids-brushing-prd.md` 转化为可开发的技术方案，覆盖：
+本文档将 PRD V1.1（去家庭协作、改好友排行榜）转化为可落地技术方案，覆盖：
 
 - 系统架构与模块边界
-- 数据模型与存储策略
-- API 与云函数契约
-- 小程序端改造方案
-- 事件埋点与质量保障
-- 里程碑与发布策略
+- 数据模型与索引
+- API/云函数契约
+- 前端改造方案
+- 埋点口径与验收标准
 
 ## 2. 现状与差距
 
-### 2.1 当前工程现状（已存在）
+### 2.1 当前工程现状
 
-- 端技术栈：Taro 4 + React + TypeScript
+- 技术栈：Taro 4 + React + TypeScript
 - 页面：`index / history / settings`
-- 核心能力：15 区域刷牙流程、本地打卡记录、本地设置、基础天气显示
+- 现有能力：15 区域刷牙引导、本地打卡记录、本地设置、基础天气
 - 存储：微信本地存储（记录/设置/天气缓存）
 
-### 2.2 与 PRD 的关键差距（需新增）
+### 2.2 与新 PRD 的差距
 
-- 家庭协作域（家庭、成员、孩子、鼓励、周报）
-- 多设备协同（仅本地存储无法满足家庭共享）
-- 可运营埋点口径（目前缺统一事件模型）
-- 首页信息结构需升级为“刷牙 + 家庭 + 天气”组合看板
+- 缺好友关系域（添加好友、双向关系、隐私可见性）
+- 缺排行榜域（日榜/周榜/连续打卡榜）
+- 缺排行榜互动能力（点赞/加油）
+- 缺统一埋点与数据口径
 
-## 3. 总体技术架构
+## 3. 能力边界（微信约束）
 
-### 3.1 架构原则
+- 小程序无法直接拉取用户全量微信好友列表
+- “微信好友排行榜”技术实现采用“站内好友关系榜”：
+  - 双方均注册本小程序
+  - 通过分享卡片/邀请码建立双向好友关系
+  - 仅在该关系集合内计算和展示排行榜
 
-- 刷牙引导链路优先本地可用（弱网可完成）
-- 家庭协作能力基于云端（保证跨成员一致性）
-- 先实现 MVP 最小闭环，再迭代周报与多孩子
+## 4. 总体技术架构
 
-### 3.2 逻辑架构
+### 4.1 架构原则
+
+- 刷牙主流程本地优先，弱网可完成
+- 排行榜与好友关系云端统一计算，保证多端一致
+- 埋点与业务写入解耦，不阻塞主流程
+
+### 4.2 逻辑架构
 
 ```mermaid
 flowchart LR
@@ -43,111 +50,105 @@ flowchart LR
   A --> C[本地存储层]
   A --> D[云函数 API 网关]
 
-  D --> E[(Cloud DB: family)]
-  D --> F[(Cloud DB: child)]
+  D --> E[(Cloud DB: user_profile)]
+  D --> F[(Cloud DB: friend_relation)]
   D --> G[(Cloud DB: brush_record)]
-  D --> H[(Cloud DB: encouragement)]
-  D --> I[(Cloud DB: invite)]
+  D --> H[(Cloud DB: leaderboard_snapshot)]
+  D --> I[(Cloud DB: encouragement)]
 
   A --> J[天气服务适配]
   J --> K[Open-Meteo]
 ```
 
-### 3.3 技术选型
+### 4.3 技术选型
 
-- 前端：沿用现有 Taro + React 架构
+- 前端：沿用 Taro + React
 - 云端：微信云开发（Cloud Functions + Cloud Database）
-- 鉴权：微信 `openid` 作为用户唯一标识
-- 天气：延续 Open-Meteo（客户端请求，缓存 + 授权降级）
-- 统计：前端埋点上报至云函数，再入库
+- 身份：`openid` 作为用户唯一标识
+- 天气：Open-Meteo + 本地缓存
+- 统计：前端埋点上报云函数
 
-## 4. 前端改造设计
+## 5. 前端改造设计
 
-### 4.1 目录与模块新增
+### 5.1 新增目录
 
-建议新增以下目录：
+- `src/domains/rank/`：排行榜域（状态、仓储、组件）
+- `src/domains/friend/`：好友域（关系管理、邀请）
+- `src/services/api/`：云函数调用封装
+- `src/services/auth/`：登录态与 `openid`
+- `src/services/analytics/`：埋点上报
+- `src/pages/rank/`：好友排行榜页
+- `src/pages/profile/`：我的页（可见性与好友管理）
 
-- `src/domains/family/`：家庭域（状态、仓储、组件）
-- `src/services/api/`：云函数调用封装（统一错误码）
-- `src/services/auth/`：登录态、`openid` 获取与缓存
-- `src/pages/family/`：我的家页（主入口）
-- `src/pages/profile/`：我的页（权限、城市、通知）
-- `src/services/analytics/`：埋点发送与批量缓冲
+### 5.2 页面路由调整
 
-### 4.2 页面路由调整
+`app.config.ts` 目标页：
 
-`app.config.ts` 目标页集合（MVP）：
+- `pages/index/index`
+- `pages/rank/index`
+- `pages/profile/index`
+- `pages/history/index`（保留）
+- `pages/settings/index`（保留）
 
-- `pages/index/index`（首页/刷牙主流程）
-- `pages/family/index`（我的家）
-- `pages/profile/index`（我的）
-- `pages/history/index`（历史，保留）
-- `pages/settings/index`（设置，保留）
+### 5.3 刷牙流程改造
 
-### 4.3 刷牙流程模块改造
+- 保留现有状态机（`idle/countdown/brushing/paused/completed`）
+- 完成后写入策略：
+  1. 先写本地记录
+  2. 异步上报云端 `brush.upsertRecord`
+  3. 上报失败进入重试队列（下次启动补偿）
 
-现有刷牙状态机继续复用，新增两个扩展点：
+### 5.4 首页改造
 
-- 完成后写入双存储：本地记录 + 云端记录（异步，不阻塞完成页）
-- 完成后触发家庭看板刷新（存在家庭关系时）
+- 新增“我的排名摘要卡”
+- 无好友时展示“添加好友引导卡”
+- 天气模块保持辅助层，不遮挡刷牙入口
 
-数据写入策略：
+### 5.5 排行榜页改造
 
-1. 先写本地，保证体验闭环。
-2. 再上报云端，失败进入重试队列。
-3. 下次启动时自动补偿失败上报。
+- 榜单类型切换：`today / weekly / streak`
+- 展示：排名、昵称、头像、核心指标、排名变化
+- 互动：点赞/加油
+- 空态：暂无好友、好友暂无数据
 
-### 4.4 天气模块改造
+## 6. 云端数据模型
 
-- 保留当前 `location -> open-meteo -> cache` 流程
-- 增加“手动选城”配置持久化（`profile` 页管理）
-- 晚上 20:00 以后增加“明日天气”展示分支
-
-## 5. 云端数据模型
-
-### 5.1 集合设计
+### 6.1 集合设计
 
 1. `user_profile`
 - `_id`
-- `openid`（唯一索引）
+- `openid`（唯一）
 - `nickname`
 - `avatar`
+- `rankVisibility`（public/friends_only/private）
 - `cityCode`（可空）
 - `createdAt`
 - `updatedAt`
 
-2. `family`
+2. `friend_relation`
 - `_id`
-- `name`
-- `ownerOpenId`
-- `status`（active/dissolved）
+- `userOpenId`
+- `friendOpenId`
+- `status`（pending/active/blocked）
+- `source`（invite/share）
 - `createdAt`
 - `updatedAt`
 
-3. `family_member`
+约束：双向各一条记录，`active` 才计入榜单。
+
+3. `friend_invite`
 - `_id`
-- `familyId`
+- `code`
+- `fromOpenId`
+- `expireAt`
+- `maxUse`
+- `usedCount`
+- `status`（active/expired/revoked）
+
+4. `brush_record`
+- `_id`
 - `openId`
-- `role`（admin/collaborator）
-- `joinedAt`
-- `status`（active/pending/removed）
-
-4. `child_profile`
-- `_id`
-- `familyId`
-- `nickname`
-- `ageRange`（3-5 / 6-8 / 9-12）
-- `avatar`
-- `brushPlanVersion`
-- `createdAt`
-- `updatedAt`
-
-5. `brush_record`
-- `_id`
-- `familyId`（可空，单人模式）
-- `childId`（可空，MVP 单孩子可默认）
-- `openId`（操作者）
-- `bizDate`（业务日 YYYY-MM-DD，按 6:00 分界）
+- `bizDate`（YYYY-MM-DD，6:00 切日）
 - `session`（morning/evening）
 - `completed`
 - `durationSec`
@@ -155,37 +156,35 @@ flowchart LR
 - `source`（local_sync/direct）
 - `createdAt`
 
-唯一约束建议：`familyId + childId + bizDate + session`。
+5. `leaderboard_snapshot`（可选，MVP 可实时算）
+- `_id`
+- `periodType`（today/weekly/streak）
+- `dateKey`
+- `openId`
+- `score`
+- `rank`
+- `createdAt`
 
 6. `encouragement`
 - `_id`
-- `familyId`
-- `childId`
 - `fromOpenId`
-- `type`（flower/like/praise/cheer）
+- `toOpenId`
+- `bizDate`
+- `type`（like/cheer）
 - `message`
 - `createdAt`
 
-7. `invite`
-- `_id`
-- `familyId`
-- `code`（短码）
-- `createdBy`
-- `expireAt`
-- `maxUse`
-- `usedCount`
-- `status`（active/expired/revoked）
-
-### 5.2 索引建议
+### 6.2 索引建议
 
 - `user_profile.openid` 唯一索引
-- `family_member.familyId + openId` 复合唯一索引
-- `brush_record.familyId + childId + bizDate + session` 唯一索引
-- `invite.code` 唯一索引
+- `friend_relation.userOpenId + friendOpenId` 唯一索引
+- `friend_invite.code` 唯一索引
+- `brush_record.openId + bizDate + session` 唯一索引
+- `leaderboard_snapshot.periodType + dateKey + rank` 普通索引
 
-## 6. API/云函数契约
+## 7. API/云函数契约
 
-所有接口统一返回：
+统一响应：
 
 ```json
 {
@@ -195,63 +194,77 @@ flowchart LR
 }
 ```
 
-错误码约定：
+错误码：
 
 - `4001` 参数错误
 - `4003` 无权限
 - `4004` 资源不存在
-- `4090` 状态冲突（如重复加入）
+- `4090` 状态冲突
 - `5000` 系统错误
 
-### 6.1 家庭域接口
+### 7.1 好友域接口
 
-1. `family.create`
-- 入参：`{ name: string }`
-- 出参：`{ familyId: string }`
-
-2. `family.getMyHome`
+1. `friend.createInvite`
 - 入参：`{}`
-- 出参：`{ family, members, children, todayBoard }`
-
-3. `family.createInvite`
-- 入参：`{ familyId: string }`
 - 出参：`{ code: string, expireAt: number }`
 
-4. `family.joinByCode`
+2. `friend.acceptInvite`
 - 入参：`{ code: string }`
-- 出参：`{ familyId: string, role: string }`
+- 出参：`{ relationEstablished: true }`
 
-5. `family.addChild`
-- 入参：`{ familyId, nickname, ageRange, avatar? }`
-- 出参：`{ childId }`
+3. `friend.list`
+- 入参：`{}`
+- 出参：`{ friends: Array<{ openId, nickname, avatar, status }> }`
 
-6. `family.sendEncouragement`
-- 入参：`{ familyId, childId, type, message? }`
-- 出参：`{ encouragementId }`
+4. `friend.remove`
+- 入参：`{ friendOpenId: string }`
+- 出参：`{ removed: true }`
 
-### 6.2 刷牙记录接口
+### 7.2 刷牙记录接口
 
 1. `brush.upsertRecord`
-- 入参：`{ familyId?, childId?, bizDate, session, completed, durationSec, completedSteps, source }`
+- 入参：`{ bizDate, session, completed, durationSec, completedSteps, source }`
 - 出参：`{ recordId }`
 
 2. `brush.getDailyStatus`
-- 入参：`{ familyId?, childId?, bizDate }`
+- 入参：`{ bizDate }`
 - 出参：`{ morningDone, eveningDone, morningTime?, eveningTime? }`
 
-3. `brush.getWeeklySummary`（MVP 可预留）
-- 入参：`{ familyId, childId, weekStartDate }`
-- 出参：`{ completionRate, streakDays, missDates, memberParticipation }`
+### 7.3 排行榜接口
 
-### 6.3 埋点接口
+1. `rank.getLeaderboard`
+- 入参：`{ periodType: 'today' | 'weekly' | 'streak', page, pageSize }`
+- 出参：`{ list: Array<RankItem>, myRank: RankItem | null }`
 
-1. `analytics.track`
-- 入参：`{ eventName, eventTime, page, userId, familyId?, childId?, props }`
-- 出参：`{ accepted: true }`
+`RankItem`：
 
-## 7. 时序与状态设计
+```json
+{
+  "openId": "string",
+  "nickname": "string",
+  "avatar": "string",
+  "score": 0,
+  "rank": 1,
+  "rankDelta": -1,
+  "todayDone": true,
+  "weeklyRate": 0.86,
+  "streakDays": 5
+}
+```
 
-### 7.1 刷牙完成时序
+2. `rank.sendEncouragement`
+- 入参：`{ toOpenId: string, type: 'like' | 'cheer', message?: string }`
+- 出参：`{ encouragementId: string }`
+
+### 7.4 用户设置接口
+
+1. `user.updateRankVisibility`
+- 入参：`{ rankVisibility: 'public' | 'friends_only' | 'private' }`
+- 出参：`{ success: true }`
+
+## 8. 时序设计
+
+### 8.1 刷牙完成并入榜
 
 ```mermaid
 sequenceDiagram
@@ -266,103 +279,106 @@ sequenceDiagram
   FE->>FE: 展示完成页
   FE->>CF: brush.upsertRecord(async)
   CF->>DB: upsert brush_record
+  CF->>DB: 触发排行榜分数更新
   DB-->>CF: ok
   CF-->>FE: ok
 ```
 
-### 7.2 邀请加入时序
+### 8.2 添加好友
 
 ```mermaid
 sequenceDiagram
-  participant A as 管理者
-  participant B as 被邀请成员
+  participant A as 发起人
+  participant B as 接收人
   participant FE as 小程序前端
   participant CF as 云函数
   participant DB as Cloud DB
 
   A->>FE: 生成邀请码
-  FE->>CF: family.createInvite
-  CF->>DB: insert invite
+  FE->>CF: friend.createInvite
+  CF->>DB: insert friend_invite
   CF-->>FE: code
 
-  B->>FE: 输入/打开邀请码
-  FE->>CF: family.joinByCode
-  CF->>DB: 校验 invite + 写 family_member
-  CF-->>FE: join success
+  B->>FE: 输入邀请码
+  FE->>CF: friend.acceptInvite
+  CF->>DB: 写入双向 friend_relation(active)
+  CF-->>FE: relationEstablished
 ```
 
-## 8. 权限与安全
+## 9. 权限与安全
 
-- 位置权限：仅天气模块按需申请，拒绝后支持手动选城
-- 用户身份：仅使用微信登录态和 `openid`
-- 接口鉴权：云函数内二次校验成员关系（不得只信前端 `familyId`）
-- 数据最小化：孩子信息仅存必要字段，不采集敏感医疗数据
-- 审计字段：关键表包含 `createdAt/updatedAt/openId`
+- 位置权限仅用于天气
+- 云函数内按 `openid` 做鉴权与关系校验
+- 排行榜可见性按 `rankVisibility` 控制
+- 不采集微信通讯录或全量好友数据
+- 关键表保留审计字段（`createdAt/updatedAt`）
 
-## 9. 埋点设计（MVP）
+## 10. 埋点设计（MVP）
 
 核心事件：
 
 - `home_view`
 - `home_start_brush_click`
+- `home_rank_card_click`
 - `brush_start`
 - `brush_step_complete`
 - `brush_complete`
-- `family_create_click`
-- `family_invite_click`
-- `family_join_success`
-- `family_encourage_send`
+- `rank_view`
+- `rank_tab_switch`
+- `rank_add_friend_click`
+- `rank_encourage_click`
+- `friend_invite_created`
+- `friend_invite_accepted`
 - `weather_permission_request`
 - `weather_permission_granted`
 - `weather_permission_denied`
 
-埋点公共字段：
+公共字段：
 
 - `eventTime`
 - `page`
 - `openid`
-- `familyId`（可空）
-- `childId`（可空）
 - `appVersion`
 - `networkType`
 
-## 10. 兼容与迁移策略
+## 11. 兼容与迁移
 
-- 本地历史数据继续保留（`recordStorage` 兼容）
-- 新增云端同步不影响旧版本使用
-- 若用户未创建家庭：运行单人模式（`familyId` 为空）
-- 后续多孩子上线时，现有数据默认挂载到“默认孩子”
+- 旧本地打卡数据继续有效
+- 新版增加云同步与榜单，不影响纯本地流程
+- 未添加好友时排行榜页显示空态，不报错
+- 后续可从“站内好友榜”平滑扩展更多社交关系来源
 
-## 11. 测试与验收
+## 12. 测试与验收
 
-### 11.1 功能验收
+### 12.1 功能验收
 
-- 刷牙流程：开始、分区切换、暂停继续、完成反馈
-- 天气流程：授权成功、拒绝授权、手动选城、20:00 后展示明日天气
-- 家庭流程：创建、邀请、加入、看板、鼓励
+- 刷牙流程完整可用
+- 排行榜可展示、可切换、可互动
+- 添加好友与移除好友链路可用
+- 天气授权成功/失败分支可用
 
-### 11.2 技术验收
+### 12.2 技术验收
 
-- 刷牙完成写本地成功率 >= 99.9%
-- 云端上报成功率 >= 99%（含重试后）
-- 家庭接口 P95 < 500ms
+- 本地写记录成功率 >= 99.9%
+- 云端上报成功率 >= 99%（含重试）
+- 排行榜接口 P95 < 500ms
 - 首页首屏渲染（缓存命中）< 1.5s
 
-### 11.3 数据验收
+### 12.3 数据验收
 
-- `brush_complete` 与 `brush_record` 日汇总差异 <= 3%
-- 家庭创建率、邀请成功率可在 BI 看板日级可观测
+- `brush_complete` 与 `brush_record` 日汇总偏差 <= 3%
+- 好友添加成功率、排行榜访问率可日级观测
 
-## 12. 研发里程碑
+## 13. 里程碑
 
-- M1（3-5 天）：云端基础（登录、家庭/成员/孩子模型、基础接口）
-- M2（4-6 天）：小程序端家庭页面与首页看板接入
-- M3（3-4 天）：刷牙记录云同步、埋点、失败重试
-- M4（2-3 天）：联调、灰度、线上验证
+- M1（3-5 天）：好友关系与排行榜云端模型 + 基础接口
+- M2（4-6 天）：前端排行榜页、首页排名摘要、好友管理
+- M3（3-4 天）：云同步重试、埋点、联调
+- M4（2-3 天）：灰度与线上验证
 
-## 13. 非目标（MVP 不做）
+## 14. 非目标（MVP 不做）
 
-- 聊天式家庭沟通
-- 多孩子完整并行管理
-- 高级提醒策略（多时段、智能推荐）
+- 聊天能力
+- 复杂社交广场
+- 全量微信好友自动同步
 - 个性化刷牙路径算法
