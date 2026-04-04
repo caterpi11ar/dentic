@@ -1,5 +1,5 @@
 export default definePageConfig({
-  navigationBarTitleText: '刷了吗 | 历史',
+  navigationBarTitleText: '今天刷牙了吗 | 历史',
   enableShareAppMessage: true,
   enableShareTimeline: true,
 })

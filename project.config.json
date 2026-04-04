@@ -1,7 +1,7 @@
 {
   "miniprogramRoot": "dist/",
   "projectname": "dentic",
-  "description": "刷了吗 - 巴氏刷牙引导",
+  "description": "今天刷牙了吗 - 巴氏刷牙引导",
   "appid": "touristappid",
   "setting": {
     "urlCheck": true,
