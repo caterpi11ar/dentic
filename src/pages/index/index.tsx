@@ -12,6 +12,7 @@ import { formatTodayHeading, getGreeting } from '@/domains/brush/utils'
 import { getBusinessAnchorDate } from '@/services/dateBoundary'
 import { generateShareMessage } from '@/services/share'
 import { applyLightThemeToChrome } from '@/services/theme'
+import { trackEvent } from '@/services/analytics'
 import { getPageTopPadding } from '@/utils/layout'
 
 export default function IndexPage() {
@@ -35,6 +36,7 @@ export default function IndexPage() {
   useShareTimeline(() => ({ title: shareContent.title }))
   useDidShow(() => {
     applyLightThemeToChrome()
+    trackEvent('home_view')
     showShareMenu({
       withShareTicket: true,
       showShareItems: ['shareAppMessage', 'shareTimeline'],
