@@ -48,7 +48,7 @@ export function useBrushSessionEffects({
 
     if (shouldShowBrushOnboarding()) {
       Taro.showModal({
-        title: '欢迎使用刷了吗',
+        title: '欢迎使用今天刷牙了吗',
         content:
           '本应用基于巴氏刷牙法，将口腔分为15个区域，每个区域停留约10秒。牙刷45度角对准牙龈线，小幅水平震颤，科学刷牙从今天开始！',
         showCancel: false,

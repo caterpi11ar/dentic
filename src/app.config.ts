@@ -4,7 +4,7 @@ export default defineAppConfig({
     navigationStyle: 'custom',
     backgroundTextStyle: 'light',
     navigationBarBackgroundColor: '#faf9f5',
-    navigationBarTitleText: '刷了吗 | 刷牙',
+    navigationBarTitleText: '今天刷牙了吗 | 刷牙',
     navigationBarTextStyle: 'black',
   },
   permission: {

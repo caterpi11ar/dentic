@@ -1,12 +1,12 @@
-# 刷了吗
+# 今天刷牙了吗
 
-![刷了吗 Logo](./public/logo.png)
+![今天刷牙了吗 Logo](./public/logo.png)
 
 基于巴氏（Bass）刷牙法的微信小程序，引导用户科学刷牙，养成良好口腔卫生习惯。
 
 ## 小程序二维码
 
-![刷了吗小程序二维码](./public/qrcode.jpg)
+![今天刷牙了吗小程序二维码](./public/qrcode.jpg)
 
 ## 功能
 

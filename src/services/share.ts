@@ -19,7 +19,7 @@ export function generateShareMessage(stats?: Partial<ShareStats>): {
   } else if (totalDays > 0) {
     title = `我已累计刷牙 ${totalDays} 天！科学刷牙从巴氏刷牙法开始`
   } else {
-    title = '刷了吗 - 科学刷牙从巴氏刷牙法开始'
+    title = '今天刷牙了吗 - 科学刷牙从巴氏刷牙法开始'
   }
 
   return {
