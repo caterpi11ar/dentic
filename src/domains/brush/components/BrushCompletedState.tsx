@@ -1,4 +1,5 @@
 import { View, Text } from '@tarojs/components'
+import Taro from '@tarojs/taro'
 import Button from '@/components/ui/Button'
 import { Card, CardContent } from '@/components/ui/Card'
 import { TOTAL_STEPS } from '@/constants/brushing-steps'
@@ -52,6 +53,14 @@ export default function BrushCompletedState({
         <View className="mt-5 flex flex-col gap-2">
           <Button className="min-h-11 text-base" openType="share" aria-label="分享刷牙成绩">
             分享
+          </Button>
+          <Button
+            variant="outline"
+            className="min-h-11 text-base"
+            onClick={() => Taro.redirectTo({ url: '/pages/rank/index' }).catch(() => undefined)}
+            aria-label="查看好友排行榜"
+          >
+            查看排行榜
           </Button>
           <Button variant="secondary" className="min-h-11 text-base" onClick={onReset} aria-label="返回首页">
             返回

@@ -1,5 +1,5 @@
-export const BUSINESS_DAY_START_HOUR = 6
-export const EVENING_SESSION_START_HOUR = 18
+export const BUSINESS_DAY_START_HOUR = 4
+export const EVENING_SESSION_START_HOUR = 12
 
 function formatDate(date: Date): string {
   const y = date.getFullYear()

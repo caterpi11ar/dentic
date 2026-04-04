@@ -1,5 +1,11 @@
 export default defineAppConfig({
-  pages: ['pages/index/index', 'pages/history/index', 'pages/settings/index'],
+  pages: [
+    'pages/index/index',
+    'pages/history/index',
+    'pages/rank/index',
+    'pages/profile/index',
+    'pages/settings/index',
+  ],
   window: {
     navigationStyle: 'custom',
     backgroundTextStyle: 'light',
