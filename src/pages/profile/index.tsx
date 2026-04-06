@@ -231,58 +231,58 @@ export default function ProfilePage() {
           <View className="flex-1 h-px bg-content/[0.08]" />
         </View>
 
-        <View className="mt-5 flex flex-col gap-3">
-          <Card className="rounded-anthropic">
-            <CardContent>
-              <View className="flex items-center justify-between gap-4">
-                <View className="flex items-start gap-3 flex-1 min-w-0">
-                  <Text className="text-xl leading-none mt-0.5">🔔</Text>
-                  <View className="flex-1 min-w-0">
-                    <Text className="block text-paragraph-sm font-heading font-semibold text-content">刷牙提醒</Text>
-                    <Text className="block mt-1.5 text-label-sm text-content/40">每天 {settings.reminderTime} 提醒你</Text>
-                  </View>
+        <Card className="mt-5 overflow-hidden">
+          <CardContent className="p-0">
+            <View className="min-h-[72px] px-5 py-4 flex items-center justify-between gap-4">
+              <View className="flex items-start gap-3 flex-1 min-w-0">
+                <View className="size-9 rounded-anthropic-sm border border-warning/20 bg-warning-light/75 flex items-center justify-center">
+                  <Text className="text-lg leading-none">🔔</Text>
                 </View>
-                <View className="shrink-0">
-                  <Switch checked={settings.reminderEnabled} onClick={handleReminderToggle} ariaLabel="刷牙提醒开关" />
+                <View className="flex-1 min-w-0">
+                  <Text className="block text-paragraph-sm font-heading font-semibold text-content">刷牙提醒</Text>
+                  <Text className="block mt-1 text-label-sm text-content/45">每天 {settings.reminderTime} 提醒你</Text>
                 </View>
               </View>
-            </CardContent>
-          </Card>
+              <View className="shrink-0">
+                <Switch checked={settings.reminderEnabled} onClick={handleReminderToggle} ariaLabel="刷牙提醒开关" />
+              </View>
+            </View>
 
-          <Card className="rounded-anthropic">
-            <CardContent>
-              <View className="flex items-center justify-between gap-4">
-                <View className="flex items-start gap-3 flex-1 min-w-0">
-                  <Text className="text-xl leading-none mt-0.5">🎵</Text>
-                  <View className="flex-1 min-w-0">
-                    <Text className="block text-paragraph-sm font-heading font-semibold text-content">步骤提示音</Text>
-                    <Text className="block mt-1.5 text-label-sm text-content/40">步骤切换时播放提示音</Text>
-                  </View>
-                </View>
-                <View className="shrink-0">
-                  <Switch checked={settings.soundEnabled} onClick={handleSoundToggle} ariaLabel="步骤提示音开关" />
-                </View>
-              </View>
-            </CardContent>
-          </Card>
+            <View className="mx-5 h-px bg-content/[0.06]" />
 
-          <Card className="rounded-anthropic">
-            <CardContent>
-              <View className="flex items-center justify-between gap-4">
-                <View className="flex items-start gap-3 flex-1 min-w-0">
-                  <Text className="text-xl leading-none mt-0.5">🗣️</Text>
-                  <View className="flex-1 min-w-0">
-                    <Text className="block text-paragraph-sm font-heading font-semibold text-content">语音播报</Text>
-                    <Text className="block mt-1.5 text-label-sm text-content/40">步骤切换时朗读提示</Text>
-                  </View>
+            <View className="min-h-[72px] px-5 py-4 flex items-center justify-between gap-4">
+              <View className="flex items-start gap-3 flex-1 min-w-0">
+                <View className="size-9 rounded-anthropic-sm border border-info/20 bg-info-light/80 flex items-center justify-center">
+                  <Text className="text-lg leading-none">🎵</Text>
                 </View>
-                <View className="shrink-0">
-                  <Switch checked={settings.voiceEnabled} onClick={handleVoiceToggle} ariaLabel="语音播报开关" />
+                <View className="flex-1 min-w-0">
+                  <Text className="block text-paragraph-sm font-heading font-semibold text-content">步骤提示音</Text>
+                  <Text className="block mt-1 text-label-sm text-content/45">步骤切换时播放提示音</Text>
                 </View>
               </View>
-            </CardContent>
-          </Card>
-        </View>
+              <View className="shrink-0">
+                <Switch checked={settings.soundEnabled} onClick={handleSoundToggle} ariaLabel="步骤提示音开关" />
+              </View>
+            </View>
+
+            <View className="mx-5 h-px bg-content/[0.06]" />
+
+            <View className="min-h-[72px] px-5 py-4 flex items-center justify-between gap-4">
+              <View className="flex items-start gap-3 flex-1 min-w-0">
+                <View className="size-9 rounded-anthropic-sm border border-success/20 bg-success-light/80 flex items-center justify-center">
+                  <Text className="text-lg leading-none">🗣️</Text>
+                </View>
+                <View className="flex-1 min-w-0">
+                  <Text className="block text-paragraph-sm font-heading font-semibold text-content">语音播报</Text>
+                  <Text className="block mt-1 text-label-sm text-content/45">步骤切换时朗读提示</Text>
+                </View>
+              </View>
+              <View className="shrink-0">
+                <Switch checked={settings.voiceEnabled} onClick={handleVoiceToggle} ariaLabel="语音播报开关" />
+              </View>
+            </View>
+          </CardContent>
+        </Card>
 
       </View>
 
