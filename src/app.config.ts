@@ -4,7 +4,6 @@ export default defineAppConfig({
     'pages/history/index',
     'pages/rank/index',
     'pages/profile/index',
-    'pages/settings/index',
   ],
   window: {
     navigationStyle: 'custom',

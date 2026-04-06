@@ -131,15 +131,6 @@ export default function ProfilePage() {
     saveSettings({ voiceEnabled: updated.voiceEnabled })
   }
 
-  const handleSetAlarm = () => {
-    Taro.showModal({
-      title: '设置闹钟',
-      content: `建议在系统闹钟中设置：\n晨间 ${settings.reminderTime}\n晚间 22:00`,
-      showCancel: false,
-      confirmText: '知道了',
-    })
-  }
-
   return (
     <View className="theme-page app-scroll theme-day min-h-screen">
       <View
@@ -293,35 +284,6 @@ export default function ProfilePage() {
           </Card>
         </View>
 
-        {/* ── 快捷操作 ── */}
-        <View className="mt-8 flex items-center gap-3">
-          <Text className="text-label-sm font-heading font-semibold tracking-[0.1em] uppercase text-content/50 shrink-0">
-            快捷操作
-          </Text>
-          <View className="flex-1 h-px bg-content/[0.08]" />
-        </View>
-
-        <View className="mt-5 mb-8">
-          <Card className="rounded-anthropic active:scale-[0.98] active:opacity-90 transition-[transform,opacity] duration-200">
-            <CardContent>
-              <View
-                className="flex items-center justify-between gap-4"
-                role="button"
-                onClick={handleSetAlarm}
-                aria-label="设置闹钟"
-              >
-                <View className="flex items-start gap-3 flex-1 min-w-0">
-                  <Text className="text-xl leading-none mt-0.5">⏰</Text>
-                  <View className="flex-1 min-w-0">
-                    <Text className="block text-paragraph-sm font-heading font-semibold text-content">设置闹钟</Text>
-                    <Text className="block mt-1.5 text-label-sm text-content/40">在系统闹钟中设置晨间与晚间提醒</Text>
-                  </View>
-                </View>
-                <Text className="text-lg text-content/25 shrink-0">→</Text>
-              </View>
-            </CardContent>
-          </Card>
-        </View>
       </View>
 
       <InPageTabBar current="profile" />
