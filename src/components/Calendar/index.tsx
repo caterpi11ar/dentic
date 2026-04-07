@@ -1,9 +1,10 @@
-import { View, Text } from '@tarojs/components'
+import { View, Text, Image } from '@tarojs/components'
 import type { KeyboardEvent as ReactKeyboardEvent } from 'react'
 import Badge from '@/components/ui/Badge'
-import { Card, CardContent, CardHeader } from '@/components/ui/Card'
 import IconButton from '@/components/ui/IconButton'
 import { cn } from '@/components/ui/cn'
+import iconChevLeft from '@/assets/icons/icon-chevron-left.svg'
+import iconChevRight from '@/assets/icons/icon-chevron-right.svg'
 
 const WEEKDAYS = ['日', '一', '二', '三', '四', '五', '六']
 
@@ -39,7 +40,7 @@ interface CalendarDayButtonProps {
 }
 
 function formatMonth(year: number, month: number): string {
-  return `${year}年 ${month}月`
+  return `${year}年${month}月`
 }
 
 function CalendarDayButton({
@@ -61,42 +62,54 @@ function CalendarDayButton({
 
   return (
     <View
-      className={cn(
-        'h-9 rounded-md border overflow-hidden relative',
-        isSelected
-          ? 'bg-primary text-surface border-primary'
-          : isToday
-            ? 'bg-primary-light border-primary/40 text-primary'
-            : 'bg-surface-white border-content/[0.06] text-content'
-      )}
-      aria-label={`${month}月${day}日${isBrushed ? '，已刷牙' : ''}`}
+      className="flex flex-col items-center justify-center"
+      style={{ height: '44px' }}
       role="button"
+      aria-label={`${month}月${day}日${isBrushed ? '，已刷牙' : ''}`}
       aria-pressed={isSelected}
       tabIndex={0}
       onClick={handleActivate}
       onKeyDown={handleKeyDown}
     >
-      <View className="h-full w-full flex items-center justify-center">
+      {/* 日期圆 */}
+      <View
+        className={cn(
+          'size-9 rounded-full flex items-center justify-center relative',
+          isSelected
+            ? 'bg-primary'
+            : isToday
+              ? 'bg-primary/15'
+              : isBrushed
+                ? 'bg-content/[0.05]'
+                : ''
+        )}
+      >
         <Text
           className={cn(
-            'text-label-xs font-heading',
+            'text-paragraph-sm tabular-nums',
             isSelected
-              ? 'text-surface font-semibold'
+              ? 'text-surface-white font-body font-semibold'
               : isToday
-                ? 'text-primary font-semibold'
-                : 'text-content'
+                ? 'text-primary font-heading font-medium'
+                : isBrushed
+                  ? 'text-content font-body font-medium'
+                  : 'text-content-disabled font-body'
           )}
         >
           {day}
         </Text>
+
+        {/* 今天指示环 */}
+        {isToday && !isSelected && (
+          <View className="absolute inset-0 rounded-full border-2 border-primary/40" />
+        )}
       </View>
 
-      {isBrushed && (
-        <View className="absolute bottom-0 left-0 right-0 flex">
-          <View className={cn('h-0.5 w-1/2', sessionInfo?.morning ? 'bg-amber-400' : 'bg-transparent')} />
-          <View className={cn('h-0.5 w-1/2', sessionInfo?.evening ? 'bg-indigo-400' : 'bg-transparent')} />
-        </View>
-      )}
+      {/* 刷牙指示 */}
+      <View className="flex items-center justify-center gap-1" style={{ height: '6px' }}>
+        {sessionInfo?.morning && <View className="size-2 rounded-full bg-surface-white border border-content/20" />}
+        {sessionInfo?.evening && <View className="size-2 rounded-full bg-content" />}
+      </View>
     </View>
   )
 }
@@ -120,51 +133,57 @@ export default function Calendar({
   const firstDayOfWeek = new Date(year, month - 1, 1).getDay()
 
   return (
-    <Card className="rounded-anthropic bg-surface-white border border-content/[0.06]">
+    <View className="rounded-anthropic-lg bg-surface-white border border-line overflow-hidden">
+      {/* 头部 */}
       {!hideHeader && (
-        <CardHeader className="px-4 pt-4 pb-1.5">
+        <View className="px-5 pt-4 pb-2 border-b border-line">
           <View className="flex items-center justify-between">
-            <Text className="text-label-sm font-heading font-semibold tracking-[0.08em] uppercase text-content/60">
+            <Text className="text-paragraph-md font-heading font-medium text-content">
               {formatMonth(year, month)}
             </Text>
             <View className="flex items-center gap-2">
               <IconButton
-                icon="‹"
+                icon={<Image src={iconChevLeft} className="size-4" mode="aspectFit" />}
                 ariaLabel="上个月"
-                className="size-9 min-h-9 min-w-9 border border-content/[0.06] bg-surface-white text-content"
+                className="size-8 min-h-8 min-w-8 rounded-full border border-line active:bg-line"
                 onClick={onPrevMonth}
               />
               <IconButton
-                icon="›"
+                icon={<Image src={iconChevRight} className="size-4" mode="aspectFit" />}
                 ariaLabel="下个月"
-                className="size-9 min-h-9 min-w-9 border border-content/[0.06] bg-surface-white text-content"
+                className="size-8 min-h-8 min-w-8 rounded-full border border-line active:bg-line"
                 onClick={onNextMonth}
               />
             </View>
           </View>
 
           {!hideStats && (
-            <View className="mt-2.5 flex flex-wrap items-center gap-2">
-              <Badge variant="secondary">本月 {monthBrushed}</Badge>
+            <View className="mt-3 flex flex-wrap items-center gap-2">
+              <Badge variant="default">本月 {monthBrushed}</Badge>
               <Badge variant="secondary">连续 {streak}</Badge>
               <Badge variant="secondary">累计 {totalDays}</Badge>
             </View>
           )}
-        </CardHeader>
+        </View>
       )}
 
-      <CardContent className="pt-1 px-4 pb-4">
-        <View className="grid grid-cols-7 mb-1">
+      {/* 日历体 */}
+      <View className={cn('px-2', hideHeader ? 'pt-3' : 'pt-1', 'pb-1')}>
+        {/* 星期头 */}
+        <View className="grid grid-cols-7 mb-0.5">
           {WEEKDAYS.map((weekday) => (
-            <Text key={weekday} className="text-center text-label-xs font-heading text-content/40 py-1 uppercase">
-              {weekday}
-            </Text>
+            <View key={weekday} className="flex items-center justify-center py-1">
+              <Text className="text-label-xs font-body font-semibold text-content-tertiary tracking-widest">
+                {weekday}
+              </Text>
+            </View>
           ))}
         </View>
 
-        <View className="grid grid-cols-7 gap-y-1 gap-x-1">
+        {/* 日期网格 */}
+        <View className="grid grid-cols-7">
           {Array.from({ length: firstDayOfWeek }, (_, i) => (
-            <View key={`empty-${i}`} className="h-9" />
+            <View key={`empty-${i}`} style={{ height: '44px' }} />
           ))}
 
           {Array.from({ length: daysInMonth }, (_, i) => {
@@ -188,7 +207,19 @@ export default function Calendar({
             )
           })}
         </View>
-      </CardContent>
-    </Card>
+
+        {/* 图例 */}
+        <View className="flex items-center justify-center gap-4 mt-2 pt-2 border-t border-line-lighter">
+          <View className="flex items-center gap-1.5">
+            <View className="size-2 rounded-full bg-surface-white border border-content/20" />
+            <Text className="text-label-xs text-content-tertiary">白天</Text>
+          </View>
+          <View className="flex items-center gap-1.5">
+            <View className="size-2 rounded-full bg-content" />
+            <Text className="text-label-xs text-content-tertiary">夜晚</Text>
+          </View>
+        </View>
+      </View>
+    </View>
   )
 }
