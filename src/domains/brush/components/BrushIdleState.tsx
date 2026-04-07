@@ -38,76 +38,76 @@ export default function BrushIdleState({
       {/* ── Hero ── */}
       <View className="pt-4 animate-fade-up motion-reduce:animate-none">
         <View className="flex items-baseline gap-3">
-          <Text className="text-paragraph-sm font-heading font-semibold tracking-[0.12em] uppercase text-content/60">
+          <Text className="text-paragraph-sm font-body font-semibold tracking-[0.12em] uppercase text-content-secondary">
             {todayHeading}
           </Text>
           {weather && (
-            <Text className="text-paragraph-sm font-heading font-semibold text-content/60">
+            <Text className="text-paragraph-sm font-body font-semibold text-content-secondary">
               {weather.temp}° {weather.description}
             </Text>
           )}
         </View>
 
-        <Text className="block mt-6 text-display-md font-body font-medium tracking-tight text-content animate-fade-up-delay-1 motion-reduce:animate-none">
+        <Text className="block mt-6 text-display-lg font-heading font-medium tracking-tight text-content animate-fade-up-delay-1 motion-reduce:animate-none">
           {greeting}
         </Text>
 
-        <Text className="block mt-4 text-paragraph-md leading-relaxed text-content/50 animate-fade-up-delay-2 motion-reduce:animate-none">
+        <Text className="block mt-4 text-paragraph-md font-heading leading-relaxed text-content-tertiary animate-fade-up-delay-2 motion-reduce:animate-none">
           准备好继续守护你的口腔健康了吗？
         </Text>
       </View>
 
       {/* ── Divider ── */}
-      <View className="my-section-gap h-px bg-content/[0.1]" />
+      <View className="my-10 h-px bg-line" />
 
       {/* ── Daily status ── */}
       <View className="flex flex-col gap-3 animate-fade-up-delay-2 motion-reduce:animate-none">
         <View className="flex items-center justify-between">
           <View className="flex items-center gap-2">
             <Image src={iconSun} className="size-4" mode="aspectFit" />
-            <Text className="text-paragraph-sm font-heading font-semibold tracking-wide text-content">
+            <Text className="text-paragraph-sm font-body font-semibold tracking-wide text-content">
               晨间
             </Text>
           </View>
           {dailyStatus.morningDone ? (
-            <Text className="text-paragraph-sm font-heading font-semibold text-success tabular-nums">
+            <Text className="text-paragraph-sm font-body font-semibold text-success tabular-nums">
               {formatTime(dailyStatus.morningTime)}
             </Text>
           ) : (
-            <Text className="text-paragraph-sm font-heading font-medium text-content/25">待完成</Text>
+            <Text className="text-paragraph-sm font-body font-medium text-content-disabled">待完成</Text>
           )}
         </View>
 
         <View className="flex items-center justify-between">
           <View className="flex items-center gap-2">
             <Image src={iconMoon} className="size-4" mode="aspectFit" />
-            <Text className="text-paragraph-sm font-heading font-semibold tracking-wide text-content">
+            <Text className="text-paragraph-sm font-body font-semibold tracking-wide text-content">
               夜间
             </Text>
           </View>
           {dailyStatus.eveningDone ? (
-            <Text className="text-paragraph-sm font-heading font-semibold text-success tabular-nums">
+            <Text className="text-paragraph-sm font-body font-semibold text-success tabular-nums">
               {formatTime(dailyStatus.eveningTime)}
             </Text>
           ) : (
-            <Text className="text-paragraph-sm font-heading font-medium text-content/25">待完成</Text>
+            <Text className="text-paragraph-sm font-body font-medium text-content-disabled">待完成</Text>
           )}
         </View>
       </View>
 
       {/* ── Divider ── */}
-      <View className="my-section-gap h-px bg-content/[0.1]" />
+      <View className="my-10 h-px bg-line" />
 
       {/* ── Streak + Milestone ── */}
       <View className="animate-fade-up-delay-3 motion-reduce:animate-none">
         <View className="flex items-baseline gap-2">
-          <Text className="text-label-sm font-heading font-semibold tracking-wide text-content/50 uppercase">
+          <Text className="text-label-sm font-body font-semibold tracking-wide text-content-tertiary uppercase">
             连续
           </Text>
-          <Text className="text-display-md leading-none font-heading font-bold tabular-nums text-primary">
+          <Text className="text-display-md leading-none font-heading font-medium tabular-nums text-primary">
             {streak}
           </Text>
-          <Text className="text-label-sm font-heading font-semibold tracking-wide text-content/50 uppercase">
+          <Text className="text-label-sm font-body font-semibold tracking-wide text-content-tertiary uppercase">
             天
           </Text>
         </View>
@@ -117,24 +117,26 @@ export default function BrushIdleState({
           max={100}
           label={`下一个目标 连续 ${nextMilestone} 天`}
           className="mt-4"
-          trackClassName="h-1 bg-content/[0.06]"
+          trackClassName="h-2 bg-line"
         />
       </View>
 
       {/* ── CTA ── */}
       <View className="mt-auto pb-10 flex justify-center">
         <View
-          className="bg-surface-white rounded-full px-8 py-3.5 border border-content/[0.08] shadow-[0_1px_4px_rgba(20,20,19,0.06)] flex items-center gap-3 active:scale-[0.97] transition-transform"
+          className="relative flex items-center justify-center"
           role="button"
           onClick={onStart}
           aria-label="开始刷牙"
         >
-          <Text className="text-xl font-semibold text-primary tracking-wide">
-            开始刷牙
-          </Text>
-          <Text className="text-xl text-primary/70 animate-[arrowBounce_1.2s_ease-in-out_infinite]">
-            →
-          </Text>
+          {/* 波纹扩散 */}
+          <View className="absolute size-20 rounded-full bg-primary/30 animate-ripple motion-reduce:animate-none" />
+          <View className="absolute size-20 rounded-full bg-primary/25 animate-ripple motion-reduce:animate-none" style={{ animationDelay: '0.7s' }} />
+          <View className="absolute size-20 rounded-full bg-primary/20 animate-ripple motion-reduce:animate-none" style={{ animationDelay: '1.4s' }} />
+          {/* 实心按钮 */}
+          <View className="relative size-20 rounded-full bg-primary flex flex-col items-center justify-center active:scale-[0.95] transition-transform">
+            <Text className="text-paragraph-md font-body font-semibold text-surface-white">刷牙</Text>
+          </View>
         </View>
       </View>
     </View>
