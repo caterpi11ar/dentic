@@ -49,7 +49,7 @@ export default function Tabs<T extends string>({
             aria-disabled={disabled}
             onClick={!disabled ? () => onValueChange(option.value) : undefined}
           >
-            <Text className={cn('text-paragraph-sm font-heading font-medium', active ? 'text-content' : 'text-content/50')}>
+            <Text className={cn('text-paragraph-sm font-body font-medium', active ? 'text-content' : 'text-content/50')}>
               {option.label}
             </Text>
           </View>
