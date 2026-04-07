@@ -8,8 +8,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        heading: ['Poppins', 'Arial', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'sans-serif'],
-        body: ['Lora', 'Georgia', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'serif'],
+        heading: ['Lora', 'Georgia', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'serif'],
+        body: ['Poppins', 'Arial', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'sans-serif'],
       },
       colors: {
         primary: {
@@ -58,7 +58,7 @@ module.exports = {
         'block-sm': '1.5rem',
         'page-x': '1.5rem',
         'page-gap': '1.25rem',
-        'section-gap': '2rem',
+        'section-gap': '3.5rem',
         'bottom-safe': '7rem',
       },
       fontSize: {
@@ -75,15 +75,15 @@ module.exports = {
         'label-xs': ['0.6875rem', { lineHeight: '1.35', letterSpacing: '0.1em' }],
       },
       borderRadius: {
-        anthropic: '0.375rem',
-        'anthropic-sm': '0.25rem',
+        anthropic: '0.5rem',
+        'anthropic-sm': '0.375rem',
         'anthropic-lg': '0.75rem',
       },
       boxShadow: {
-        card: '0 1px 3px rgba(20, 20, 19, 0.04)',
-        'card-hover': '0 4px 12px rgba(20, 20, 19, 0.08)',
-        'card-lg': '0 8px 24px rgba(20, 20, 19, 0.06)',
-        nav: '0 -1px 0 rgba(20, 20, 19, 0.06)',
+        card: '0px 0px 0px 1px rgba(240, 238, 230, 1)',
+        'card-hover': '0px 0px 0px 1px rgba(209, 207, 197, 1)',
+        'card-lg': 'rgba(0, 0, 0, 0.05) 0px 4px 24px',
+        nav: '0 -1px 0 rgba(240, 238, 230, 1)',
       },
       keyframes: {
         slideUp: {
@@ -127,6 +127,10 @@ module.exports = {
           '0%, 100%': { transform: 'translateX(0)' },
           '50%': { transform: 'translateX(6px)' },
         },
+        ripple: {
+          '0%': { transform: 'scale(1)', opacity: '0.5' },
+          '100%': { transform: 'scale(2.5)', opacity: '0' },
+        },
       },
       animation: {
         'slide-up': 'slideUp 0.3s ease-out',
@@ -135,6 +139,7 @@ module.exports = {
         'countdown-pulse': 'countdownPulse 0.8s ease-out',
         shimmer: 'shimmer 2s linear infinite',
         'gentle-pulse': 'gentlePulse 2s ease-in-out infinite',
+        ripple: 'ripple 3s ease-out infinite',
         'fade-up': 'fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both',
         'fade-up-delay-1': 'fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both',
         'fade-up-delay-2': 'fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both',
