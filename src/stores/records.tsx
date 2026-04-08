@@ -1,11 +1,11 @@
 import type { ReactNode } from 'react'
-import type { StoreApi } from 'zustand'
 import type { BrushingRecord } from '@/types'
 import Taro from '@tarojs/taro'
-import { createContext, useContext } from 'react'
-import { createStore, useStore } from 'zustand'
+import { createContext } from 'react'
 import { persist } from 'zustand/middleware'
+import { createStore } from 'zustand/vanilla'
 import { createTaroStorage } from './middleware/taroStorage'
+import { useVanillaStore } from './useVanillaStore'
 
 // ── 类型 ──
 
@@ -14,8 +14,6 @@ interface RecordsState {
   /** 保存历史，去重键为 date + session */
   saveRecord: (record: BrushingRecord) => void
 }
-
-type RecordsStore = StoreApi<RecordsState>
 
 // ── 迁移 ──
 
@@ -56,48 +54,43 @@ function migrateRecords(records: unknown): BrushingRecord[] {
   return result
 }
 
-// ── Store 工厂 ──
+// ── Store ──
 
-function createRecordsStore(): RecordsStore {
-  return createStore<RecordsState>()(
-    persist(
-      (set, get) => ({
-        records: [],
-        saveRecord: (record) => {
-          const records = [...get().records]
-          const idx = records.findIndex(
-            r => r.date === record.date && r.session === record.session,
-          )
-          if (idx >= 0) {
-            records[idx] = record
-          }
-          else {
-            records.push(record)
-          }
-          set({ records })
-        },
-      }),
-      {
-        name: RECORDS_STORAGE_KEY,
-        storage: createTaroStorage<RecordsState>({
-          deserialize: raw => ({ records: migrateRecords(raw) }),
-          serialize: state => state.records ?? [],
-        }),
+export const recordsStore = createStore<RecordsState>()(
+  persist(
+    (set, get) => ({
+      records: [],
+      saveRecord: (record) => {
+        const records = [...get().records]
+        const idx = records.findIndex(
+          r => r.date === record.date && r.session === record.session,
+        )
+        if (idx >= 0) {
+          records[idx] = record
+        }
+        else {
+          records.push(record)
+        }
+        set({ records })
       },
-    ),
-  )
-}
-
-// 模块级单例（供非 React 代码使用，如 brushRepository）
-export const recordsStore = createRecordsStore()
+    }),
+    {
+      name: RECORDS_STORAGE_KEY,
+      storage: createTaroStorage<RecordsState>({
+        deserialize: raw => ({ records: migrateRecords(raw) }),
+        serialize: state => state.records ?? [],
+      }),
+    },
+  ),
+)
 
 // ── Context & Provider ──
 
-const RecordsStoreContext = createContext<RecordsStore | null>(null)
+const RecordsStoreContext = createContext(null)
 
 export function RecordsProvider({ children }: { children: ReactNode }) {
   return (
-    <RecordsStoreContext.Provider value={recordsStore}>
+    <RecordsStoreContext.Provider value={null}>
       {children}
     </RecordsStoreContext.Provider>
   )
@@ -106,8 +99,5 @@ export function RecordsProvider({ children }: { children: ReactNode }) {
 // ── Hook ──
 
 export function useRecordsStore<T>(selector: (state: RecordsState) => T): T {
-  const store = useContext(RecordsStoreContext)
-  if (!store)
-    throw new Error('useRecordsStore 必须在 RecordsProvider 内使用')
-  return useStore(store, selector)
+  return useVanillaStore(recordsStore, selector)
 }

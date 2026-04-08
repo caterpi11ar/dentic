@@ -1,7 +1,6 @@
 import { Image, Input, Button as TaroButton, Text, View } from '@tarojs/components'
 import Taro, { useDidShow } from '@tarojs/taro'
 import { useState } from 'react'
-import { useShallow } from 'zustand/react/shallow'
 import iconBell from '@/assets/icons/icon-bell.svg'
 import iconMusic from '@/assets/icons/icon-music.svg'
 import iconUser from '@/assets/icons/icon-user.svg'
@@ -15,28 +14,18 @@ import { useProfileStore } from '@/stores/profile'
 import { useSettingsStore } from '@/stores/settings'
 
 export default function ProfilePage() {
-  const { reminderEnabled, reminderTime, soundEnabled, voiceEnabled, updateSettings }
-    = useSettingsStore(
-      useShallow(state => ({
-        reminderEnabled: state.reminderEnabled,
-        reminderTime: state.reminderTime,
-        soundEnabled: state.soundEnabled,
-        voiceEnabled: state.voiceEnabled,
-        updateSettings: state.updateSettings,
-      })),
-    )
+  const reminderEnabled = useSettingsStore(s => s.reminderEnabled)
+  const reminderTime = useSettingsStore(s => s.reminderTime)
+  const soundEnabled = useSettingsStore(s => s.soundEnabled)
+  const voiceEnabled = useSettingsStore(s => s.voiceEnabled)
+  const updateSettings = useSettingsStore(s => s.updateSettings)
 
-  const { nickname, avatar, authorized, updateNickname, updateAvatar, fetchProfile }
-    = useProfileStore(
-      useShallow(state => ({
-        nickname: state.nickname,
-        avatar: state.avatar,
-        authorized: state.authorized,
-        updateNickname: state.updateNickname,
-        updateAvatar: state.updateAvatar,
-        fetchProfile: state.fetchProfile,
-      })),
-    )
+  const nickname = useProfileStore(s => s.nickname)
+  const avatar = useProfileStore(s => s.avatar)
+  const authorized = useProfileStore(s => s.authorized)
+  const updateNickname = useProfileStore(s => s.updateNickname)
+  const updateAvatar = useProfileStore(s => s.updateAvatar)
+  const fetchProfile = useProfileStore(s => s.fetchProfile)
 
   const [showNicknameInput, setShowNicknameInput] = useState(false)
   const [tempNickname, setTempNickname] = useState('')

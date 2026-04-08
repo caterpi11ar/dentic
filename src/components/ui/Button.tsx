@@ -4,7 +4,7 @@ import { cn } from '@/components/ui/cn'
 
 type TaroButtonProps = ComponentProps<typeof TaroButton>
 
-export type ButtonVariant = 'default' | 'secondary' | 'outline' | 'ghost'
+export type ButtonVariant = 'default' | 'secondary' | 'outline' | 'ghost' | 'danger'
 export type ButtonSize = 'sm' | 'md' | 'lg' | 'icon'
 
 export interface ButtonProps extends Omit<TaroButtonProps, 'className' | 'size'> {
@@ -18,10 +18,11 @@ const BASE_CLASS
   = 'font-body font-semibold leading-none flex items-center justify-center gap-1.5 transition-[background-color,border-color,opacity,transform] duration-200 active:scale-[0.98] active:opacity-90'
 
 const VARIANT_CLASS: Record<ButtonVariant, string> = {
-  default: 'bg-primary text-surface-white border border-transparent',
-  secondary: 'bg-surface-white text-content border border-content/[0.12]',
-  outline: 'bg-transparent text-content border border-content/[0.2]',
-  ghost: 'bg-transparent text-content-secondary border-transparent',
+  default: 'bg-primary !text-surface-white border border-transparent',
+  secondary: 'bg-surface-white !text-content border border-content/[0.12]',
+  outline: 'bg-transparent !text-content border border-content/[0.2]',
+  ghost: 'bg-transparent !text-content-secondary border-transparent',
+  danger: 'bg-transparent !text-danger border-2 border-danger',
 }
 
 const SIZE_CLASS: Record<ButtonSize, string> = {

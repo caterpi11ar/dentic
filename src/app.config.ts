@@ -2,6 +2,8 @@ export default defineAppConfig({
   pages: [
     'pages/index/index',
     'pages/history/index',
+    'pages/family/index',
+    'pages/family/create',
     'pages/rank/index',
     'pages/profile/index',
   ],

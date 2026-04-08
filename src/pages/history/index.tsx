@@ -2,7 +2,6 @@ import type { BrushingRecord } from '@/types'
 import { Image, Text, View } from '@tarojs/components'
 import { showShareMenu, useDidShow, useShareAppMessage, useShareTimeline } from '@tarojs/taro'
 import { useMemo, useRef, useState } from 'react'
-import { useShallow } from 'zustand/react/shallow'
 import iconMoon from '@/assets/icons/moon.svg'
 import iconSun from '@/assets/icons/sun.svg'
 import Calendar from '@/components/Calendar'
@@ -72,13 +71,10 @@ export default function HistoryPage() {
   })
 
   const prefix = `${year}-${String(month).padStart(2, '0')}`
-  const { monthRecords, streak, totalDays } = useRecordsStore(
-    useShallow(state => ({
-      monthRecords: state.records.filter(r => r.date.startsWith(prefix)),
-      streak: getCurrentStreak(),
-      totalDays: getTotalBrushedDays(),
-    })),
-  )
+  const allRecords = useRecordsStore(state => state.records)
+  const monthRecords = useMemo(() => allRecords.filter(r => r.date.startsWith(prefix)), [allRecords, prefix])
+  const streak = getCurrentStreak()
+  const totalDays = getTotalBrushedDays()
 
   const daySessionMap = useMemo(() => {
     const map = new Map<string, { morning: boolean, evening: boolean }>()
