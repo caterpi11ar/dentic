@@ -49,7 +49,7 @@ export function ListItem({
       <View className="min-w-0 flex-1 flex items-center gap-2.5">
         {left ? <View className="shrink-0">{left}</View> : null}
         <View className="min-w-0 flex-1">
-          <Text className="text-paragraph-sm font-heading font-semibold text-content block truncate">{title}</Text>
+          <Text className="text-paragraph-sm font-body font-semibold text-content block truncate">{title}</Text>
           {description ? <Text className="mt-1 text-label-sm text-content/50 block">{description}</Text> : null}
         </View>
       </View>

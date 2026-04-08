@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { View, Text, Image } from '@tarojs/components'
 import { useDidShow } from '@tarojs/taro'
 import InPageTabBar from '@/components/InPageTabBar'
+import PageLayout from '@/components/PageLayout'
 import Tabs from '@/components/ui/Tabs'
 import type { TabOption } from '@/components/ui/Tabs'
 import { Card, CardContent } from '@/components/ui/Card'
@@ -10,7 +11,10 @@ import { getLeaderboard } from '@/services/api/rankApi'
 import type { RankItem } from '@/services/api/rankApi'
 import { applyLightThemeToChrome } from '@/services/theme'
 import { trackEvent } from '@/services/analytics'
-import { getPageTopPadding } from '@/utils/layout'
+import iconMedal1 from '@/assets/icons/icon-medal-1.svg'
+import iconMedal2 from '@/assets/icons/icon-medal-2.svg'
+import iconMedal3 from '@/assets/icons/icon-medal-3.svg'
+import iconEmpty from '@/assets/icons/icon-empty.svg'
 import type { RankPeriodType } from '@/types'
 
 const RANK_TAB_OPTIONS: TabOption<RankPeriodType>[] = [
@@ -28,15 +32,14 @@ const PERIOD_LABELS: Record<RankPeriodType, string> = {
   streak: '连续打卡',
 }
 
-function getRankIcon(rank: number): string {
-  if (rank === 1) return '🥇'
-  if (rank === 2) return '🥈'
-  if (rank === 3) return '🥉'
-  return String(rank)
+function getRankIcon(rank: number): string | null {
+  if (rank === 1) return iconMedal1
+  if (rank === 2) return iconMedal2
+  if (rank === 3) return iconMedal3
+  return null
 }
 
 export default function RankPage() {
-  const safeTopPadding = getPageTopPadding(20)
   const [periodType, setPeriodType] = useState<RankPeriodType>('totalDays')
   const [list, setList] = useState<RankItem[]>([])
   const [myRank, setMyRank] = useState<RankItem | null>(null)
@@ -75,17 +78,13 @@ export default function RankPage() {
   const unit = PERIOD_UNITS[periodType]
 
   return (
-    <View className="theme-page theme-day h-screen overflow-hidden">
-      <View
-        className="px-page-x max-w-2xl mx-auto h-full pb-bottom-safe flex flex-col"
-        style={{ paddingTop: safeTopPadding }}
-      >
-        <Text className="text-display-sm font-body font-medium tracking-tight text-content">
+    <PageLayout>
+      <Text className="text-display-md font-body font-medium tracking-tight text-content">
           排行榜
         </Text>
 
         {/* 榜单类型切换 */}
-        <View className="mt-4 flex justify-center">
+        <View className="mt-6 flex justify-center">
           <Tabs
             value={periodType}
             options={RANK_TAB_OPTIONS}
@@ -96,11 +95,11 @@ export default function RankPage() {
 
         {/* 我的排名卡 */}
         {myRank && (
-          <Card className="mt-4 border-primary/20 bg-primary-light/30">
+          <Card className="mt-6 border-line bg-primary-light">
             <CardContent className="py-3.5">
               <View className="flex items-center justify-between">
                 <View>
-                  <Text className="text-label-xs font-heading font-semibold tracking-[0.08em] uppercase text-content/45">
+                  <Text className="text-label-xs font-heading font-semibold tracking-[0.08em] uppercase text-content-tertiary">
                     我的排名
                   </Text>
                   <Text className="mt-1 block text-display-sm font-heading font-bold text-primary">
@@ -108,10 +107,10 @@ export default function RankPage() {
                   </Text>
                 </View>
                 <View className="text-right">
-                  <Text className="text-label-xs font-heading font-semibold tracking-[0.08em] uppercase text-content/45">
+                  <Text className="text-label-xs font-heading font-semibold tracking-[0.08em] uppercase text-content-tertiary">
                     {PERIOD_LABELS[periodType]}
                   </Text>
-                  <Text className="mt-1 block text-paragraph-md font-heading font-bold tabular-nums text-content">
+                  <Text className="mt-1 block text-paragraph-md font-heading font-bold tabular-nums text-content-secondary">
                     {myRank.score}{unit}
                   </Text>
                 </View>
@@ -121,13 +120,13 @@ export default function RankPage() {
         )}
 
         {/* 排行列表 */}
-        <View className="mt-4 flex-1 min-h-0 overflow-y-auto">
+        <View className="mt-6 flex-1 min-h-0 overflow-y-auto">
           {loading ? (
-            <Card>
-              <CardContent>
-                <Text className="text-paragraph-sm text-content/45 text-center">加载中...</Text>
-              </CardContent>
-            </Card>
+            <View className="flex flex-col gap-3 p-4">
+              {[1, 2, 3].map((i) => (
+                <View key={i} className="h-14 rounded-anthropic bg-line animate-shimmer" />
+              ))}
+            </View>
           ) : error ? (
             <Card>
               <CardContent>
@@ -137,8 +136,8 @@ export default function RankPage() {
           ) : list.length === 0 ? (
             <Card>
               <CardContent className="flex flex-col items-center py-8 gap-2">
-                <Text className="text-display-sm">🏆</Text>
-                <Text className="text-paragraph-sm text-content/45 text-center">
+                <Image src={iconEmpty} className="size-16" mode="aspectFit" />
+                <Text className="text-paragraph-sm text-content-tertiary text-center">
                   暂无排行数据，完成刷牙后即可上榜
                 </Text>
               </CardContent>
@@ -146,63 +145,64 @@ export default function RankPage() {
           ) : (
             <Card>
               <CardContent className="p-0">
-                {list.map((item) => (
-                  <View
-                    key={item.openId}
-                    className={cn(
-                      'flex items-center gap-3 px-4 py-3 border-b border-content/[0.06] last:border-b-0',
-                      item.isMe && 'bg-primary-light/40',
-                    )}
-                  >
-                    {/* 排名 */}
-                    <View className="w-8 flex items-center justify-center flex-shrink-0">
-                      <Text
-                        className={cn(
-                          'font-heading font-bold',
-                          item.rank <= 3 ? 'text-paragraph-md' : 'text-paragraph-sm text-content/50',
-                        )}
-                      >
-                        {getRankIcon(item.rank)}
-                      </Text>
-                    </View>
-
-                    {/* 头像 */}
-                    <View className="size-9 rounded-full bg-primary-light flex items-center justify-center flex-shrink-0 overflow-hidden">
-                      {item.avatar ? (
-                        <Image src={item.avatar} className="size-9 rounded-full" mode="aspectFill" />
-                      ) : (
-                        <Text className="text-paragraph-sm font-heading font-semibold text-primary">
-                          {item.nickname.slice(0, 1) || '?'}
-                        </Text>
+                {list.map((item) => {
+                  const medal = getRankIcon(item.rank)
+                  return (
+                    <View
+                      key={item.openId}
+                      className={cn(
+                        'flex items-center gap-3 px-4 py-3 border-b border-line last:border-b-0',
+                        item.isMe && 'bg-primary-light',
                       )}
-                    </View>
-
-                    {/* 昵称 */}
-                    <View className="flex-1 min-w-0">
-                      <Text
-                        className={cn(
-                          'text-paragraph-sm font-body truncate',
-                          item.isMe ? 'text-primary font-medium' : 'text-content',
+                    >
+                      {/* 排名 */}
+                      <View className="w-8 flex items-center justify-center flex-shrink-0">
+                        {medal ? (
+                          <Image src={medal} className="size-6" mode="aspectFit" />
+                        ) : (
+                          <Text className="font-body font-medium text-content-tertiary">
+                            {item.rank}
+                          </Text>
                         )}
-                      >
-                        {item.nickname}
-                        {item.isMe && ' (我)'}
+                      </View>
+
+                      {/* 头像 */}
+                      <View className="size-9 rounded-full bg-primary-light flex items-center justify-center flex-shrink-0 overflow-hidden">
+                        {item.avatar ? (
+                          <Image src={item.avatar} className="size-9 rounded-full" mode="aspectFill" />
+                        ) : (
+                          <Text className="text-paragraph-sm font-heading font-semibold text-primary">
+                            {item.nickname.slice(0, 1) || '?'}
+                          </Text>
+                        )}
+                      </View>
+
+                      {/* 昵称 */}
+                      <View className="flex-1 min-w-0">
+                        <Text
+                          className={cn(
+                            'text-paragraph-sm font-body truncate',
+                            item.isMe ? 'text-primary font-medium' : 'text-content',
+                          )}
+                        >
+                          {item.nickname}
+                          {item.isMe && ' (我)'}
+                        </Text>
+                      </View>
+
+                      {/* 分数 */}
+                      <Text className="text-paragraph-sm font-heading font-bold tabular-nums text-content-secondary flex-shrink-0">
+                        {item.score}{unit}
                       </Text>
                     </View>
-
-                    {/* 分数 */}
-                    <Text className="text-paragraph-sm font-heading font-bold tabular-nums text-content flex-shrink-0">
-                      {item.score}{unit}
-                    </Text>
-                  </View>
-                ))}
+                  )
+                })}
               </CardContent>
             </Card>
           )}
         </View>
-      </View>
 
       <InPageTabBar current="rank" />
-    </View>
+    </PageLayout>
   )
 }

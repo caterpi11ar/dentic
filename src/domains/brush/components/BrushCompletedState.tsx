@@ -1,8 +1,8 @@
-import { View, Text } from '@tarojs/components'
+import { View, Text, Image } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import Button from '@/components/ui/Button'
-import { Card, CardContent } from '@/components/ui/Card'
 import { TOTAL_STEPS } from '@/constants/brushing-steps'
+import iconCheck from '@/assets/icons/icon-check.svg'
 
 interface BrushCompletedStateProps {
   completionMessage: string
@@ -20,54 +20,66 @@ export default function BrushCompletedState({
   onReset,
 }: BrushCompletedStateProps) {
   return (
-    <View className="pt-2">
-      <Card className="w-full rounded-anthropic-lg bg-surface-white shadow-card border border-content/[0.06] animate-fade-scale-in motion-reduce:animate-none">
-        <CardContent>
-        <View className="flex flex-col items-center text-center">
-          <View className="size-16 rounded-full bg-gradient-to-br from-success to-success-dark flex items-center justify-center mb-4 animate-bounce-slow motion-reduce:animate-none">
-            <Text className="text-5xl text-surface-white">✓</Text>
-          </View>
-          <Text className="text-display-sm font-heading font-bold text-content max-w-[90%]">{completionMessage}</Text>
-          {milestone && (
-            <Text className="text-paragraph-sm md:text-base leading-relaxed text-info font-bold mt-2 max-w-[90%]">{milestone}</Text>
-          )}
-        </View>
+    <View className="flex-1 flex flex-col items-center justify-center animate-fade-scale-in motion-reduce:animate-none">
+      {/* 对勾 */}
+      <View className="size-16 rounded-full bg-primary flex items-center justify-center mb-5">
+        <Image src={iconCheck} className="size-8" mode="aspectFit" />
+      </View>
 
-        <View className="mt-5 flex flex-col gap-2">
-          <View className="rounded-anthropic bg-content/[0.03] border border-content/[0.06] px-4 py-3.5 min-h-11 flex items-center justify-between">
-            <Text className="text-paragraph-sm text-content/50">总用时</Text>
-            <Text className="text-paragraph-md font-heading font-bold text-primary tabular-nums">
-              {Math.floor(elapsedTime / 60)}:{String(elapsedTime % 60).padStart(2, '0')}
-            </Text>
-          </View>
-          <View className="rounded-anthropic bg-content/[0.03] border border-content/[0.06] px-4 py-3.5 min-h-11 flex items-center justify-between">
-            <Text className="text-paragraph-sm text-content/50">步骤数</Text>
-            <Text className="text-paragraph-md font-heading font-bold text-success tabular-nums">{TOTAL_STEPS}</Text>
-          </View>
-          <View className="rounded-anthropic bg-content/[0.03] border border-content/[0.06] px-4 py-3.5 min-h-11 flex items-center justify-between">
-            <Text className="text-paragraph-sm text-content/50">连续天数</Text>
-            <Text className="text-paragraph-md font-heading font-bold text-info tabular-nums">{streak}</Text>
-          </View>
-        </View>
+      {/* 完成文案 */}
+      <Text className="text-display-md font-heading font-medium text-content text-center px-4">
+        {completionMessage}
+      </Text>
+      {milestone && (
+        <Text className="text-paragraph-sm leading-relaxed text-content-secondary font-medium mt-2 text-center px-4">
+          {milestone}
+        </Text>
+      )}
 
-        <View className="mt-5 flex flex-col gap-2">
-          <Button className="min-h-11 text-base" openType="share" aria-label="分享刷牙成绩">
-            分享
-          </Button>
+      {/* 统计数据 - 横向三栏 */}
+      <View className="mt-8 w-full flex items-center justify-center gap-6">
+        <View className="flex flex-col items-center">
+          <Text className="text-display-sm font-heading font-medium text-primary tabular-nums">
+            {Math.floor(elapsedTime / 60)}:{String(elapsedTime % 60).padStart(2, '0')}
+          </Text>
+          <Text className="mt-1 text-label-xs font-body text-content-tertiary">用时</Text>
+        </View>
+        <View className="w-px h-8 bg-line" />
+        <View className="flex flex-col items-center">
+          <Text className="text-display-sm font-heading font-medium text-content tabular-nums">
+            {TOTAL_STEPS}
+          </Text>
+          <Text className="mt-1 text-label-xs font-body text-content-tertiary">步骤</Text>
+        </View>
+        <View className="w-px h-8 bg-line" />
+        <View className="flex flex-col items-center">
+          <Text className="text-display-sm font-heading font-medium text-primary tabular-nums">
+            {streak}
+          </Text>
+          <Text className="mt-1 text-label-xs font-body text-content-tertiary">连续天数</Text>
+        </View>
+      </View>
+
+      {/* 按钮 */}
+      <View className="mt-10 w-full flex flex-col gap-3 px-2">
+        <Button className="min-h-11 text-base" openType="share" aria-label="分享刷牙成绩">
+          分享
+        </Button>
+        <View className="flex gap-3">
           <Button
-            variant="outline"
-            className="min-h-11 text-base"
+            variant="secondary"
+            className="min-h-11 text-base flex-1"
+            fullWidth={false}
             onClick={() => Taro.redirectTo({ url: '/pages/rank/index' }).catch(() => undefined)}
             aria-label="查看好友排行榜"
           >
-            查看排行榜
+            排行榜
           </Button>
-          <Button variant="secondary" className="min-h-11 text-base" onClick={onReset} aria-label="返回首页">
+          <Button variant="ghost" className="min-h-11 text-base flex-1" fullWidth={false} onClick={onReset} aria-label="返回首页">
             返回
           </Button>
         </View>
-        </CardContent>
-      </Card>
+      </View>
     </View>
   )
 }

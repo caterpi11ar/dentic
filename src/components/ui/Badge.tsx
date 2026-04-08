@@ -21,7 +21,7 @@ interface BadgeProps extends PropsWithChildren {
 export default function Badge({ variant = 'default', className, children }: BadgeProps) {
   return (
     <View className={cn('rounded-anthropic-sm px-2.5 py-1', VARIANT_CLASS[variant], className)}>
-      <Text className="text-label-xs font-heading font-medium tracking-wide">{children}</Text>
+      <Text className="text-label-xs font-body font-medium tracking-wide">{children}</Text>
     </View>
   )
 }

@@ -19,11 +19,11 @@ export default function WeeklyStats({ stats }: WeeklyStatsProps) {
       headerRight={(
         <View className="flex items-center gap-4">
           <View className="flex items-center gap-1">
-            <Text className="text-sm font-heading font-bold text-primary tabular-nums">{stats.totalSessions}</Text>
+            <Text className="text-sm font-body font-bold text-primary tabular-nums">{stats.totalSessions}</Text>
             <Text className="text-xs text-content-secondary">次</Text>
           </View>
           <View className="flex items-center gap-1">
-            <Text className="text-sm font-heading font-bold text-primary tabular-nums">
+            <Text className="text-sm font-body font-bold text-primary tabular-nums">
               {stats.avgDuration > 0
                 ? `${Math.floor(stats.avgDuration / 60)}:${String(stats.avgDuration % 60).padStart(2, '0')}`
                 : '--'}

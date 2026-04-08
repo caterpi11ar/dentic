@@ -19,8 +19,8 @@ export default function BrushActiveState({ session, stepPrompt, onPause }: Brush
   const isPaused = session.state === 'paused'
 
   return (
-    <View className="h-full min-h-0 pt-1 flex flex-col gap-2 overflow-hidden">
-      <View className="h-[42%] min-h-[210px] overflow-visible">
+    <View className="h-full min-h-0 pt-3 flex flex-col gap-3 overflow-hidden">
+      <View className={`h-[42%] min-h-[210px] overflow-visible rounded-anthropic-lg bg-content/[0.06]${isPaused ? ' opacity-60' : ''}`}>
         <View className="px-1 py-1">
           <ErrorBoundary>
             <ToothScene
@@ -35,9 +35,9 @@ export default function BrushActiveState({ session, stepPrompt, onPause }: Brush
       </View>
 
       <View className="flex-1 min-h-0 overflow-hidden px-1 pt-1">
-        <View className="h-full min-h-0 flex flex-col items-center gap-1.5 animate-slide-up motion-reduce:animate-none">
+        <View className="h-full min-h-0 flex flex-col items-center gap-2.5 animate-slide-up motion-reduce:animate-none">
           <BrushTimer seconds={session.stepTimeLeft} stepDuration={session.stepDuration} />
-          <View className="w-full rounded-anthropic border border-primary/15 bg-primary/[0.06] px-4 py-3.5">
+          <View className="w-full rounded-anthropic border border-line bg-primary-light px-4 py-3.5">
             <Text className="text-paragraph-md font-medium text-content leading-relaxed">{stepPrompt}</Text>
           </View>
           <StepIndicator currentStep={session.currentStepIndex} />
@@ -45,7 +45,7 @@ export default function BrushActiveState({ session, stepPrompt, onPause }: Brush
             <View
               role="button"
               hoverClass="none"
-              className="size-12 rounded-full bg-surface-white/95 shadow-[0_4px_10px_rgba(20,20,19,0.08)] flex items-center justify-center active:scale-[0.96] transition-transform"
+              className="size-12 rounded-full bg-surface-white/95 shadow-card flex items-center justify-center active:scale-[0.96] transition-transform"
               onClick={onPause}
               aria-label={isPaused ? '继续刷牙' : '暂停刷牙'}
             >

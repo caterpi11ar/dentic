@@ -5,9 +5,13 @@ import { getSettings, saveSettings } from '@/services/settingsStorage'
 import { getProfile, updateProfile } from '@/services/api/userApi'
 import { applyLightThemeToChrome } from '@/services/theme'
 import InPageTabBar from '@/components/InPageTabBar'
+import PageLayout from '@/components/PageLayout'
 import { Card, CardContent } from '@/components/ui/Card'
 import Switch from '@/components/ui/Switch'
-import { getPageTopPadding } from '@/utils/layout'
+import iconBell from '@/assets/icons/icon-bell.svg'
+import iconMusic from '@/assets/icons/icon-music.svg'
+import iconVoice from '@/assets/icons/icon-voice.svg'
+import iconUser from '@/assets/icons/icon-user.svg'
 import type { UserSettings } from '@/types'
 
 const PROFILE_CACHE_KEY = 'user_profile_cache'
@@ -30,7 +34,6 @@ function setCachedProfile(nickname: string, avatar: string): void {
 }
 
 export default function ProfilePage() {
-  const safeTopPadding = getPageTopPadding(20)
   const [settings, setSettings] = useState<UserSettings>(getSettings)
 
   // 优先从本地缓存初始化，避免闪烁
@@ -41,15 +44,17 @@ export default function ProfilePage() {
   const [showNicknameInput, setShowNicknameInput] = useState(false)
 
   useEffect(() => {
-    // 后台从云端同步最新资料
+    // 首次挂载从云端同步最新资料
     getProfile()
       .then((profile) => {
         if (profile.nickname) {
           setNickname(profile.nickname)
           setAuthorized(true)
-          setCachedProfile(profile.nickname, profile.avatar || '')
         }
         if (profile.avatar) setAvatar(profile.avatar)
+        if (profile.nickname || profile.avatar) {
+          setCachedProfile(profile.nickname || nickname, profile.avatar || avatar)
+        }
       })
       .catch(() => undefined)
   }, [])
@@ -57,18 +62,43 @@ export default function ProfilePage() {
   useDidShow(() => {
     applyLightThemeToChrome()
     setSettings(getSettings())
+    // 每次进入页面都刷新云端头像
+    getProfile()
+      .then((profile) => {
+        if (profile.nickname) {
+          setNickname(profile.nickname)
+          setAuthorized(true)
+        }
+        if (profile.avatar) setAvatar(profile.avatar)
+        if (profile.nickname || profile.avatar) {
+          setCachedProfile(profile.nickname || nickname, profile.avatar || avatar)
+        }
+      })
+      .catch(() => undefined)
   })
 
   // 第一步：选择头像后，自动弹出昵称输入
   const handleChooseAvatar = (e) => {
-    const url = e?.detail?.avatarUrl
-    if (url) {
-      setAvatar(url)
-      setCachedProfile(nickname, url)
-      updateProfile({ avatar: url }).catch(() => undefined)
-      // 头像选完，立即展示昵称输入框并自动聚焦
-      setShowNicknameInput(true)
-    }
+    const tempUrl = e?.detail?.avatarUrl
+    if (!tempUrl) return
+
+    // 先用临时路径预览，再后台上传云存储
+    setAvatar(tempUrl)
+    setShowNicknameInput(true)
+
+    const cloudPath = `avatars/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.jpg`
+    Taro.cloud
+      .uploadFile({ cloudPath, filePath: tempUrl })
+      .then((res) => {
+        const fileID = res.fileID
+        setAvatar(fileID)
+        setCachedProfile(nickname, fileID)
+        updateProfile({ avatar: fileID }).catch(() => undefined)
+      })
+      .catch(() => {
+        setCachedProfile(nickname, tempUrl)
+        updateProfile({ avatar: tempUrl }).catch(() => undefined)
+      })
   }
 
   // 第二步：昵称输入变化时暂存
@@ -132,12 +162,8 @@ export default function ProfilePage() {
   }
 
   return (
-    <View className="theme-page app-scroll theme-day min-h-screen">
-      <View
-        className="pb-bottom-safe px-page-x max-w-2xl mx-auto flex flex-col"
-        style={{ paddingTop: safeTopPadding }}
-      >
-        <Text className="text-display-sm font-body font-medium tracking-tight text-content">
+    <PageLayout scroll>
+        <Text className="text-display-md font-body font-medium tracking-tight text-content">
           我的
         </Text>
 
@@ -165,7 +191,7 @@ export default function ProfilePage() {
                     <Text className="text-paragraph-md font-heading font-semibold text-content truncate">
                       {nickname}
                     </Text>
-                    <Text className="mt-0.5 block text-label-xs text-content/35">
+                    <Text className="mt-0.5 block text-label-xs text-content-disabled">
                       点击更换头像
                     </Text>
                   </View>
@@ -178,13 +204,13 @@ export default function ProfilePage() {
                   {avatar ? (
                     <Image src={avatar} className="size-16 rounded-full" mode="aspectFill" />
                   ) : (
-                    <Text className="text-3xl">👤</Text>
+                    <Image src={iconUser} className="size-8 text-content-tertiary" mode="aspectFit" />
                   )}
                 </View>
-                <Text className="text-paragraph-sm text-content/60">设置你的昵称</Text>
+                <Text className="text-paragraph-sm text-content-secondary">设置你的昵称</Text>
                 <Input
                   type="nickname"
-                  className="w-full rounded-anthropic-sm border border-content/[0.12] px-4 py-2.5 text-paragraph-sm font-body text-center"
+                  className="w-full rounded-anthropic-lg border border-line-light px-4 py-2.5 text-paragraph-sm font-body text-center"
                   placeholder="点击输入微信昵称"
                   focus
                   onInput={handleNicknameInput}
@@ -192,7 +218,7 @@ export default function ProfilePage() {
                   onBlur={handleNicknameConfirm}
                 />
                 <View
-                  className="rounded-anthropic bg-primary px-6 py-2 active:opacity-85"
+                  className="rounded-anthropic bg-primary px-6 py-3 active:opacity-85"
                   role="button"
                   onClick={handleSaveNickname}
                   aria-label="确认昵称"
@@ -208,13 +234,13 @@ export default function ProfilePage() {
                 className="!p-0 !m-0 !bg-transparent !border-0 !leading-none after:!border-0 w-full"
               >
                 <View className="flex flex-col items-center gap-3 py-2">
-                  <View className="size-16 rounded-full bg-primary-light/60 flex items-center justify-center">
-                    <Text className="text-3xl">👤</Text>
+                  <View className="size-16 rounded-full bg-primary-light flex items-center justify-center">
+                    <Image src={iconUser} className="size-8 text-content-tertiary" mode="aspectFit" />
                   </View>
-                  <Text className="text-paragraph-sm text-content/50">
+                  <Text className="text-paragraph-sm text-content-tertiary">
                     点击授权微信头像和昵称
                   </Text>
-                  <Text className="text-paragraph-sm text-content/30">
+                  <Text className="text-paragraph-sm text-content-disabled">
                     用于排行榜展示
                   </Text>
                 </View>
@@ -224,23 +250,23 @@ export default function ProfilePage() {
         </Card>
 
         {/* ── 声音与提醒 ── */}
-        <View className="mt-8 flex items-center gap-3">
-          <Text className="text-label-sm font-heading font-semibold tracking-[0.1em] uppercase text-content/50 shrink-0">
+        <View className="mt-12 flex items-center gap-3">
+          <Text className="text-label-sm font-heading font-semibold tracking-[0.1em] uppercase text-content-tertiary shrink-0">
             声音与提醒
           </Text>
-          <View className="flex-1 h-px bg-content/[0.08]" />
+          <View className="flex-1 h-px bg-line" />
         </View>
 
-        <Card className="mt-5 overflow-hidden">
-          <CardContent className="p-0">
-            <View className="min-h-[72px] px-5 py-4 flex items-center justify-between gap-4">
+        <Card className="mt-5 overflow-hidden rounded-anthropic">
+          <CardContent className="p-0 divide-y divide-line">
+            <View className="flex items-center justify-between gap-4 px-5 py-4">
               <View className="flex items-start gap-3 flex-1 min-w-0">
                 <View className="size-9 rounded-anthropic-sm border border-warning/20 bg-warning-light/75 flex items-center justify-center">
-                  <Text className="text-lg leading-none">🔔</Text>
+                  <Image src={iconBell} className="size-5 text-content-secondary" mode="aspectFit" />
                 </View>
                 <View className="flex-1 min-w-0">
                   <Text className="block text-paragraph-sm font-heading font-semibold text-content">刷牙提醒</Text>
-                  <Text className="block mt-1 text-label-sm text-content/45">每天 {settings.reminderTime} 提醒你</Text>
+                  <Text className="block mt-1 text-label-sm text-content-tertiary">每天 {settings.reminderTime} 提醒你</Text>
                 </View>
               </View>
               <View className="shrink-0">
@@ -248,16 +274,14 @@ export default function ProfilePage() {
               </View>
             </View>
 
-            <View className="mx-5 h-px bg-content/[0.06]" />
-
-            <View className="min-h-[72px] px-5 py-4 flex items-center justify-between gap-4">
+            <View className="flex items-center justify-between gap-4 px-5 py-4">
               <View className="flex items-start gap-3 flex-1 min-w-0">
                 <View className="size-9 rounded-anthropic-sm border border-info/20 bg-info-light/80 flex items-center justify-center">
-                  <Text className="text-lg leading-none">🎵</Text>
+                  <Image src={iconMusic} className="size-5 text-content-secondary" mode="aspectFit" />
                 </View>
                 <View className="flex-1 min-w-0">
                   <Text className="block text-paragraph-sm font-heading font-semibold text-content">步骤提示音</Text>
-                  <Text className="block mt-1 text-label-sm text-content/45">步骤切换时播放提示音</Text>
+                  <Text className="block mt-1 text-label-sm text-content-tertiary">步骤切换时播放提示音</Text>
                 </View>
               </View>
               <View className="shrink-0">
@@ -265,16 +289,14 @@ export default function ProfilePage() {
               </View>
             </View>
 
-            <View className="mx-5 h-px bg-content/[0.06]" />
-
-            <View className="min-h-[72px] px-5 py-4 flex items-center justify-between gap-4">
+            <View className="flex items-center justify-between gap-4 px-5 py-4">
               <View className="flex items-start gap-3 flex-1 min-w-0">
                 <View className="size-9 rounded-anthropic-sm border border-success/20 bg-success-light/80 flex items-center justify-center">
-                  <Text className="text-lg leading-none">🗣️</Text>
+                  <Image src={iconVoice} className="size-5 text-content-secondary" mode="aspectFit" />
                 </View>
                 <View className="flex-1 min-w-0">
                   <Text className="block text-paragraph-sm font-heading font-semibold text-content">语音播报</Text>
-                  <Text className="block mt-1 text-label-sm text-content/45">步骤切换时朗读提示</Text>
+                  <Text className="block mt-1 text-label-sm text-content-tertiary">步骤切换时朗读提示</Text>
                 </View>
               </View>
               <View className="shrink-0">
@@ -284,9 +306,7 @@ export default function ProfilePage() {
           </CardContent>
         </Card>
 
-      </View>
-
       <InPageTabBar current="profile" />
-    </View>
+    </PageLayout>
   )
 }

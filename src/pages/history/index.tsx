@@ -2,12 +2,12 @@ import { useMemo, useRef, useState } from 'react'
 import { View, Text, Image } from '@tarojs/components'
 import { showShareMenu, useDidShow, useShareAppMessage, useShareTimeline } from '@tarojs/taro'
 import InPageTabBar from '@/components/InPageTabBar'
+import PageLayout from '@/components/PageLayout'
 import Calendar from '@/components/Calendar'
 import iconSun from '@/assets/icons/sun.svg'
 import iconMoon from '@/assets/icons/moon.svg'
 import { getBusinessAnchorDate, getBusinessDate } from '@/services/dateBoundary'
 import { applyLightThemeToChrome } from '@/services/theme'
-import { getPageTopPadding } from '@/utils/layout'
 import {
   getRecordsByDate,
   getRecordsByMonth,
@@ -45,7 +45,6 @@ function formatSelectedDate(dateStr: string): string {
 }
 
 export default function HistoryPage() {
-  const safeTopPadding = getPageTopPadding(20)
   const nowRef = useRef(new Date())
   const now = nowRef.current
   const businessToday = getBusinessAnchorDate(now)
@@ -129,28 +128,18 @@ export default function HistoryPage() {
   }
 
   return (
-    <View className="theme-page theme-day h-screen overflow-hidden">
-      <View className="px-page-x max-w-2xl mx-auto h-full pb-bottom-safe flex flex-col" style={{ paddingTop: safeTopPadding }}>
-        <Text className="text-display-sm font-body font-medium tracking-tight text-content">
-          历史
-        </Text>
+    <PageLayout>
+      <Text className="text-display-md font-body font-medium tracking-tight text-content">
+        历史
+      </Text>
 
-        <View className="mt-4 rounded-anthropic border border-content/[0.06] bg-surface-white grid grid-cols-3 divide-x divide-content/[0.06]">
-          <View className="min-w-0 px-3 py-3.5 flex flex-col items-center justify-center text-center">
-            <Text className="text-label-xs font-heading font-semibold tracking-[0.08em] uppercase text-content/45">连续</Text>
-            <Text className="mt-1.5 text-paragraph-md font-heading font-bold tabular-nums text-primary leading-none">{streak} 天</Text>
-          </View>
-          <View className="min-w-0 px-3 py-3.5 flex flex-col items-center justify-center text-center">
-            <Text className="text-label-xs font-heading font-semibold tracking-[0.08em] uppercase text-content/45">累计</Text>
-            <Text className="mt-1.5 text-paragraph-md font-heading font-bold tabular-nums text-content leading-none">{totalDays} 天</Text>
-          </View>
-          <View className="min-w-0 px-3 py-3.5 flex flex-col items-center justify-center text-center">
-            <Text className="text-label-xs font-heading font-semibold tracking-[0.08em] uppercase text-content/45">本月</Text>
-            <Text className="mt-1.5 text-paragraph-md font-heading font-bold tabular-nums text-info leading-none">{monthRate}%</Text>
-          </View>
-        </View>
+      <View className="mt-3 flex items-center gap-3">
+        <Text className="text-paragraph-sm font-body font-semibold tabular-nums text-primary">{streak}<Text className="text-label-xs text-content-tertiary ml-0.5">天连续</Text></Text>
+        <Text className="text-paragraph-sm font-body font-semibold tabular-nums text-content">{totalDays}<Text className="text-label-xs text-content-tertiary ml-0.5">天累计</Text></Text>
+        <Text className="text-paragraph-sm font-body font-semibold tabular-nums text-primary">{monthRate}<Text className="text-label-xs text-content-tertiary ml-0.5">%本月</Text></Text>
+      </View>
 
-        <View className="mt-4 flex-1 min-h-0 overflow-y-auto">
+      <View className="mt-4 flex-1 min-h-0 overflow-y-auto">
           <Calendar
             year={year}
             month={month}
@@ -166,9 +155,9 @@ export default function HistoryPage() {
             hideStats
           />
 
-          <View className="mt-3 rounded-anthropic border border-content/[0.06] bg-surface-white p-4">
+          <View className="mt-5 rounded-anthropic border border-line bg-surface-white p-4">
             <View className="flex items-baseline justify-between">
-              <Text className="text-label-xs font-heading font-semibold tracking-[0.1em] uppercase text-content/45">当天记录</Text>
+              <Text className="text-label-sm font-body font-semibold tracking-[0.08em] uppercase text-content-tertiary">当天记录</Text>
               {selectedDate && (
                 <Text className="text-paragraph-sm font-heading text-content-secondary">
                   {formatSelectedDate(selectedDate)}
@@ -180,11 +169,11 @@ export default function HistoryPage() {
                 {(['morning', 'evening'] as const).map((session) => (
                   <View
                     key={session}
-                    className="rounded-anthropic-sm border border-content/[0.06] bg-primary-light/70 px-3 py-2.5 flex items-center justify-between"
+                    className="rounded-anthropic-sm border border-line bg-primary-light/70 px-3 py-2.5 flex items-center justify-between"
                   >
                     <View className="flex items-center gap-1.5">
                       <Image src={SESSION_ICONS[session]} className="size-4" mode="aspectFit" />
-                      <Text className="text-label-xs font-heading font-semibold tracking-[0.08em] uppercase text-content/50">
+                      <Text className="text-label-xs font-heading font-semibold tracking-[0.08em] uppercase text-content-tertiary">
                         {SESSION_LABELS[session]}
                       </Text>
                     </View>
@@ -195,13 +184,12 @@ export default function HistoryPage() {
                 ))}
               </View>
             ) : (
-              <Text className="mt-2 text-paragraph-sm text-content/35">请选择日期查看晨间和夜间时间</Text>
+              <Text className="mt-2 text-paragraph-sm text-content-disabled">请选择日期查看晨间和夜间时间</Text>
             )}
           </View>
         </View>
-      </View>
 
       <InPageTabBar current="history" />
-    </View>
+    </PageLayout>
   )
 }

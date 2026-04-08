@@ -13,10 +13,9 @@ import { getBusinessAnchorDate } from '@/services/dateBoundary'
 import { generateShareMessage } from '@/services/share'
 import { applyLightThemeToChrome } from '@/services/theme'
 import { trackEvent } from '@/services/analytics'
-import { getPageTopPadding } from '@/utils/layout'
+import PageLayout from '@/components/PageLayout'
 
 export default function IndexPage() {
-  const safeTopPadding = getPageTopPadding(20)
 
   const {
     session,
@@ -56,16 +55,15 @@ export default function IndexPage() {
 
   const isIdle = session.state === 'idle'
   const isBrushingFlow = session.state !== 'idle' && session.state !== 'completed'
-  const shouldEnableScroll = session.state === 'completed'
+  const shouldEnableScroll = false
 
   return (
-    <View className={cn('theme-page theme-day min-h-screen', shouldEnableScroll && 'app-scroll')}>
+    <PageLayout scroll={shouldEnableScroll}>
       <View
         className={cn(
-          'relative px-page-x max-w-2xl mx-auto',
-          isIdle ? 'h-screen overflow-hidden pb-bottom-safe' : isBrushingFlow ? 'h-screen overflow-hidden pb-bottom-safe' : 'min-h-screen pb-bottom-safe'
+          'relative flex-1 flex flex-col',
+          isBrushingFlow ? 'overflow-hidden' : ''
         )}
-        style={{ paddingTop: safeTopPadding }}
       >
         {session.state === 'countdown' && (
           <BrushCountdownOverlay remaining={session.countdownRemaining} />
@@ -101,6 +99,6 @@ export default function IndexPage() {
       </View>
 
       <InPageTabBar current="brush" />
-    </View>
+    </PageLayout>
   )
 }
