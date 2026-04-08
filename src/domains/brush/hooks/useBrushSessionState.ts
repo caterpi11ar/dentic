@@ -1,6 +1,10 @@
-import { useMemo, useState } from 'react'
+import type { DailyStatus } from '@/domains/brush/utils'
+import type { BrushingSession } from '@/services/brushing'
 import { useMemoizedFn } from 'ahooks'
+import { useMemo, useState } from 'react'
+import { getRandomCompletionMessage, MILESTONE_MESSAGES, MILESTONES } from '@/constants/brushing-steps'
 import {
+
   createSession,
   getCurrentStep,
   pauseSession,
@@ -8,10 +12,7 @@ import {
   startCountdown,
   tick,
   tickCountdown,
-  type BrushingSession,
 } from '@/services/brushing'
-import { MILESTONES, MILESTONE_MESSAGES, getRandomCompletionMessage } from '@/constants/brushing-steps'
-import type { DailyStatus } from '@/domains/brush/utils'
 
 export type BrushInteractionAction = 'start' | 'pauseToggle'
 
@@ -79,13 +80,13 @@ export function useBrushSessionState(): UseBrushSessionStateResult {
 
   const applyCompletionMeta = useMemoizedFn((nextStreak: number) => {
     setCompletionMessage(getRandomCompletionMessage())
-    const currentMilestone = MILESTONES.find((m) => m === nextStreak)
+    const currentMilestone = MILESTONES.find(m => m === nextStreak)
     setMilestone(currentMilestone ? MILESTONE_MESSAGES[currentMilestone] : null)
   })
 
   const markInteraction = useMemoizedFn((action: BrushInteractionAction) => {
     setInteractionAction(action)
-    setInteractionVersion((prev) => prev + 1)
+    setInteractionVersion(prev => prev + 1)
   })
 
   const stepPrompt = useMemo(() => getCurrentStep(session).prompt, [session])

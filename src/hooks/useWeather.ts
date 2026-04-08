@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import type { WeatherData } from '@/services/weatherService'
 import { useDidShow } from '@tarojs/taro'
+import { useState } from 'react'
 import {
-  getCachedWeather,
   fetchWeather,
-  type WeatherData,
+  getCachedWeather,
+
 } from '@/services/weatherService'
 
 export function useWeather() {

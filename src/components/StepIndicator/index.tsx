@@ -1,6 +1,6 @@
-import { View, Text } from '@tarojs/components'
-import { BRUSHING_STEPS, TOTAL_STEPS } from '@/constants/brushing-steps'
+import { Text, View } from '@tarojs/components'
 import { cn } from '@/components/ui/cn'
+import { BRUSHING_STEPS, TOTAL_STEPS } from '@/constants/brushing-steps'
 
 interface Props {
   currentStep: number
@@ -29,7 +29,7 @@ export default function StepIndicator({ currentStep, totalSteps = TOTAL_STEPS }:
               key={i}
               className={cn(
                 'h-2 flex-1 rounded-full transition-[background-color] duration-300 ease-in-out motion-reduce:transition-none',
-                isDone ? 'bg-primary' : isActive ? 'bg-primary animate-gentle-pulse' : 'bg-line'
+                isDone ? 'bg-primary' : isActive ? 'bg-primary animate-gentle-pulse' : 'bg-line',
               )}
             />
           )
@@ -37,7 +37,10 @@ export default function StepIndicator({ currentStep, totalSteps = TOTAL_STEPS }:
       </View>
       <View className="flex items-center justify-center gap-1.5">
         <Text className="text-label-sm font-body text-content-tertiary tabular-nums">
-          {currentStep + 1} / {totalSteps}
+          {currentStep + 1}
+          {' '}
+          /
+          {totalSteps}
         </Text>
         <Text className="text-paragraph-sm font-heading text-primary font-medium">{stepName}</Text>
       </View>

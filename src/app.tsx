@@ -1,7 +1,9 @@
-import { useEffect, PropsWithChildren } from 'react'
+import type { PropsWithChildren } from 'react'
 import Taro from '@tarojs/taro'
-import { processSyncQueue } from '@/services/syncQueue'
+import { useEffect } from 'react'
 import { migrateLocalRecordsToCloud } from '@/services/migration'
+import { processSyncQueue } from '@/services/syncQueue'
+import { StoreProvider } from '@/stores/provider'
 import './app.scss'
 
 // 初始化微信云开发
@@ -20,7 +22,7 @@ function App({ children }: PropsWithChildren) {
     migrateLocalRecordsToCloud().catch(() => undefined)
   }, [])
 
-  return <>{children}</>
+  return <StoreProvider>{children}</StoreProvider>
 }
 
 export default App

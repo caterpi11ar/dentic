@@ -1,6 +1,6 @@
-import { Component } from 'react'
 import type { ReactNode } from 'react'
-import { View, Text } from '@tarojs/components'
+import { Text, View } from '@tarojs/components'
+import { Component } from 'react'
 
 interface Props {
   children: ReactNode

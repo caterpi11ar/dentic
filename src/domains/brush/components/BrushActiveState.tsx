@@ -1,11 +1,11 @@
-import { View, Text, Image } from '@tarojs/components'
+import type { BrushingSession } from '@/services/brushing'
+import { Image, Text, View } from '@tarojs/components'
+import iconBrushPlay from '@/assets/icons/brush-play.svg'
+import iconBrushStop from '@/assets/icons/brush-stop.svg'
 import BrushTimer from '@/components/BrushTimer'
 import ErrorBoundary from '@/components/ErrorBoundary'
 import StepIndicator from '@/components/StepIndicator'
 import ToothScene from '@/components/ToothScene'
-import type { BrushingSession } from '@/services/brushing'
-import iconBrushPlay from '@/assets/icons/brush-play.svg'
-import iconBrushStop from '@/assets/icons/brush-stop.svg'
 
 interface BrushActiveStateProps {
   session: BrushingSession
@@ -14,8 +14,8 @@ interface BrushActiveStateProps {
 }
 
 export default function BrushActiveState({ session, stepPrompt, onPause }: BrushActiveStateProps) {
-  const toothSceneMode =
-    session.state === 'brushing' ? 'brushing' : session.state === 'paused' ? 'paused' : 'inactive'
+  const toothSceneMode
+    = session.state === 'brushing' ? 'brushing' : session.state === 'paused' ? 'paused' : 'inactive'
   const isPaused = session.state === 'paused'
 
   return (

@@ -1,9 +1,9 @@
-import { View, Text } from '@tarojs/components'
-import { BRUSHING_STEPS } from '@/constants/brushing-steps'
+import { Text, View } from '@tarojs/components'
 import { cn } from '@/components/ui/cn'
+import { BRUSHING_STEPS } from '@/constants/brushing-steps'
 
 type SceneMode = 'brushing' | 'paused' | 'inactive'
-type ToothCircle = { x: number; y: number; size: number }
+interface ToothCircle { x: number, y: number, size: number }
 
 interface Props {
   currentStepIndex: number

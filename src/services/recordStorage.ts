@@ -1,72 +1,21 @@
-import Taro from '@tarojs/taro'
 import type { BrushingRecord } from '@/types'
-
-const RECORDS_STORAGE_KEY = 'brushing_records'
-
-let cachedRecords: BrushingRecord[] | null = null
-
-function invalidateRecordCache() {
-  cachedRecords = null
-}
-
-/** 迁移旧历史：缺少 session 字段的默认设为 morning */
-function migrateRecords(records: unknown): BrushingRecord[] {
-  if (!Array.isArray(records)) return []
-  let migrated = false
-  const result = records.map((record) => {
-    if (!record || typeof record !== 'object') return null
-    const current = record as Partial<BrushingRecord>
-    if (typeof current.date !== 'string') return null
-    if (typeof current.completed !== 'boolean') return null
-    if (typeof current.duration !== 'number') return null
-    if (typeof current.completedSteps !== 'number') return null
-    if (typeof current.timestamp !== 'number') return null
-
-    if (!current.session) {
-      migrated = true
-      return { ...current, session: 'morning' as const } as BrushingRecord
-    }
-    if (current.session !== 'morning' && current.session !== 'evening') return null
-    return current as BrushingRecord
-  }).filter((record): record is BrushingRecord => !!record)
-  if (migrated) {
-    Taro.setStorageSync(RECORDS_STORAGE_KEY, result)
-  }
-  return result
-}
+import { recordsStore } from '@/stores/records'
 
 export function getRecords(): BrushingRecord[] {
-  if (cachedRecords) return cachedRecords
-  try {
-    const raw = Taro.getStorageSync(RECORDS_STORAGE_KEY) || []
-    cachedRecords = migrateRecords(raw)
-    return cachedRecords
-  } catch {
-    return []
-  }
+  return recordsStore.getState().records
 }
 
-/** 保存历史，去重键为 date + session */
 export function saveRecord(record: BrushingRecord): void {
-  const records = getRecords()
-  const idx = records.findIndex((r) => r.date === record.date && r.session === record.session)
-  if (idx >= 0) {
-    records[idx] = record
-  } else {
-    records.push(record)
-  }
-  Taro.setStorageSync(RECORDS_STORAGE_KEY, records)
-  invalidateRecordCache()
+  recordsStore.getState().saveRecord(record)
 }
 
-/** 返回某天所有历史（早/晚） */
 export function getRecordsByDate(date: string): BrushingRecord[] {
-  return getRecords().filter((r) => r.date === date)
+  return recordsStore.getState().records.filter(r => r.date === date)
 }
 
 export function getRecordsByMonth(year: number, month: number): BrushingRecord[] {
   const prefix = `${year}-${String(month).padStart(2, '0')}`
-  return getRecords().filter((r) => r.date.startsWith(prefix))
+  return recordsStore.getState().records.filter(r => r.date.startsWith(prefix))
 }
 
 export function formatDate(date: Date): string {

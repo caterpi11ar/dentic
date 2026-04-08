@@ -1,5 +1,5 @@
-import { callCloudFunction } from '@/services/api'
 import type { RankPeriodType } from '@/types'
+import { callCloudFunction } from '@/services/api'
 
 export interface RankItem {
   openId: string

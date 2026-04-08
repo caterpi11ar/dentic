@@ -1,6 +1,6 @@
+import type { BrushingState, BrushingStep } from '@/types'
 import { BRUSHING_STEPS, TOTAL_STEPS } from '@/constants/brushing-steps'
 import { isMorningSessionHour } from '@/services/dateBoundary'
-import type { BrushingState, BrushingStep } from '@/types'
 
 const FIXED_STEP_DURATION_SECONDS = 10
 
@@ -33,7 +33,8 @@ export function startCountdown(session: BrushingSession): BrushingSession {
 }
 
 export function tickCountdown(session: BrushingSession): BrushingSession {
-  if (session.state !== 'countdown') return session
+  if (session.state !== 'countdown')
+    return session
   const next = session.countdownRemaining - 1
   if (next <= 0) {
     return startSession({ ...session, countdownRemaining: 0 })
@@ -61,7 +62,8 @@ export function resumeSession(session: BrushingSession): BrushingSession {
 
 /** 每秒调用一次，返回更新后的 session */
 export function tick(session: BrushingSession): BrushingSession {
-  if (session.state !== 'brushing') return session
+  if (session.state !== 'brushing')
+    return session
 
   const newTimeLeft = session.stepTimeLeft - 1
   const newElapsed = session.elapsedTime + 1

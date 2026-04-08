@@ -3,9 +3,9 @@ import {
   OPEN_METEO_BASE_URL,
   WEATHER_CACHE_KEY,
   WEATHER_CACHE_TTL,
+  WMO_NIGHT_EMOJI,
   WMO_WEATHER,
   WMO_WEATHER_DEFAULT,
-  WMO_NIGHT_EMOJI,
 } from '@/constants/weather'
 
 export interface WeatherData {
@@ -25,10 +25,13 @@ export interface WeatherResult {
 export function getCachedWeather(): WeatherData | null {
   try {
     const cached = Taro.getStorageSync(WEATHER_CACHE_KEY)
-    if (!cached || typeof cached.temp !== 'number' || !cached.updatedAt) return null
-    if (Date.now() - cached.updatedAt > WEATHER_CACHE_TTL) return null
+    if (!cached || typeof cached.temp !== 'number' || !cached.updatedAt)
+      return null
+    if (Date.now() - cached.updatedAt > WEATHER_CACHE_TTL)
+      return null
     return cached as WeatherData
-  } catch {
+  }
+  catch {
     return null
   }
 }
@@ -36,7 +39,8 @@ export function getCachedWeather(): WeatherData | null {
 export async function fetchWeather(): Promise<WeatherResult> {
   // 先查缓存
   const cached = getCachedWeather()
-  if (cached) return { data: cached, error: null }
+  if (cached)
+    return { data: cached, error: null }
 
   // 获取位置
   let lat: number
@@ -45,7 +49,8 @@ export async function fetchWeather(): Promise<WeatherResult> {
     const loc = await Taro.getLocation({ type: 'wgs84' })
     lat = loc.latitude
     lon = loc.longitude
-  } catch {
+  }
+  catch {
     return { data: null, error: 'location_denied' }
   }
 
@@ -83,7 +88,8 @@ export async function fetchWeather(): Promise<WeatherResult> {
 
     Taro.setStorageSync(WEATHER_CACHE_KEY, weatherData)
     return { data: weatherData, error: null }
-  } catch {
+  }
+  catch {
     return { data: null, error: 'network_error' }
   }
 }

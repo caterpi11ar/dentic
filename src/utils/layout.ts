@@ -16,7 +16,8 @@ export function getStatusBarHeight(): number {
       cachedStatusBarHeight = statusBarHeight
       return statusBarHeight
     }
-  } catch {
+  }
+  catch {
     // Ignore and fall back to default.
   }
 
@@ -34,7 +35,8 @@ export function getPageTopPadding(extra = 10): string {
     if (Number.isFinite(menuBottom) && menuBottom > 0) {
       navBottom = Math.max(navBottom, menuBottom)
     }
-  } catch {
+  }
+  catch {
     // Ignore and use default nav bottom.
   }
 

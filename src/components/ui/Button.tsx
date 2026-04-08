@@ -1,5 +1,5 @@
-import { Button as TaroButton } from '@tarojs/components'
 import type { ComponentProps } from 'react'
+import { Button as TaroButton } from '@tarojs/components'
 import { cn } from '@/components/ui/cn'
 
 type TaroButtonProps = ComponentProps<typeof TaroButton>
@@ -14,8 +14,8 @@ export interface ButtonProps extends Omit<TaroButtonProps, 'className' | 'size'>
   size?: ButtonSize
 }
 
-const BASE_CLASS =
-  'font-body font-semibold leading-none flex items-center justify-center gap-1.5 transition-[background-color,border-color,opacity,transform] duration-200 active:scale-[0.98] active:opacity-90'
+const BASE_CLASS
+  = 'font-body font-semibold leading-none flex items-center justify-center gap-1.5 transition-[background-color,border-color,opacity,transform] duration-200 active:scale-[0.98] active:opacity-90'
 
 const VARIANT_CLASS: Record<ButtonVariant, string> = {
   default: 'bg-primary text-surface-white border border-transparent',
@@ -46,7 +46,7 @@ export default function Button({
         SIZE_CLASS[size],
         fullWidth && size !== 'icon' && 'w-full',
         props.disabled && 'opacity-55',
-        className
+        className,
       )}
       {...props}
     />

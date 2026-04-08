@@ -1,5 +1,5 @@
 import Taro from '@tarojs/taro'
-import { getSettings } from '@/services/settingsStorage'
+import { settingsStore } from '@/stores/settings'
 
 let _audioCtx: Taro.InnerAudioContext | null = null
 
@@ -13,14 +13,16 @@ function getAudioContext(): Taro.InnerAudioContext {
 }
 
 export function playStepSound(): void {
-  const { soundEnabled } = getSettings()
-  if (!soundEnabled) return
+  const { soundEnabled } = settingsStore.getState()
+  if (!soundEnabled)
+    return
   try {
     const ctx = getAudioContext()
     ctx.stop()
     ctx.seek(0)
     ctx.play()
-  } catch {
+  }
+  catch {
     // 静默失败
   }
 }
@@ -38,14 +40,16 @@ function getVoiceContext(): Taro.InnerAudioContext {
 }
 
 export function playVoice(filename: string): void {
-  const { voiceEnabled } = getSettings()
-  if (!voiceEnabled) return
+  const { voiceEnabled } = settingsStore.getState()
+  if (!voiceEnabled)
+    return
   try {
     const ctx = getVoiceContext()
     ctx.stop()
     ctx.src = `assets/audio/voice/${filename}`
     ctx.play()
-  } catch {
+  }
+  catch {
     // 静默失败
   }
 }

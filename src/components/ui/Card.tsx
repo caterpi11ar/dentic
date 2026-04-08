@@ -1,5 +1,5 @@
-import { View } from '@tarojs/components'
 import type { PropsWithChildren } from 'react'
+import { View } from '@tarojs/components'
 import { cn } from '@/components/ui/cn'
 
 interface CardProps extends PropsWithChildren {

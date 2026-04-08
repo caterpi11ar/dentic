@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
-import Button, { type ButtonProps } from '@/components/ui/Button'
+import type { ButtonProps } from '@/components/ui/Button'
+import Button from '@/components/ui/Button'
 import { cn } from '@/components/ui/cn'
 
 interface IconButtonProps
