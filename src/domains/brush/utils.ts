@@ -11,6 +11,10 @@ export function formatTodayHeading(date: Date): string {
   return `${date.getMonth() + 1}月${date.getDate()}日`
 }
 
+export function isDailyComplete(status: DailyStatus): boolean {
+  return status.morningDone && status.eveningDone
+}
+
 export function getGreeting(hour: number): string {
   if (hour < BUSINESS_DAY_START_HOUR)
     return '晚上好'

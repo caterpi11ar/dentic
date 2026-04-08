@@ -86,6 +86,7 @@ export default function IndexPage() {
             milestone={milestone}
             elapsedTime={session.elapsedTime}
             streak={streak}
+            dailyStatus={dailyStatus}
             onReset={handleReset}
           />
         ) : session.state !== 'idle' ? (
