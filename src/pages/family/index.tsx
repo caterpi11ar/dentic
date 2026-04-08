@@ -9,7 +9,6 @@ import Button from '@/components/ui/Button'
 import Tabs from '@/components/ui/Tabs'
 import { getBusinessAnchorDate, getBusinessDate } from '@/services/dateBoundary'
 import { applyLightThemeToChrome } from '@/services/theme'
-import { authStore } from '@/stores/auth'
 import { familyStore, useFamilyStore } from '@/stores/family'
 
 const INTERACTION_LABELS: Record<string, string> = {
@@ -310,14 +309,6 @@ export default function FamilyPage() {
   })
 
   const handleInteraction = (type: 'like' | 'reminder') => {
-    // 按当前用户过滤（后端也有校验，前端仅做快速拦截）
-    const myOpenId = authStore.getState().openId
-    const todayCount = interactions.filter(i => i.type === type && i.fromOpenId === myOpenId).length
-    if (todayCount >= 3) {
-      Taro.showToast({ title: '今天已达上限，明天再来吧', icon: 'none' }).catch(() => undefined)
-      return
-    }
-
     if (interactionCooldown) {
       Taro.showToast({ title: '操作太频繁，请稍后再试', icon: 'none' }).catch(() => undefined)
       return
@@ -446,7 +437,7 @@ export default function FamilyPage() {
             <Button
               variant="danger"
               onClick={() => {
-                const isCreator = family!.creatorOpenId === authStore.getState().openId
+                const isCreator = family!.myRole === 'creator'
                 const msg = isCreator ? '你是创建者，退出将解散家庭，所有成员都会被移除。确认退出？' : '确认退出该家庭？'
                 Taro.showModal({
                   title: '退出家庭',
