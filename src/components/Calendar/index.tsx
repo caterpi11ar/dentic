@@ -1,14 +1,13 @@
-import { View, Text, Image } from '@tarojs/components'
-import type { KeyboardEvent as ReactKeyboardEvent } from 'react'
-import Badge from '@/components/ui/Badge'
-import IconButton from '@/components/ui/IconButton'
-import { cn } from '@/components/ui/cn'
+import { Image, Text, View } from '@tarojs/components'
 import iconChevLeft from '@/assets/icons/icon-chevron-left.svg'
 import iconChevRight from '@/assets/icons/icon-chevron-right.svg'
+import Badge from '@/components/ui/Badge'
+import { cn } from '@/components/ui/cn'
+import IconButton from '@/components/ui/IconButton'
 
 const WEEKDAYS = ['日', '一', '二', '三', '四', '五', '六']
 
-type DaySessionInfo = {
+interface DaySessionInfo {
   morning: boolean
   evening: boolean
 }
@@ -54,11 +53,6 @@ function CalendarDayButton({
 }: CalendarDayButtonProps) {
   const isBrushed = !!sessionInfo
   const handleActivate = () => onSelectDate(dateStr)
-  const handleKeyDown = (event: ReactKeyboardEvent) => {
-    if (event.key !== 'Enter' && event.key !== ' ') return
-    event.preventDefault()
-    handleActivate()
-  }
 
   return (
     <View
@@ -67,9 +61,7 @@ function CalendarDayButton({
       role="button"
       aria-label={`${month}月${day}日${isBrushed ? '，已刷牙' : ''}`}
       aria-pressed={isSelected}
-      tabIndex={0}
       onClick={handleActivate}
-      onKeyDown={handleKeyDown}
     >
       {/* 日期圆 */}
       <View
@@ -81,7 +73,7 @@ function CalendarDayButton({
               ? 'bg-primary/15'
               : isBrushed
                 ? 'bg-content/[0.05]'
-                : ''
+                : '',
         )}
       >
         <Text
@@ -93,7 +85,7 @@ function CalendarDayButton({
                 ? 'text-primary font-heading font-medium'
                 : isBrushed
                   ? 'text-content font-body font-medium'
-                  : 'text-content-disabled font-body'
+                  : 'text-content-disabled font-body',
           )}
         >
           {day}
@@ -159,9 +151,18 @@ export default function Calendar({
 
           {!hideStats && (
             <View className="mt-3 flex flex-wrap items-center gap-2">
-              <Badge variant="default">本月 {monthBrushed}</Badge>
-              <Badge variant="secondary">连续 {streak}</Badge>
-              <Badge variant="secondary">累计 {totalDays}</Badge>
+              <Badge variant="default">
+                本月
+                {monthBrushed}
+              </Badge>
+              <Badge variant="secondary">
+                连续
+                {streak}
+              </Badge>
+              <Badge variant="secondary">
+                累计
+                {totalDays}
+              </Badge>
             </View>
           )}
         </View>
@@ -171,7 +172,7 @@ export default function Calendar({
       <View className={cn('px-2', hideHeader ? 'pt-3' : 'pt-1', 'pb-1')}>
         {/* 星期头 */}
         <View className="grid grid-cols-7 mb-0.5">
-          {WEEKDAYS.map((weekday) => (
+          {WEEKDAYS.map(weekday => (
             <View key={weekday} className="flex items-center justify-center py-1">
               <Text className="text-label-xs font-body font-semibold text-content-tertiary tracking-widest">
                 {weekday}

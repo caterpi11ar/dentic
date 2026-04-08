@@ -1,14 +1,16 @@
-import { View, Text, Image } from '@tarojs/components'
+import type { DailyStatus } from '@/domains/brush/utils'
+import { Image, Text, View } from '@tarojs/components'
+import iconMoon from '@/assets/icons/moon.svg'
+import iconSun from '@/assets/icons/sun.svg'
 import Progress from '@/components/ui/Progress'
 import { useWeather } from '@/hooks/useWeather'
-import type { DailyStatus } from '@/domains/brush/utils'
-import iconSun from '@/assets/icons/sun.svg'
-import iconMoon from '@/assets/icons/moon.svg'
 
 function formatTime(timestamp?: number): string {
-  if (typeof timestamp !== 'number') return '--:--'
+  if (typeof timestamp !== 'number')
+    return '--:--'
   const d = new Date(timestamp)
-  if (Number.isNaN(d.getTime())) return '--:--'
+  if (Number.isNaN(d.getTime()))
+    return '--:--'
   return `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}`
 }
 
@@ -43,7 +45,9 @@ export default function BrushIdleState({
           </Text>
           {weather && (
             <Text className="text-paragraph-sm font-body font-semibold text-content-secondary">
-              {weather.temp}° {weather.description}
+              {weather.temp}
+              °
+              {weather.description}
             </Text>
           )}
         </View>

@@ -6,7 +6,7 @@ export const WEATHER_CACHE_KEY = 'weather_cache'
 export const WEATHER_CACHE_TTL = 15 * 60 * 1000 // 15 分钟
 
 // WMO 天气码 → { emoji, description }
-export const WMO_WEATHER: Record<number, { emoji: string; desc: string }> = {
+export const WMO_WEATHER: Record<number, { emoji: string, desc: string }> = {
   0: { emoji: '☀️', desc: '晴' },
   1: { emoji: '🌤️', desc: '大部晴朗' },
   2: { emoji: '⛅', desc: '多云' },

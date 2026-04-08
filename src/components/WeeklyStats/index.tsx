@@ -1,7 +1,7 @@
-import { View, Text } from '@tarojs/components'
 import type { WeeklyStatsData } from '@/services/recordStatsService'
-import Section from '@/components/ui/Section'
+import { Text, View } from '@tarojs/components'
 import { cn } from '@/components/ui/cn'
+import Section from '@/components/ui/Section'
 
 const WEEKDAY_LABELS = ['一', '二', '三', '四', '五', '六', '日']
 
@@ -10,7 +10,7 @@ interface WeeklyStatsProps {
 }
 
 export default function WeeklyStats({ stats }: WeeklyStatsProps) {
-  const maxCount = Math.max(...stats.days.map((d) => d.count), 1)
+  const maxCount = Math.max(...stats.days.map(d => d.count), 1)
 
   return (
     <Section
@@ -46,7 +46,7 @@ export default function WeeklyStats({ stats }: WeeklyStatsProps) {
                 <View
                   className={cn(
                     'w-full rounded-lg transition-[height] duration-300 ease-in-out motion-reduce:transition-none',
-                    day.count > 0 ? 'bg-primary' : 'bg-line-light'
+                    day.count > 0 ? 'bg-primary' : 'bg-line-light',
                   )}
                   style={{ height: `${pct}%` }}
                 />

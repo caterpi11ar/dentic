@@ -1,8 +1,8 @@
-import { View, Text, Image } from '@tarojs/components'
+import { Image, Text, View } from '@tarojs/components'
 import Taro from '@tarojs/taro'
+import iconCheck from '@/assets/icons/icon-check.svg'
 import Button from '@/components/ui/Button'
 import { TOTAL_STEPS } from '@/constants/brushing-steps'
-import iconCheck from '@/assets/icons/icon-check.svg'
 
 interface BrushCompletedStateProps {
   completionMessage: string
@@ -40,7 +40,9 @@ export default function BrushCompletedState({
       <View className="mt-8 w-full flex items-center justify-center gap-6">
         <View className="flex flex-col items-center">
           <Text className="text-display-sm font-heading font-medium text-primary tabular-nums">
-            {Math.floor(elapsedTime / 60)}:{String(elapsedTime % 60).padStart(2, '0')}
+            {Math.floor(elapsedTime / 60)}
+            :
+            {String(elapsedTime % 60).padStart(2, '0')}
           </Text>
           <Text className="mt-1 text-label-xs font-body text-content-tertiary">用时</Text>
         </View>

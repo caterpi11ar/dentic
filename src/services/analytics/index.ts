@@ -23,10 +23,12 @@ export function trackEvent(eventName: string, properties?: Record<string, unknow
     // 缓冲区满时批量上报
     if (buffer.length >= 20) {
       flushEvents(buffer)
-    } else {
+    }
+    else {
       saveEventBuffer(buffer)
     }
-  } catch {
+  }
+  catch {
     // 埋点不应影响主流程
   }
 }
@@ -36,7 +38,8 @@ const EVENT_BUFFER_KEY = 'analytics_buffer'
 function getEventBuffer(): Record<string, unknown>[] {
   try {
     return (Taro.getStorageSync(EVENT_BUFFER_KEY) as Record<string, unknown>[]) || []
-  } catch {
+  }
+  catch {
     return []
   }
 }
@@ -44,7 +47,8 @@ function getEventBuffer(): Record<string, unknown>[] {
 function saveEventBuffer(buffer: Record<string, unknown>[]): void {
   try {
     Taro.setStorageSync(EVENT_BUFFER_KEY, buffer)
-  } catch {
+  }
+  catch {
     // 静默处理
   }
 }

@@ -1,4 +1,4 @@
-import { View, Text } from '@tarojs/components'
+import { Text, View } from '@tarojs/components'
 import { cn } from '@/components/ui/cn'
 
 export interface TabOption<T extends string = string> {
@@ -42,7 +42,7 @@ export default function Tabs<T extends string>({
               active
                 ? 'bg-surface-white text-content shadow-card'
                 : 'bg-transparent text-content/50',
-              disabled ? 'opacity-45' : 'active:opacity-85'
+              disabled ? 'opacity-45' : 'active:opacity-85',
             )}
             role="tab"
             aria-selected={active}

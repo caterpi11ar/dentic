@@ -57,7 +57,7 @@ export interface ApiResponse<T = unknown> {
 }
 
 /** API 错误码 */
-export const enum ApiErrorCode {
+export enum ApiErrorCode {
   OK = 0,
   PARAM_ERROR = 4001,
   NO_PERMISSION = 4003,

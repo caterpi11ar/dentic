@@ -1,6 +1,6 @@
+import type { SyncQueueItem } from '@/types'
 import Taro from '@tarojs/taro'
 import { upsertBrushRecord } from '@/services/api/brushApi'
-import type { SyncQueueItem } from '@/types'
 
 const SYNC_QUEUE_KEY = 'brush_sync_queue'
 const MAX_RETRIES = 3
@@ -9,7 +9,8 @@ const MAX_RETRIES = 3
 export function getSyncQueue(): SyncQueueItem[] {
   try {
     return (Taro.getStorageSync(SYNC_QUEUE_KEY) as SyncQueueItem[]) || []
-  } catch {
+  }
+  catch {
     return []
   }
 }
@@ -17,7 +18,8 @@ export function getSyncQueue(): SyncQueueItem[] {
 function saveQueue(queue: SyncQueueItem[]): void {
   try {
     Taro.setStorageSync(SYNC_QUEUE_KEY, queue)
-  } catch {
+  }
+  catch {
     // 静默处理
   }
 }
@@ -37,14 +39,15 @@ export function enqueueSyncItem(payload: SyncQueueItem['payload']): void {
 
 /** 从队列移除指定条目 */
 export function dequeueSyncItem(id: string): void {
-  const queue = getSyncQueue().filter((item) => item.id !== id)
+  const queue = getSyncQueue().filter(item => item.id !== id)
   saveQueue(queue)
 }
 
 /** 处理同步队列：逐条重试上报 */
 export async function processSyncQueue(): Promise<void> {
   const queue = getSyncQueue()
-  if (queue.length === 0) return
+  if (queue.length === 0)
+    return
 
   const remaining: SyncQueueItem[] = []
 
@@ -55,7 +58,8 @@ export async function processSyncQueue(): Promise<void> {
         source: 'local_sync',
       })
       // 成功，不保留
-    } catch {
+    }
+    catch {
       // 失败，增加重试计数
       if (item.retryCount + 1 < MAX_RETRIES) {
         remaining.push({ ...item, retryCount: item.retryCount + 1 })

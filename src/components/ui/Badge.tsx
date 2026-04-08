@@ -1,5 +1,5 @@
-import { View, Text } from '@tarojs/components'
 import type { PropsWithChildren } from 'react'
+import { Text, View } from '@tarojs/components'
 import { cn } from '@/components/ui/cn'
 
 type Variant = 'default' | 'secondary' | 'outline' | 'success' | 'warning' | 'info'

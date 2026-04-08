@@ -19,7 +19,7 @@ export default function Switch({ checked, onClick, ariaLabel }: SwitchProps) {
       <View
         className={cn(
           'absolute top-0.5 left-0.5 size-5 rounded-full bg-surface-white shadow-sm transition-transform duration-300',
-          checked ? 'translate-x-4' : 'translate-x-0'
+          checked ? 'translate-x-4' : 'translate-x-0',
         )}
       />
     </View>

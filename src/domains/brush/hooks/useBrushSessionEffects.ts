@@ -1,7 +1,9 @@
-import { useEffect, useRef } from 'react'
+import type { BrushInteractionAction } from '@/domains/brush/hooks/useBrushSessionState'
+import type { DailyStatus } from '@/domains/brush/utils'
+import type { BrushingSession } from '@/services/brushing'
 import Taro, { useDidShow } from '@tarojs/taro'
 import { useInterval, useUnmount } from 'ahooks'
-import type { BrushingSession } from '@/services/brushing'
+import { useEffect, useRef } from 'react'
 import {
   destroyBrushAudio,
   playBrushCompleteAudio,
@@ -10,19 +12,17 @@ import {
 } from '@/domains/brush/effects/audioFeedback'
 import { setBrushScreenWakeLock } from '@/domains/brush/effects/screenWakeLock'
 import {
+  vibrateBrushComplete,
+  vibrateBrushStepChange,
+  vibrateBrushTap,
+} from '@/domains/brush/effects/vibrationFeedback'
+import {
   getBrushOverview,
   markBrushOnboardingSeen,
   saveBrushCompletionRecord,
   shouldShowBrushOnboarding,
   syncBrushRecordToCloud,
 } from '@/domains/brush/repositories/brushRepository'
-import {
-  vibrateBrushTap,
-  vibrateBrushComplete,
-  vibrateBrushStepChange,
-} from '@/domains/brush/effects/vibrationFeedback'
-import type { DailyStatus } from '@/domains/brush/utils'
-import type { BrushInteractionAction } from '@/domains/brush/hooks/useBrushSessionState'
 import { trackEvent } from '@/services/analytics'
 
 interface UseBrushSessionEffectsParams {

@@ -1,5 +1,5 @@
-import { View, Text } from '@tarojs/components'
 import type { PropsWithChildren, ReactNode } from 'react'
+import { Text, View } from '@tarojs/components'
 import { cn } from '@/components/ui/cn'
 
 interface ListProps extends PropsWithChildren {
@@ -39,7 +39,7 @@ export function ListItem({
         'px-4 py-3.5 min-h-[3.75rem] flex items-center justify-between gap-3 bg-surface-white',
         interactive && !disabled && 'active:opacity-85',
         disabled && 'opacity-55',
-        className
+        className,
       )}
       onClick={interactive && !disabled ? onClick : undefined}
       role={interactive ? 'button' : undefined}

@@ -1,4 +1,6 @@
+import type { DailyStatus } from '@/domains/brush/utils'
 import { TOTAL_STEPS } from '@/constants/brushing-steps'
+import { upsertBrushRecord } from '@/services/api/brushApi'
 import { getSessionTypeForDate } from '@/services/brushing'
 import {
   getBusinessDate,
@@ -6,36 +8,39 @@ import {
   isMorningSessionHour,
 } from '@/services/dateBoundary'
 import { hasSeenOnboarding, markOnboardingSeen } from '@/services/onboardingStorage'
-import {
-  getRecordsByDate,
-  saveRecord,
-} from '@/services/recordStorage'
 import { getCurrentStreak } from '@/services/recordStatsService'
-import { upsertBrushRecord } from '@/services/api/brushApi'
 import { enqueueSyncItem } from '@/services/syncQueue'
-import type { DailyStatus } from '@/domains/brush/utils'
+import { recordsStore } from '@/stores/records'
 
 function getRecordHour(timestamp?: number): number | null {
-  if (typeof timestamp !== 'number') return null
+  if (typeof timestamp !== 'number')
+    return null
   const hour = new Date(timestamp).getHours()
   return Number.isNaN(hour) ? null : hour
 }
 
 export function getTodayDailyStatus(): DailyStatus {
   const today = getBusinessDate(new Date())
-  const records = getRecordsByDate(today).filter((record) => record.completed)
+  const records = recordsStore
+    .getState()
+    .records
+    .filter(r => r.date === today && r.completed)
 
   const morningRecord = records.find((record) => {
-    if (record.session === 'morning') return true
-    if (record.session !== 'evening') return false
+    if (record.session === 'morning')
+      return true
+    if (record.session !== 'evening')
+      return false
     const hour = getRecordHour(record.timestamp)
     return hour !== null && isMorningSessionHour(hour)
   })
 
   const eveningRecord = records.find((record) => {
-    if (record.session !== 'evening') return false
+    if (record.session !== 'evening')
+      return false
     const hour = getRecordHour(record.timestamp)
-    if (hour === null) return true
+    if (hour === null)
+      return true
     return isEveningSessionHour(hour)
   })
 
@@ -47,7 +52,7 @@ export function getTodayDailyStatus(): DailyStatus {
   }
 }
 
-export function getBrushOverview(): { streak: number; dailyStatus: DailyStatus } {
+export function getBrushOverview(): { streak: number, dailyStatus: DailyStatus } {
   return {
     streak: getCurrentStreak(),
     dailyStatus: getTodayDailyStatus(),
@@ -64,7 +69,7 @@ export function markBrushOnboardingSeen(): void {
 
 export function saveBrushCompletionRecord(elapsedTime: number): void {
   const now = new Date()
-  saveRecord({
+  recordsStore.getState().saveRecord({
     date: getBusinessDate(now),
     session: getSessionTypeForDate(now),
     completed: true,

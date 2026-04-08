@@ -1,6 +1,7 @@
 import { View } from '@tarojs/components'
 import { showShareMenu, useDidShow, useShareAppMessage, useShareTimeline } from '@tarojs/taro'
 import InPageTabBar from '@/components/InPageTabBar'
+import PageLayout from '@/components/PageLayout'
 import { cn } from '@/components/ui/cn'
 import { MILESTONES } from '@/constants/brushing-steps'
 import BrushActiveState from '@/domains/brush/components/BrushActiveState'
@@ -9,14 +10,12 @@ import BrushCountdownOverlay from '@/domains/brush/components/BrushCountdownOver
 import BrushIdleState from '@/domains/brush/components/BrushIdleState'
 import { useBrushSession } from '@/domains/brush/hooks/useBrushSession'
 import { formatTodayHeading, getGreeting } from '@/domains/brush/utils'
+import { trackEvent } from '@/services/analytics'
 import { getBusinessAnchorDate } from '@/services/dateBoundary'
 import { generateShareMessage } from '@/services/share'
 import { applyLightThemeToChrome } from '@/services/theme'
-import { trackEvent } from '@/services/analytics'
-import PageLayout from '@/components/PageLayout'
 
 export default function IndexPage() {
-
   const {
     session,
     streak,
@@ -42,7 +41,7 @@ export default function IndexPage() {
     }).catch(() =>
       showShareMenu({
         withShareTicket: true,
-      }).catch(() => undefined)
+      }).catch(() => undefined),
     )
   })
 
@@ -50,7 +49,7 @@ export default function IndexPage() {
   const businessNow = getBusinessAnchorDate(now)
   const todayHeading = formatTodayHeading(businessNow)
   const greeting = getGreeting(now.getHours())
-  const nextMilestone = MILESTONES.find((m) => m > streak) ?? streak + 3
+  const nextMilestone = MILESTONES.find(m => m > streak) ?? streak + 3
   const milestoneProgress = nextMilestone > 0 ? Math.min(100, Math.round((streak / nextMilestone) * 100)) : 0
 
   const isIdle = session.state === 'idle'
@@ -62,7 +61,7 @@ export default function IndexPage() {
       <View
         className={cn(
           'relative flex-1 flex flex-col',
-          isBrushingFlow ? 'overflow-hidden' : ''
+          isBrushingFlow ? 'overflow-hidden' : '',
         )}
       >
         {session.state === 'countdown' && (

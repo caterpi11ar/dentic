@@ -1,5 +1,5 @@
-import { View, Text } from '@tarojs/components'
 import type { PropsWithChildren, ReactNode } from 'react'
+import { Text, View } from '@tarojs/components'
 import { Card, CardContent, CardHeader } from '@/components/ui/Card'
 import { cn } from '@/components/ui/cn'
 

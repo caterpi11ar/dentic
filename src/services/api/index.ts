@@ -1,5 +1,5 @@
-import Taro from '@tarojs/taro'
 import type { ApiResponse } from '@/types'
+import Taro from '@tarojs/taro'
 
 /** 云函数统一调用封装 */
 export async function callCloudFunction<T>(

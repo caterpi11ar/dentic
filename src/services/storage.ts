@@ -1,10 +1,4 @@
-export {
-  getRecords,
-  saveRecord,
-  getRecordsByDate,
-  getRecordsByMonth,
-  formatDate,
-} from '@/services/recordStorage'
+export { hasSeenOnboarding, markOnboardingSeen } from '@/services/onboardingStorage'
 
 export {
   getCurrentStreak,
@@ -13,6 +7,12 @@ export {
   type WeeklyStatsData,
 } from '@/services/recordStatsService'
 
-export { getSettings, saveSettings } from '@/services/settingsStorage'
+export {
+  formatDate,
+  getRecords,
+  getRecordsByDate,
+  getRecordsByMonth,
+  saveRecord,
+} from '@/services/recordStorage'
 
-export { hasSeenOnboarding, markOnboardingSeen } from '@/services/onboardingStorage'
+export { getSettings, saveSettings } from '@/services/settingsStorage'

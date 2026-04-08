@@ -8,8 +8,10 @@ const MIGRATION_FLAG_KEY = 'cloud_migration_done'
 export async function migrateLocalRecordsToCloud(): Promise<void> {
   // 已迁移过，跳过
   try {
-    if (Taro.getStorageSync(MIGRATION_FLAG_KEY)) return
-  } catch {
+    if (Taro.getStorageSync(MIGRATION_FLAG_KEY))
+      return
+  }
+  catch {
     return
   }
 
@@ -23,7 +25,8 @@ export async function migrateLocalRecordsToCloud(): Promise<void> {
   // 逐条上传（失败不中断，下次启动会重试）
   let allSuccess = true
   for (const record of localRecords) {
-    if (!record.completed) continue
+    if (!record.completed)
+      continue
     try {
       await upsertBrushRecord({
         bizDate: record.date,
@@ -33,7 +36,8 @@ export async function migrateLocalRecordsToCloud(): Promise<void> {
         completedSteps: record.completedSteps,
         source: 'local_sync',
       })
-    } catch {
+    }
+    catch {
       allSuccess = false
     }
   }
@@ -47,7 +51,8 @@ export async function migrateLocalRecordsToCloud(): Promise<void> {
 function markMigrationDone(): void {
   try {
     Taro.setStorageSync(MIGRATION_FLAG_KEY, true)
-  } catch {
+  }
+  catch {
     // 静默处理
   }
 }
