@@ -1,7 +1,6 @@
 import { View } from '@tarojs/components'
 import { showShareMenu, useDidShow, useShareAppMessage, useShareTimeline } from '@tarojs/taro'
 import InPageTabBar from '@/components/InPageTabBar'
-import PageLayout from '@/components/PageLayout'
 import { cn } from '@/components/ui/cn'
 import { MILESTONES } from '@/constants/brushing-steps'
 import BrushActiveState from '@/domains/brush/components/BrushActiveState'
@@ -14,6 +13,7 @@ import { trackEvent } from '@/services/analytics'
 import { getBusinessAnchorDate } from '@/services/dateBoundary'
 import { generateShareMessage } from '@/services/share'
 import { applyLightThemeToChrome } from '@/services/theme'
+import { familyStore } from '@/stores/family'
 
 export default function IndexPage() {
   const {
@@ -43,6 +43,11 @@ export default function IndexPage() {
         withShareTicket: true,
       }).catch(() => undefined),
     )
+    // 拉取家庭数据（静默，不阻塞首页）
+    familyStore.getState().fetchFamily().then((info) => {
+      if (info)
+        familyStore.getState().fetchDashboard()
+    }).catch(() => undefined)
   })
 
   const now = new Date()
@@ -54,14 +59,13 @@ export default function IndexPage() {
 
   const isIdle = session.state === 'idle'
   const isBrushingFlow = session.state !== 'idle' && session.state !== 'completed'
-  const shouldEnableScroll = false
 
   return (
-    <PageLayout scroll={shouldEnableScroll}>
+    <View className="theme-page theme-day min-h-screen">
       <View
         className={cn(
-          'relative flex-1 flex flex-col',
-          isBrushingFlow ? 'overflow-hidden' : '',
+          'px-page-x pt-12 max-w-2xl mx-auto',
+          isBrushingFlow ? 'h-screen overflow-hidden flex flex-col' : 'min-h-screen pb-bottom-safe flex flex-col',
         )}
       >
         {session.state === 'countdown' && (
@@ -96,9 +100,9 @@ export default function IndexPage() {
             onPause={handlePause}
           />
         ) : null}
-      </View>
 
-      <InPageTabBar current="brush" />
-    </PageLayout>
+        <InPageTabBar current="brush" />
+      </View>
+    </View>
   )
 }

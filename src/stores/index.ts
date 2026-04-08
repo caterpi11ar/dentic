@@ -1,4 +1,5 @@
 export { AuthProvider, authStore, useAuthStore } from './auth'
+export { FamilyProvider, familyStore, useFamilyStore } from './family'
 export { ProfileProvider, profileStore, useProfileStore } from './profile'
 export { StoreProvider } from './provider'
 export { RecordsProvider, recordsStore, useRecordsStore } from './records'

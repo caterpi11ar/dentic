@@ -19,9 +19,10 @@ export default function BottomNav<T extends string>({ items, activeKey, onChange
   return (
     <View
       className={cn(
-        'fixed bottom-0 left-0 right-0 z-50 flex justify-around items-center px-4 pb-8 pt-3.5 bg-surface-white/95 shadow-nav backdrop-blur-sm',
+        'fixed bottom-0 left-0 right-0 z-50 flex items-center px-0 pt-2 bg-surface-white/95 shadow-nav backdrop-blur-sm',
         className,
       )}
+      style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
       role="tablist"
       aria-label="页面导航"
     >
@@ -32,7 +33,7 @@ export default function BottomNav<T extends string>({ items, activeKey, onChange
           <View
             key={item.key}
             className={cn(
-              'min-w-20 px-4 py-2.5 rounded-lg flex flex-col items-center justify-center gap-1 transition-colors duration-150',
+              'min-w-0 flex-1 py-1.5 flex flex-col items-center justify-center gap-0.5 transition-colors duration-150',
               active ? 'text-primary' : 'text-content-disabled active:opacity-80',
             )}
             onClick={() => onChange(item.key)}
@@ -42,7 +43,7 @@ export default function BottomNav<T extends string>({ items, activeKey, onChange
             aria-label={item.label}
           >
             <View className="leading-none flex items-center justify-center">{item.icon}</View>
-            <Text className={cn('text-label-xs font-body font-semibold tracking-[0.06em]', active ? 'text-primary' : 'text-content-disabled')}>
+            <Text className={cn('text-label-xs font-body font-semibold tracking-[0.02em]', active ? 'text-primary' : 'text-content-disabled')}>
               {item.label}
             </Text>
           </View>
