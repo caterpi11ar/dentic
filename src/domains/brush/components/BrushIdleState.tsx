@@ -37,7 +37,7 @@ export default function BrushIdleState({
 
   return (
     <View className="h-full flex flex-col">
-      {/* ── Hero ── */}
+      {/* ── 日期 + 天气 ── */}
       <View className="pt-4 animate-fade-up motion-reduce:animate-none">
         <View className="flex items-baseline gap-3">
           <Text className="text-paragraph-sm font-body font-semibold tracking-[0.12em] uppercase text-content-secondary">
@@ -55,54 +55,66 @@ export default function BrushIdleState({
         <Text className="block mt-6 text-display-lg font-heading font-medium tracking-tight text-content animate-fade-up-delay-1 motion-reduce:animate-none">
           {greeting}
         </Text>
-
-        <Text className="block mt-4 text-paragraph-md font-heading leading-relaxed text-content-tertiary animate-fade-up-delay-2 motion-reduce:animate-none">
-          准备好继续守护你的口腔健康了吗？
-        </Text>
       </View>
 
-      {/* ── Divider ── */}
-      <View className="my-10 h-px bg-line" />
-
-      {/* ── Daily status ── */}
-      <View className="flex flex-col gap-3 animate-fade-up-delay-2 motion-reduce:animate-none">
-        <View className="flex items-center justify-between">
+      {/* ── 模块 A：今日状态 ── */}
+      <View className="mt-8 flex gap-3 animate-fade-up-delay-2 motion-reduce:animate-none">
+        {/* 早刷状态卡片 */}
+        <View className="flex-1 rounded-anthropic border border-line bg-surface-white/80 px-4 py-3.5">
           <View className="flex items-center gap-2">
             <Image src={iconSun} className="size-4" mode="aspectFit" />
-            <Text className="text-paragraph-sm font-body font-semibold tracking-wide text-content">
+            <Text className="text-paragraph-sm font-body font-semibold text-content">
               晨间
             </Text>
           </View>
           {dailyStatus.morningDone ? (
-            <Text className="text-paragraph-sm font-body font-semibold text-success tabular-nums">
-              {formatTime(dailyStatus.morningTime)}
-            </Text>
+            <View className="mt-2 flex items-center gap-1.5">
+              <Text className="text-display-sm font-heading font-medium text-success tabular-nums">
+                {formatTime(dailyStatus.morningTime)}
+              </Text>
+              <Text className="text-label-xs text-success">✓</Text>
+            </View>
           ) : (
-            <Text className="text-paragraph-sm font-body font-medium text-content-disabled">待完成</Text>
+            <Text className="mt-2 text-paragraph-sm font-body font-medium text-content-disabled">
+              待完成
+            </Text>
           )}
         </View>
 
-        <View className="flex items-center justify-between">
+        {/* 晚刷状态卡片 */}
+        <View className="flex-1 rounded-anthropic border border-line bg-surface-white/80 px-4 py-3.5">
           <View className="flex items-center gap-2">
             <Image src={iconMoon} className="size-4" mode="aspectFit" />
-            <Text className="text-paragraph-sm font-body font-semibold tracking-wide text-content">
+            <Text className="text-paragraph-sm font-body font-semibold text-content">
               夜间
             </Text>
           </View>
           {dailyStatus.eveningDone ? (
-            <Text className="text-paragraph-sm font-body font-semibold text-success tabular-nums">
-              {formatTime(dailyStatus.eveningTime)}
-            </Text>
+            <View className="mt-2 flex items-center gap-1.5">
+              <Text className="text-display-sm font-heading font-medium text-success tabular-nums">
+                {formatTime(dailyStatus.eveningTime)}
+              </Text>
+              <Text className="text-label-xs text-success">✓</Text>
+            </View>
           ) : (
-            <Text className="text-paragraph-sm font-body font-medium text-content-disabled">待完成</Text>
+            <Text className="mt-2 text-paragraph-sm font-body font-medium text-content-disabled">
+              待完成
+            </Text>
           )}
         </View>
       </View>
 
-      {/* ── Divider ── */}
-      <View className="my-10 h-px bg-line" />
+      {/* ── 模块 B：价值说明 ── */}
+      <View className="mt-8 animate-fade-up-delay-2 motion-reduce:animate-none">
+        <Text className="text-paragraph-md font-heading leading-relaxed text-content-tertiary">
+          科学引导 15 区域刷牙，每次只需 2.5 分钟
+        </Text>
+      </View>
 
-      {/* ── Streak + Milestone ── */}
+      {/* ── 分割线 ── */}
+      <View className="my-8 h-px bg-line" />
+
+      {/* ── 模块 C：连续打卡 ── */}
       <View className="animate-fade-up-delay-3 motion-reduce:animate-none">
         <View className="flex items-baseline gap-2">
           <Text className="text-label-sm font-body font-semibold tracking-wide text-content-tertiary uppercase">
@@ -125,7 +137,7 @@ export default function BrushIdleState({
         />
       </View>
 
-      {/* ── CTA ── */}
+      {/* ── 模块 D：开始按钮 ── */}
       <View className="mt-auto pb-10 flex justify-center">
         <View
           className="relative flex items-center justify-center"
