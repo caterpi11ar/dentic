@@ -11,6 +11,16 @@ module.exports = async ({ openid, familyId, type }, db) => {
     throw { code: 4001, message: '无效的互动类型', data: null }
   }
 
+  // 校验发送者是否属于该家庭
+  const { total: memberCount } = await db
+    .collection('family_member')
+    .where({ familyId, openId: openid })
+    .count()
+
+  if (memberCount === 0) {
+    throw { code: 4003, message: '你不是该家庭成员', data: null }
+  }
+
   // 今日 0 点时间戳
   const now = new Date()
   const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime()

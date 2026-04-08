@@ -12,6 +12,11 @@ module.exports = async ({ openid, familyId }, db) => {
 
   const openIds = members.map(m => m.openId)
 
+  // 校验调用者是否属于该家庭
+  if (!openIds.includes(openid)) {
+    throw { code: 4003, message: '你不是该家庭成员', data: null }
+  }
+
   // 获取成员 profile
   const { data: profiles } = await db
     .collection('user_profile')
