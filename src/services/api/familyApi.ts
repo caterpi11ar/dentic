@@ -14,6 +14,7 @@ export interface FamilyInfo {
   familyId: string
   name: string
   creatorOpenId: string
+  myRole: 'creator' | 'member'
   members: FamilyMember[]
 }
 

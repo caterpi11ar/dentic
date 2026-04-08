@@ -42,10 +42,13 @@ module.exports = async ({ openid }, db) => {
     joinedAt: m.joinedAt,
   }))
 
+  const myRole = memberships[0].role
+
   return {
     familyId,
     name: family.name,
     creatorOpenId: family.creatorOpenId,
+    myRole,
     members: memberList,
   }
 }
