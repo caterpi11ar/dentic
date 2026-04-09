@@ -1,3 +1,10 @@
+/** 每步完成详情（用于健康画像的区域级分析） */
+export interface StepDetail {
+  zone: string // 区域标识，如 'upper-outer-left'
+  actualDuration: number // 该步实际刷牙秒数
+  skipped: boolean // 中途退出时，未到达的步骤标记为 true
+}
+
 /** 刷牙历史 */
 export interface BrushingRecord {
   date: string // YYYY-MM-DD
@@ -6,6 +13,11 @@ export interface BrushingRecord {
   duration: number // 实际用时（秒）
   completedSteps: number // 完成的步骤数
   timestamp: number // 完成时间戳
+  stepDetails?: StepDetail[] // 每步区域详情
+  pauseCount?: number // 暂停次数
+  totalPauseDuration?: number // 总暂停时长（秒）
+  abandoned?: boolean // 是否中途退出
+  abandonedAtStep?: number // 在第几步退出（步骤索引）
 }
 
 /** 刷牙步骤 */
@@ -75,13 +87,18 @@ export type RankPeriodType = 'totalDays' | 'streak'
 /** 云端刷牙记录 */
 export interface CloudBrushRecord {
   openId: string
-  bizDate: string // YYYY-MM-DD，6:00 切日
+  bizDate: string // YYYY-MM-DD，4:00 切日
   session: 'morning' | 'evening'
   completed: boolean
   durationSec: number
   completedSteps: number
   source: 'local_sync' | 'direct'
   createdAt: number
+  stepDetails?: StepDetail[]
+  pauseCount?: number
+  totalPauseDuration?: number
+  abandoned?: boolean
+  abandonedAtStep?: number
 }
 
 /** 同步队列条目 */

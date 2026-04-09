@@ -16,6 +16,7 @@ export function useBrushSession() {
     pauseOrResume,
     resetFlow,
     tickFlow,
+    addPauseDuration,
     syncOverview,
     applyCompletionMeta,
     markInteraction,
@@ -24,6 +25,7 @@ export function useBrushSession() {
   useBrushSessionEffects({
     session,
     tickFlow,
+    addPauseDuration,
     syncOverview,
     applyCompletionMeta,
     interactionAction,

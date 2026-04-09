@@ -29,6 +29,7 @@ interface UseBrushSessionStateResult {
   pauseOrResume: () => void
   resetFlow: () => void
   tickFlow: () => void
+  addPauseDuration: (seconds: number) => void
   syncOverview: (nextStreak: number, nextStatus: DailyStatus) => void
   applyCompletionMeta: (nextStreak: number) => void
   markInteraction: (action: BrushInteractionAction) => void
@@ -73,6 +74,13 @@ export function useBrushSessionState(): UseBrushSessionStateResult {
     })
   })
 
+  const addPauseDuration = useMemoizedFn((seconds: number) => {
+    setSession(prev => ({
+      ...prev,
+      totalPauseDuration: prev.totalPauseDuration + seconds,
+    }))
+  })
+
   const syncOverview = useMemoizedFn((nextStreak: number, nextStatus: DailyStatus) => {
     setStreak(nextStreak)
     setDailyStatus(nextStatus)
@@ -104,6 +112,7 @@ export function useBrushSessionState(): UseBrushSessionStateResult {
     pauseOrResume,
     resetFlow,
     tickFlow,
+    addPauseDuration,
     syncOverview,
     applyCompletionMeta,
     markInteraction,

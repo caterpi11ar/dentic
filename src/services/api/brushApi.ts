@@ -1,3 +1,4 @@
+import type { StepDetail } from '@/types'
 import { callCloudFunction } from '@/services/api'
 
 /** 上报/更新刷牙记录 */
@@ -8,6 +9,11 @@ export function upsertBrushRecord(params: {
   durationSec: number
   completedSteps: number
   source: 'local_sync' | 'direct'
+  stepDetails?: StepDetail[]
+  pauseCount?: number
+  totalPauseDuration?: number
+  abandoned?: boolean
+  abandonedAtStep?: number
 }): Promise<{ recordId: string }> {
   return callCloudFunction('brush', 'upsertRecord', params)
 }

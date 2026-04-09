@@ -66,6 +66,10 @@ export const recordsStore = createStore<RecordsState>()(
           r => r.date === record.date && r.session === record.session,
         )
         if (idx >= 0) {
+          const existing = records[idx]
+          // 防降级：已完成的记录不被中途退出记录覆盖
+          if (existing.completed && !record.completed)
+            return
           records[idx] = record
         }
         else {

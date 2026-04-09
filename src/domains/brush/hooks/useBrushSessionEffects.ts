@@ -19,8 +19,10 @@ import {
 import {
   getBrushOverview,
   markBrushOnboardingSeen,
+  saveBrushAbandonedRecord,
   saveBrushCompletionRecord,
   shouldShowBrushOnboarding,
+  syncBrushAbandonedRecordToCloud,
   syncBrushRecordToCloud,
 } from '@/domains/brush/repositories/brushRepository'
 import { trackEvent } from '@/services/analytics'
@@ -28,6 +30,7 @@ import { trackEvent } from '@/services/analytics'
 interface UseBrushSessionEffectsParams {
   session: BrushingSession
   tickFlow: () => void
+  addPauseDuration: (seconds: number) => void
   syncOverview: (nextStreak: number, nextStatus: DailyStatus) => void
   applyCompletionMeta: (nextStreak: number) => void
   interactionAction: BrushInteractionAction | null
@@ -37,12 +40,16 @@ interface UseBrushSessionEffectsParams {
 export function useBrushSessionEffects({
   session,
   tickFlow,
+  addPauseDuration,
   syncOverview,
   applyCompletionMeta,
   interactionAction,
   interactionVersion,
 }: UseBrushSessionEffectsParams): void {
   const completedHandledRef = useRef(false)
+  const sessionRef = useRef(session)
+  sessionRef.current = session
+  const pauseStartRef = useRef(0)
 
   useDidShow(() => {
     const { streak, dailyStatus } = getBrushOverview()
@@ -87,6 +94,20 @@ export function useBrushSessionEffects({
     }
   }, [session.currentStepIndex, session.state])
 
+  // 暂停时长追踪
+  useEffect(() => {
+    if (session.state === 'paused') {
+      pauseStartRef.current = Date.now()
+    }
+    else if (session.state === 'brushing' && pauseStartRef.current > 0) {
+      const pausedSec = Math.round((Date.now() - pauseStartRef.current) / 1000)
+      pauseStartRef.current = 0
+      if (pausedSec > 0) {
+        addPauseDuration(pausedSec)
+      }
+    }
+  }, [session.state, addPauseDuration])
+
   useEffect(() => {
     if (session.state !== 'completed') {
       completedHandledRef.current = false
@@ -99,10 +120,10 @@ export function useBrushSessionEffects({
 
     completedHandledRef.current = true
 
-    saveBrushCompletionRecord(session.elapsedTime)
+    saveBrushCompletionRecord(session)
 
     // 异步上报云端（不阻塞 UI）
-    syncBrushRecordToCloud(session.elapsedTime)
+    syncBrushRecordToCloud(session)
 
     trackEvent('brush_complete', { elapsedTime: session.elapsedTime })
 
@@ -119,6 +140,11 @@ export function useBrushSessionEffects({
   }, [session.state])
 
   useUnmount(() => {
+    const s = sessionRef.current
+    if (s.state === 'brushing' || s.state === 'paused') {
+      saveBrushAbandonedRecord(s)
+      syncBrushAbandonedRecordToCloud(s)
+    }
     setBrushScreenWakeLock(false)
     destroyBrushAudio()
   })
