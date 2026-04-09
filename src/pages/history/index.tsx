@@ -4,6 +4,7 @@ import { showShareMenu, useDidShow, useShareAppMessage, useShareTimeline } from 
 import { useMemo, useRef, useState } from 'react'
 import iconMoon from '@/assets/icons/moon.svg'
 import iconSun from '@/assets/icons/sun.svg'
+import AiWeeklyReport from '@/components/AiWeeklyReport'
 import Calendar from '@/components/Calendar'
 import InPageTabBar from '@/components/InPageTabBar'
 import PageLayout from '@/components/PageLayout'
@@ -172,6 +173,8 @@ export default function HistoryPage() {
           onSelectDate={setSelectedDate}
           hideStats
         />
+
+        <AiWeeklyReport />
 
         <View className="mt-5 rounded-anthropic border border-line bg-surface-white p-4">
           <View className="flex items-baseline justify-between">

@@ -3,6 +3,7 @@ import type { FamilyDashboard, FamilyInfo } from '@/services/api/familyApi'
 import { Image, Text, View } from '@tarojs/components'
 import iconMoon from '@/assets/icons/moon.svg'
 import iconSun from '@/assets/icons/sun.svg'
+import RiskWarning from '@/components/RiskWarning'
 import Progress from '@/components/ui/Progress'
 import { useWeather } from '@/hooks/useWeather'
 import { useFamilyStore } from '@/stores/family'
@@ -145,6 +146,11 @@ export default function BrushIdleState({
         <Text className="block mt-4 text-display-lg font-heading font-medium tracking-tight text-content animate-fade-up-delay-1 motion-reduce:animate-none">
           {greeting}
         </Text>
+      </View>
+
+      {/* ── 风险预警 ── */}
+      <View className="mt-5">
+        <RiskWarning />
       </View>
 
       {/* ── 模块 A：今日状态 ── */}
