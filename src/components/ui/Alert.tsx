@@ -1,19 +1,17 @@
 import type { VariantProps } from 'class-variance-authority'
-import type { PropsWithChildren } from 'react'
-import { Text, View } from '@tarojs/components'
 import { cva } from 'class-variance-authority'
-import { cn } from '@/components/ui/cn'
+import * as React from 'react'
+
+import { cn } from './cn'
 
 const alertVariants = cva(
-  'relative w-full rounded-anthropic border px-4 py-3 text-paragraph-sm',
+  'relative grid w-full grid-cols-[0_1fr] items-start gap-y-0.5 rounded-lg border px-4 py-3 text-sm has-[>svg]:grid-cols-[calc(var(--spacing)*4)_1fr] has-[>svg]:gap-x-3 [&>svg]:size-4 [&>svg]:translate-y-0.5 [&>svg]:text-current',
   {
     variants: {
       variant: {
-        default: 'border-content/[0.08] bg-surface-white text-content',
-        destructive: 'border-danger/30 bg-danger/5 text-danger',
-        warning: 'border-warning/30 bg-warning-light/50 text-content',
-        success: 'border-success/30 bg-success-light/50 text-content',
-        info: 'border-info/30 bg-info-light/50 text-content',
+        default: 'bg-card text-card-foreground',
+        destructive:
+          'bg-card text-destructive *:data-[slot=alert-description]:text-destructive/90 [&>svg]:text-current',
       },
     },
     defaultVariants: {
@@ -25,45 +23,45 @@ const alertVariants = cva(
 function Alert({
   className,
   variant,
-  children,
   ...props
-}: PropsWithChildren<{ className?: string } & VariantProps<typeof alertVariants> & { 'role'?: string, 'aria-live'?: string }>) {
+}: React.ComponentProps<'div'> & VariantProps<typeof alertVariants>) {
   return (
-    <View
+    <div
+      data-slot="alert"
       role="alert"
-      aria-live="polite"
       className={cn(alertVariants({ variant }), className)}
       {...props}
-    >
-      {children}
-    </View>
+    />
   )
 }
 
-function AlertTitle({ className, children }: PropsWithChildren<{ className?: string }>) {
+function AlertTitle({ className, ...props }: React.ComponentProps<'div'>) {
   return (
-    <Text
+    <div
+      data-slot="alert-title"
       className={cn(
-        'block font-body font-semibold text-label-xs tracking-wide uppercase text-content-tertiary',
+        'col-start-2 line-clamp-1 min-h-4 font-medium tracking-tight',
         className,
       )}
-    >
-      {children}
-    </Text>
+      {...props}
+    />
   )
 }
 
-function AlertDescription({ className, children }: PropsWithChildren<{ className?: string }>) {
+function AlertDescription({
+  className,
+  ...props
+}: React.ComponentProps<'div'>) {
   return (
-    <Text
+    <div
+      data-slot="alert-description"
       className={cn(
-        'block mt-1.5 text-paragraph-sm font-body text-content-secondary leading-relaxed',
+        'col-start-2 grid justify-items-start gap-1 text-sm text-muted-foreground [&_p]:leading-relaxed',
         className,
       )}
-    >
-      {children}
-    </Text>
+      {...props}
+    />
   )
 }
 
-export { Alert, AlertDescription, AlertTitle, alertVariants }
+export { Alert, AlertDescription, AlertTitle }

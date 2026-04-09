@@ -12,6 +12,19 @@ module.exports = {
         body: ['Poppins', 'Arial', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', 'sans-serif'],
       },
       colors: {
+        // shadcn/ui token 映射
+        card: {
+          DEFAULT: 'rgb(var(--twc-surface-white) / <alpha-value>)',
+          foreground: 'rgb(var(--twc-content) / <alpha-value>)',
+        },
+        muted: {
+          DEFAULT: 'rgb(var(--twc-surface) / <alpha-value>)',
+          foreground: 'rgb(var(--twc-content-secondary) / <alpha-value>)',
+        },
+        destructive: {
+          DEFAULT: 'rgb(var(--twc-danger) / <alpha-value>)',
+        },
+        // 项目语义色彩
         primary: {
           DEFAULT: 'rgb(var(--twc-primary) / <alpha-value>)',
           dark: 'rgb(var(--twc-primary-dark) / <alpha-value>)',
