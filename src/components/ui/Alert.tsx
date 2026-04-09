@@ -1,68 +1,69 @@
+import type { VariantProps } from 'class-variance-authority'
 import type { PropsWithChildren } from 'react'
 import { Text, View } from '@tarojs/components'
+import { cva } from 'class-variance-authority'
 import { cn } from '@/components/ui/cn'
 
-type AlertVariant = 'default' | 'success' | 'warning' | 'danger' | 'info'
+const alertVariants = cva(
+  'relative w-full rounded-anthropic border px-4 py-3 text-paragraph-sm',
+  {
+    variants: {
+      variant: {
+        default: 'border-content/[0.08] bg-surface-white text-content',
+        destructive: 'border-danger/30 bg-danger/5 text-danger',
+        warning: 'border-warning/30 bg-warning-light/50 text-content',
+        success: 'border-success/30 bg-success-light/50 text-content',
+        info: 'border-info/30 bg-info-light/50 text-content',
+      },
+    },
+    defaultVariants: {
+      variant: 'default',
+    },
+  },
+)
 
-const VARIANT_CLASS: Record<AlertVariant, string> = {
-  default: 'border-content/[0.08] bg-surface-white',
-  success: 'border-success/30 bg-success-light/50',
-  warning: 'border-warning/30 bg-warning-light/50',
-  danger: 'border-danger/30 bg-danger/5',
-  info: 'border-info/30 bg-info-light/50',
-}
-
-export interface AlertProps extends PropsWithChildren {
-  className?: string
-  variant?: AlertVariant
-  title?: string
-  description?: string
-  onClose?: () => void
-}
-
-export default function Alert({
-  variant = 'default',
-  title,
-  description,
+function Alert({
   className,
+  variant,
   children,
-  onClose,
-}: AlertProps) {
+  ...props
+}: PropsWithChildren<{ className?: string } & VariantProps<typeof alertVariants> & { 'role'?: string, 'aria-live'?: string }>) {
   return (
     <View
-      className={cn(
-        'rounded-anthropic border px-3.5 py-3',
-        VARIANT_CLASS[variant],
-        className,
-      )}
       role="alert"
       aria-live="polite"
+      className={cn(alertVariants({ variant }), className)}
+      {...props}
     >
-      <View className="flex items-start justify-between gap-2">
-        <View className="flex-1 min-w-0">
-          {title && (
-            <Text className="block text-label-xs font-body font-semibold tracking-wide text-content-tertiary uppercase">
-              {title}
-            </Text>
-          )}
-          {description && (
-            <Text className={cn('block text-paragraph-sm font-body text-content-secondary leading-relaxed', title && 'mt-1.5')}>
-              {description}
-            </Text>
-          )}
-          {children}
-        </View>
-        {onClose && (
-          <View
-            className="shrink-0 size-6 flex items-center justify-center rounded-full"
-            role="button"
-            aria-label="关闭"
-            onClick={onClose}
-          >
-            <Text className="text-label-sm text-content-tertiary">×</Text>
-          </View>
-        )}
-      </View>
+      {children}
     </View>
   )
 }
+
+function AlertTitle({ className, children }: PropsWithChildren<{ className?: string }>) {
+  return (
+    <Text
+      className={cn(
+        'block font-body font-semibold text-label-xs tracking-wide uppercase text-content-tertiary',
+        className,
+      )}
+    >
+      {children}
+    </Text>
+  )
+}
+
+function AlertDescription({ className, children }: PropsWithChildren<{ className?: string }>) {
+  return (
+    <Text
+      className={cn(
+        'block mt-1.5 text-paragraph-sm font-body text-content-secondary leading-relaxed',
+        className,
+      )}
+    >
+      {children}
+    </Text>
+  )
+}
+
+export { Alert, AlertDescription, AlertTitle, alertVariants }
