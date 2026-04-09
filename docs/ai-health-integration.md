@@ -90,6 +90,7 @@ getCompletionTip(params) → Promise<CompletionTipData>
 - 周报：key = `weekly_{weekMonday}`，TTL 7 天
 - 完成提示：key = `tip_{bizDate}`，TTL 24 小时
 - handler 先查缓存，命中则跳过 AI 调用
+- 过期清理：微信云数据库无自动 TTL 删除，需在云函数中查询时顺带清理过期记录（`expiresAt < now`），或定期通过定时触发器批量清理
 
 **前端缓存**：Taro Storage 二级缓存，避免重复云函数调用。
 
@@ -105,6 +106,10 @@ getCompletionTip(params) → Promise<CompletionTipData>
 2. 查询上周数据用于环比对比
 3. 聚合计算：总次数、完成率（次数/14）、平均时长、早晚比例、连续天数
 4. 组装精简 JSON 作为 prompt context
+
+> **注意**：项目以凌晨 4:00 作为业务日切换边界（`BUSINESS_DAY_START_HOUR = 4`），早晚场次以 12:00 分界。云端数据聚合时需使用 `bizDate` 字段而非自然日期，确保与前端逻辑一致。
+
+**空数据兜底**：若本周无任何刷牙记录，不调用 AI，直接返回预设的鼓励文案（如"新的一周，从一次刷牙开始吧"）。
 
 ### 完成提示数据（前端传入）
 
@@ -124,15 +129,16 @@ getCompletionTip(params) → Promise<CompletionTipData>
 ### 周报系统提示词
 
 ```
-你是"今天刷牙了吗"，专注口腔健康的 AI 小助手。请用温暖鼓励的语气，
+你是"今天刷牙了吗"小程序的 AI 助手，专注口腔健康。请用温暖鼓励的语气，
 基于刷牙数据生成简短周报（3-4句话）。
 包含：1）习惯评价 2）数据亮点 3）改善建议 4）鼓励语。不超过100字。
+如果本周没有刷牙记录，请温和地鼓励用户开始培养刷牙习惯。
 ```
 
 ### 完成提示系统提示词
 
 ```
-你是"今天刷牙了吗"，为刚完成刷牙的用户生成鼓励。
+你是"今天刷牙了吗"小程序的 AI 助手，为刚完成刷牙的用户生成鼓励。
 用1句个性化鼓励（含具体数据）和1句口腔健康小知识回复。
 50字以内，语气活泼有趣。
 ```
@@ -236,6 +242,8 @@ getCompletionTip(params) → Promise<CompletionTipData>
 - [ ] 域名白名单添加 `api.hunyuan.cloud.tencent.com`
 - [ ] 云开发控制台创建 `ai_cache` 集合
 - [ ] 为 `ai` 云函数配置环境变量 `HUNYUAN_API_KEY`
+
+---
 
 ## Token 预算估算
 
