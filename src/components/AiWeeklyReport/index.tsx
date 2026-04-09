@@ -1,8 +1,13 @@
 import { Text, View } from '@tarojs/components'
 import { useAiWeeklyReport } from '@/hooks/useAiWeeklyReport'
+import { useSettingsStore } from '@/stores/settings'
 
 export default function AiWeeklyReport() {
+  const aiEnabled = useSettingsStore(s => s.aiEnabled)
   const { data, loading } = useAiWeeklyReport()
+
+  if (!aiEnabled)
+    return null
 
   if (loading) {
     return (

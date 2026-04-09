@@ -18,6 +18,7 @@ export default function ProfilePage() {
   const reminderTime = useSettingsStore(s => s.reminderTime)
   const soundEnabled = useSettingsStore(s => s.soundEnabled)
   const voiceEnabled = useSettingsStore(s => s.voiceEnabled)
+  const aiEnabled = useSettingsStore(s => s.aiEnabled)
   const updateSettings = useSettingsStore(s => s.updateSettings)
 
   const nickname = useProfileStore(s => s.nickname)
@@ -87,6 +88,10 @@ export default function ProfilePage() {
 
   const handleVoiceToggle = () => {
     updateSettings({ voiceEnabled: !voiceEnabled })
+  }
+
+  const handleAiToggle = () => {
+    updateSettings({ aiEnabled: !aiEnabled })
   }
 
   return (
@@ -234,6 +239,21 @@ export default function ProfilePage() {
             </View>
             <View className="shrink-0">
               <Switch checked={voiceEnabled} onClick={handleVoiceToggle} ariaLabel="语音播报开关" />
+            </View>
+          </View>
+
+          <View className="flex items-center justify-between gap-4 px-5 py-4">
+            <View className="flex items-start gap-3 flex-1 min-w-0">
+              <View className="size-9 rounded-anthropic-sm border border-primary/20 bg-primary-light/80 flex items-center justify-center">
+                <Text className="text-base">AI</Text>
+              </View>
+              <View className="flex-1 min-w-0">
+                <Text className="block text-paragraph-sm font-heading font-semibold text-content">AI 健康建议</Text>
+                <Text className="block mt-1 text-label-sm text-content-tertiary">首页风险提醒和历史页周报</Text>
+              </View>
+            </View>
+            <View className="shrink-0">
+              <Switch checked={aiEnabled} onClick={handleAiToggle} ariaLabel="AI健康建议开关" />
             </View>
           </View>
         </CardContent>

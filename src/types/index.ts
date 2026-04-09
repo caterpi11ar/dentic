@@ -44,6 +44,7 @@ export interface UserSettings {
   reminderTime: string // HH:mm
   soundEnabled: boolean // 步骤切换提示音
   voiceEnabled: boolean // 语音播报
+  aiEnabled: boolean // AI 健康建议
   rankVisibility?: RankVisibility // 排行榜可见性
   cityCode?: string | null // 城市编码
 }

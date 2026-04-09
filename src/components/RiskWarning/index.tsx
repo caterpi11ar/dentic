@@ -1,10 +1,12 @@
 import { Text, View } from '@tarojs/components'
 import { useRiskWarning } from '@/hooks/useRiskWarning'
+import { useSettingsStore } from '@/stores/settings'
 
 export default function RiskWarning() {
+  const aiEnabled = useSettingsStore(s => s.aiEnabled)
   const { topRisk, aiTip, loading, dismiss } = useRiskWarning()
 
-  if (loading || !topRisk || !aiTip)
+  if (!aiEnabled || loading || !topRisk || !aiTip)
     return null
 
   const severityStyles = {

@@ -13,6 +13,7 @@ const DEFAULT_SETTINGS: UserSettings = {
   reminderTime: '07:30',
   soundEnabled: true,
   voiceEnabled: true,
+  aiEnabled: true,
 }
 
 interface SettingsState extends UserSettings {
