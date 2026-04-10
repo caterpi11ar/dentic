@@ -4,6 +4,7 @@ export default defineAppConfig({
     'pages/history/index',
     'pages/family/index',
     'pages/family/create',
+    'pages/family/join',
     'pages/rank/index',
     'pages/profile/index',
   ],

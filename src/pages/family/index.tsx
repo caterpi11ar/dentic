@@ -304,7 +304,7 @@ export default function FamilyPage() {
       return { title: '今天刷牙了吗' }
     return {
       title: `邀请你加入「${family.name}」，一起关注刷牙`,
-      path: `/pages/family/index?familyId=${family.familyId}`,
+      path: `/pages/family/join?familyId=${family.familyId}`,
     }
   })
 
