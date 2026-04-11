@@ -2,67 +2,90 @@
 
 ![今天刷牙了吗 Logo](./public/logo.png)
 
-基于巴氏（Bass）刷牙法的微信小程序，引导用户科学刷牙，养成良好口腔卫生习惯。
+基于巴氏（Bass）刷牙法的微信小程序，引导用户科学刷牙、持续打卡，并支持家庭协作与排行榜激励。
 
 ## 小程序二维码
 
 ![今天刷牙了吗小程序二维码](./public/qrcode.jpg)
 
-## 功能
+## 当前功能
 
-- **3D 牙齿模型**：实时高亮当前刷牙区域，平滑切换视角，加载失败时自动降级为文字引导
-- **15 区域引导**：覆盖上下牙外侧、内侧、咬合面及舌头，每区域 10 秒，共约 2.5 分钟
-- **早晚刷牙区分**：自动识别早/晚刷牙，分别计入历史，日历双色圆点一目了然
-- **环形进度条**：conic-gradient 实时弧形进度，步骤区域名称实时显示
-- **震动反馈**：步骤切换、完成、按钮点击均有触觉反馈
-- **刷牙打卡**：完成后自动写入历史，支持暂停与继续
-- **历史日历**：月视图查看刷牙历史，统计连续天数、本月及总计，支持分享成绩
-- **排行榜**：支持按**累计天数**与**连续天数**两个维度切换查看，快速对比进度
-- **连续打卡激励**：3 天、7 天、30 天等里程碑提示，完成界面展示详细统计
-- **分享功能**：刷牙完成后或历史页均可一键分享给好友
-- **可调设置**：刷牙提醒、步骤提示音、语音播报、主题模式
+- **巴氏刷牙全流程引导**：15 个区域逐步引导（含倒计时、步骤提示、完成反馈）
+- **刷牙会话状态机**：空闲 / 倒计时 / 进行中 / 暂停 / 完成分态渲染
+- **音频 + 震动 + 亮屏**：步骤播报、触觉反馈、刷牙中保持亮屏
+- **早晚双时段打卡**：按业务日期自动归档，支持晨间/夜间完成状态展示
+- **历史页日历统计**：月历查看、当天晨晚完成时间、连续天数/累计天数/本月完成率
+- **家庭协作**：创建家庭、邀请加入、家庭看板、成员状态、互动（鼓励/提醒）
+- **排行榜**：按累计天数和连续天数双维度切换，展示个人排名
+- **个人中心**：头像昵称授权与同步、提醒/提示音/语音播报开关
+- **天气信息**：首页展示本地天气（定位授权 + 缓存）
+- **数据可靠性**：本地记录启动迁移到云端、失败上报进入重试队列
+- **分享能力**：支持分享给好友与分享到朋友圈
+
+## 页面与路由
+
+来自 `src/app.config.ts`：
+
+- `pages/index/index`：刷牙首页
+- `pages/history/index`：历史统计
+- `pages/family/index`：家庭主页（看板/成员/互动）
+- `pages/family/create`：创建家庭
+- `pages/family/join`：加入家庭
+- `pages/rank/index`：排行榜
+- `pages/profile/index`：个人中心（原设置能力已并入）
 
 ## 技术栈
 
 | 领域 | 方案 |
 |------|------|
-| 框架 | Taro 4 + React + TypeScript |
-| Hooks | React Hooks + ahooks |
-| 构建 | Vite |
-| 3D 渲染 | three-platformize（Three.js 微信小程序适配） |
+| 框架 | Taro 4 + React 18 + TypeScript |
+| 状态管理 | Zustand（vanilla store + 持久化） |
+| 构建 | Taro CLI + Vite Runner |
 | 样式 | Sass + Tailwind CSS |
-| 存储 | 微信本地存储 |
-| 代码质量 | ESLint + Prettier |
+| 3D 渲染 | three-platformize（Three.js 小程序适配） |
+| 数据端 | 微信云开发（Cloud Functions + Cloud DB） |
+| 工程质量 | ESLint + TypeScript typecheck |
 
-## 项目结构
+## 项目结构（当前）
 
-```
+```text
 src/
 ├── pages/
-│   ├── index/          # 刷牙主页（页面编排）
-│   ├── history/        # 历史（日历 + 统计 + 分享）
-│   └── settings/       # 设置（提醒、音效、主题）
+│   ├── index/           # 刷牙首页
+│   ├── history/         # 历史统计
+│   ├── family/          # 家庭（主页/创建/加入）
+│   ├── rank/            # 排行榜
+│   └── profile/         # 个人中心（设置）
 ├── domains/
 │   └── brush/
-│       ├── hooks/      # 刷牙会话：纯状态(state) + 副作用(effect) 编排
-│       ├── components/ # 刷牙流程分态组件（空闲/进行中/完成/倒计时）
-│       ├── effects/    # 领域副作用适配（音频/震动/亮屏）
-│       └── utils.ts    # 刷牙领域工具函数
-├── components/
-│   ├── ToothScene/     # 3D 牙齿场景（含加载失败兜底）
-│   ├── BrushTimer/     # conic-gradient 环形倒计时
-│   ├── StepIndicator/  # 步骤进度点 + 区域名称
-│   ├── Calendar/       # 打卡日历（早晚双色圆点）
-│   └── ErrorBoundary/  # React 错误边界
+│       ├── hooks/       # 刷牙会话状态与副作用编排
+│       ├── components/  # 刷牙流程分态组件
+│       ├── effects/     # 音频/震动/亮屏等端能力适配
+│       └── repositories/# 刷牙数据仓储（记录保存、同步）
+├── components/          # 页面级与通用 UI 组件
+├── stores/              # auth/profile/settings/family/records 状态
 ├── services/
-│   ├── brushing.ts     # 刷牙流程状态机
-│   ├── storage.ts      # 本地存储封装（含旧数据迁移）
-│   └── share.ts        # 分享文案生成
-├── constants/
-│   └── brushing-steps.ts  # 15 个刷牙区域定义
-└── types/
-    └── index.ts        # 类型定义
+│   ├── api/             # 云函数调用封装及各域 API
+│   ├── migration.ts     # 本地历史迁移到云端
+│   ├── syncQueue.ts     # 失败重试队列
+│   ├── weatherService.ts# 天气服务
+│   └── ...
+├── constants/           # 刷牙步骤、天气映射等常量
+└── assets/              # 图标、音频、字体等资源
+
+cloud/functions/
+├── brush/               # upsertRecord / getDailyStatus
+├── family/              # 家庭与互动相关动作
+├── rank/                # 排行榜
+└── user/                # 用户资料
 ```
+
+## 云函数动作一览
+
+- `brush`：`upsertRecord`、`getDailyStatus`
+- `family`：`createFamily`、`joinFamily`、`leaveFamily`、`getFamily`、`getFamilyPreview`、`getDashboard`、`sendInteraction`、`getInteractions`
+- `rank`：`getLeaderboard`
+- `user`：`getProfile`、`updateProfile`
 
 ## 快速开始
 
@@ -70,40 +93,30 @@ src/
 # 安装依赖
 pnpm install
 
-# 开发模式
+# 微信小程序开发
 pnpm run dev:weapp
 
-# 生产构建
+# 微信小程序构建
 pnpm run build:weapp
 
 # 代码检查
-pnpm lint
+pnpm run lint
 
-# 代码格式化
-pnpm format
+# 自动修复 lint
+pnpm run lint:fix
+
+# 类型检查
+pnpm run typecheck
 ```
 
-编译产物在 `dist/` 目录，用微信开发者工具导入项目根目录即可预览。
+### 本地调试说明
 
-## 巴氏刷牙法 15 区域
-
-| 步骤 | 区域 | 提示 |
-|:----:|------|------|
-| 1 | 上牙外侧右 | 刷右上方外侧，牙刷倾斜45度 |
-| 2 | 上牙外侧前 | 刷上方门牙外侧 |
-| 3 | 上牙外侧左 | 刷左上方外侧 |
-| 4 | 上牙内侧右 | 翻到内侧，刷右上方内侧 |
-| 5 | 上牙内侧前 | 上门牙内侧，牙刷竖起来刷 |
-| 6 | 上牙内侧左 | 刷左上方内侧 |
-| 7 | 上牙咬合面 | 刷上方咬合面，来回刷 |
-| 8 | 下牙外侧右 | 下排牙齿，刷右下方外侧 |
-| 9 | 下牙外侧前 | 刷下方门牙外侧 |
-| 10 | 下牙外侧左 | 刷左下方外侧 |
-| 11 | 下牙内侧右 | 翻到内侧，刷右下方内侧 |
-| 12 | 下牙内侧前 | 下门牙内侧，牙刷竖起来刷 |
-| 13 | 下牙内侧左 | 刷左下方内侧 |
-| 14 | 下牙咬合面 | 刷下方咬合面 |
-| 15 | 舌头 | 最后，轻轻刷舌头表面 |
+1. 使用 `pnpm run dev:weapp` 生成 `dist/`。
+2. 微信开发者工具导入项目根目录。
+3. 本项目 `project.config.json` 中：
+   - `miniprogramRoot`: `dist/`
+   - `cloudfunctionRoot`: `cloud/functions/`
+4. 需要在微信开发者工具中同步上传/部署对应云函数后再联调云端能力。
 
 ## License
 
