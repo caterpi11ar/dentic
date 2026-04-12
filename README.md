@@ -1,5 +1,13 @@
 # 今天刷牙了吗
 
+[![Platform](https://img.shields.io/badge/Platform-WeChat%20Mini%20Program-07C160)](https://developers.weixin.qq.com/miniprogram/dev/framework/)
+[![Taro](https://img.shields.io/badge/Taro-4.1.11-1E80FF)](https://taro.zone/)
+[![React](https://img.shields.io/badge/React-18.3.1-61DAFB)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178C6)](https://www.typescriptlang.org/)
+[![License](https://img.shields.io/badge/License-MIT-black)](#license)
+
+[中文](./README.md) | [English](./README.en.md)
+
 ![今天刷牙了吗 Logo](./public/logo.png)
 
 基于巴氏（Bass）刷牙法的微信小程序，引导用户科学刷牙、持续打卡，并支持家庭协作与排行榜激励。
