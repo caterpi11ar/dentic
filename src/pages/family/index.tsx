@@ -1,7 +1,8 @@
 import type { DashboardMember, FamilyDashboard } from '@/services/api/familyApi'
-import { Image, Text, View } from '@tarojs/components'
+import { Text, View } from '@tarojs/components'
 import Taro, { useDidShow, useShareAppMessage } from '@tarojs/taro'
 import { useMemo, useState } from 'react'
+import AvatarImage from '@/components/AvatarImage'
 import Calendar from '@/components/Calendar'
 import InPageTabBar from '@/components/InPageTabBar'
 import PageLayout from '@/components/PageLayout'
@@ -50,7 +51,7 @@ function AvatarStack({
             style={i > 0 ? { marginLeft: '-8px' } : undefined}
           >
             {m.avatar
-              ? <Image src={m.avatar} className="size-9 rounded-full" mode="aspectFill" />
+              ? <AvatarImage src={m.avatar} className="size-9 rounded-full" mode="aspectFill" />
               : (
                   <Text className="text-label-xs font-heading font-semibold text-primary">
                     {m.nickname.slice(0, 1)}
@@ -402,7 +403,7 @@ export default function FamilyPage() {
               <View key={member.openId} className="flex items-center gap-3 rounded-anthropic border border-line bg-surface-white/80 px-4 py-3.5">
                 <View className="size-10 rounded-full bg-primary-light flex items-center justify-center overflow-hidden flex-shrink-0">
                   {member.avatar ? (
-                    <Image src={member.avatar} className="size-10 rounded-full" mode="aspectFill" />
+                    <AvatarImage src={member.avatar} className="size-10 rounded-full" mode="aspectFill" />
                   ) : (
                     <Text className="text-paragraph-sm font-heading font-semibold text-primary">
                       {member.nickname.slice(0, 1)}

@@ -3,6 +3,7 @@ import type { FamilyDashboard, FamilyInfo } from '@/services/api/familyApi'
 import { Image, Text, View } from '@tarojs/components'
 import iconMoon from '@/assets/icons/moon.svg'
 import iconSun from '@/assets/icons/sun.svg'
+import AvatarImage from '@/components/AvatarImage'
 import Progress from '@/components/ui/Progress'
 import { useWeather } from '@/hooks/useWeather'
 import { useFamilyStore } from '@/stores/family'
@@ -59,7 +60,7 @@ function FamilyProgress({ familyInfo, dashboard }: { familyInfo: FamilyInfo, das
                   style={i > 0 ? { marginLeft: '-6px' } : undefined}
                 >
                   {m.avatar
-                    ? <Image src={m.avatar} className="size-7 rounded-full" mode="aspectFill" />
+                    ? <AvatarImage src={m.avatar} className="size-7 rounded-full" mode="aspectFill" />
                     : (
                         <Text className="text-[10px] font-heading font-semibold text-primary">
                           {m.nickname.slice(0, 1)}
@@ -87,7 +88,7 @@ function FamilyProgress({ familyInfo, dashboard }: { familyInfo: FamilyInfo, das
                   style={i > 0 ? { marginLeft: '-6px' } : undefined}
                 >
                   {m.avatar
-                    ? <Image src={m.avatar} className="size-7 rounded-full" mode="aspectFill" />
+                    ? <AvatarImage src={m.avatar} className="size-7 rounded-full" mode="aspectFill" />
                     : (
                         <Text className="text-[10px] font-heading font-semibold text-content-tertiary">
                           {m.nickname.slice(0, 1)}
