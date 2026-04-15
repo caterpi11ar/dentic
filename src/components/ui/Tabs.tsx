@@ -16,8 +16,8 @@ export interface TabsProps<T extends string = string> {
 }
 
 const SIZE_CLASS: Record<NonNullable<TabsProps['size']>, string> = {
-  sm: 'min-h-9 px-3 rounded-md',
-  md: 'min-h-10 px-4 rounded-lg',
+  sm: 'min-h-9 px-3 rounded-anthropic',
+  md: 'min-h-10 px-4 rounded-anthropic',
 }
 
 export default function Tabs<T extends string>({
@@ -28,33 +28,41 @@ export default function Tabs<T extends string>({
   size = 'sm',
 }: TabsProps<T>) {
   return (
-    <View className={cn('inline-flex items-center rounded-anthropic border border-content/[0.08] bg-content/[0.03] p-0.5', className)} role="tablist">
-      {options.map((option) => {
-        const active = value === option.value
-        const disabled = option.disabled
+    <View
+      className={cn(
+        'inline-flex items-center overflow-hidden rounded-anthropic-lg border border-line bg-surface-white p-1',
+        className,
+      )}
+      role="tablist"
+    >
+      <View className="inline-flex items-center gap-1 w-full">
+        {options.map((option) => {
+          const active = value === option.value
+          const disabled = option.disabled
 
-        return (
-          <View
-            key={option.value}
-            className={cn(
-              'flex items-center justify-center min-w-[68px] transition-colors duration-150',
-              SIZE_CLASS[size],
-              active
-                ? 'bg-surface-white text-content shadow-card'
-                : 'bg-transparent text-content/50',
-              disabled ? 'opacity-45' : 'active:opacity-85',
-            )}
-            role="tab"
-            aria-selected={active}
-            aria-disabled={disabled}
-            onClick={!disabled ? () => onValueChange(option.value) : undefined}
-          >
-            <Text className={cn('text-paragraph-sm font-body font-medium', active ? 'text-content' : 'text-content/50')}>
-              {option.label}
-            </Text>
-          </View>
-        )
-      })}
+          return (
+            <View
+              key={option.value}
+              className={cn(
+                'flex-1 flex items-center justify-center min-w-[68px] border transition-all duration-200 ease-out',
+                SIZE_CLASS[size],
+                active
+                  ? 'border-line bg-primary-light text-primary'
+                  : 'border-transparent bg-transparent text-content-secondary',
+                disabled ? 'opacity-45' : 'active:bg-line-lighter',
+              )}
+              role="tab"
+              aria-selected={active}
+              aria-disabled={disabled}
+              onClick={!disabled ? () => onValueChange(option.value) : undefined}
+            >
+              <Text className={cn('text-paragraph-sm font-body font-semibold', active ? 'text-primary' : 'text-content-secondary')}>
+                {option.label}
+              </Text>
+            </View>
+          )
+        })}
+      </View>
     </View>
   )
 }

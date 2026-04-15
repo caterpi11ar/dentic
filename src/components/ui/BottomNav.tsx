@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { Text, View } from '@tarojs/components'
 import { cn } from '@/components/ui/cn'
+import { useMotionPreset } from '@/motion'
 
 export interface BottomNavItem<T extends string = string> {
   key: T
@@ -16,6 +17,12 @@ interface BottomNavProps<T extends string = string> {
 }
 
 export default function BottomNav<T extends string>({ items, activeKey, onChange, className }: BottomNavProps<T>) {
+  const navMotion = useMotionPreset('navPress')
+  const transitionStyle = {
+    transitionDuration: `${navMotion.duration}ms`,
+    transitionTimingFunction: navMotion.easing,
+  }
+
   return (
     <View
       className={cn(
@@ -33,17 +40,32 @@ export default function BottomNav<T extends string>({ items, activeKey, onChange
           <View
             key={item.key}
             className={cn(
-              'min-w-0 flex-1 py-1.5 flex flex-col items-center justify-center gap-0.5 transition-colors duration-150',
-              active ? 'text-primary' : 'text-content-disabled active:opacity-80',
+              'relative min-w-0 flex-1 py-1.5 flex flex-col items-center justify-center gap-0.5 transition-[color,transform,opacity]',
+              active ? 'text-primary -translate-y-[1px]' : 'text-content-disabled active:opacity-80',
             )}
+            style={transitionStyle}
             onClick={() => onChange(item.key)}
             role="tab"
             aria-selected={active}
             aria-current={active ? 'page' : undefined}
             aria-label={item.label}
           >
-            <View className="leading-none flex items-center justify-center">{item.icon}</View>
-            <Text className={cn('text-label-xs font-body font-semibold tracking-[0.02em]', active ? 'text-primary' : 'text-content-disabled')}>
+            <View
+              className={cn(
+                'leading-none flex items-center justify-center transition-transform',
+                active ? 'scale-105' : 'scale-100',
+              )}
+              style={transitionStyle}
+            >
+              {item.icon}
+            </View>
+            <Text
+              className={cn(
+                'text-label-xs font-body font-semibold tracking-[0.02em] transition-[color,opacity,transform]',
+                active ? 'text-primary opacity-100' : 'text-content-disabled opacity-80',
+              )}
+              style={transitionStyle}
+            >
               {item.label}
             </Text>
           </View>

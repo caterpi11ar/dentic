@@ -1,5 +1,6 @@
 import { Image } from '@tarojs/components'
-import Taro from '@tarojs/taro'
+import Taro, { useDidShow } from '@tarojs/taro'
+import { useRef } from 'react'
 import iconBrushActive from '@/assets/icons/tab-brush-active.svg'
 import iconBrushInactive from '@/assets/icons/tab-brush-inactive.svg'
 import iconFamilyActive from '@/assets/icons/tab-family-active.svg'
@@ -35,11 +36,46 @@ const TAB_DEFS: Array<{ key: TabKey, label: string, path: string }> = [
 ]
 
 export default function InPageTabBar({ current }: InPageTabBarProps) {
+  const isNavigatingRef = useRef(false)
+
+  useDidShow(() => {
+    isNavigatingRef.current = false
+    try {
+      Taro.hideLoading()
+    }
+    catch {}
+    try {
+      Taro.hideNavigationBarLoading()
+    }
+    catch {}
+  })
+
   const handleNavigate = (key: TabKey) => {
     const tab = TAB_DEFS.find(item => item.key === key)
-    if (!tab || tab.key === current)
+    if (!tab || tab.key === current || isNavigatingRef.current)
       return
-    Taro.redirectTo({ url: tab.path }).catch(() => undefined)
+
+    isNavigatingRef.current = true
+    try {
+      Taro.showLoading({ title: '', mask: true })
+    }
+    catch {
+      try {
+        Taro.showNavigationBarLoading()
+      }
+      catch {}
+    }
+    Taro.redirectTo({ url: tab.path }).catch(() => {
+      isNavigatingRef.current = false
+      try {
+        Taro.hideLoading()
+      }
+      catch {}
+      try {
+        Taro.hideNavigationBarLoading()
+      }
+      catch {}
+    })
   }
 
   const items = TAB_DEFS.map(tab => ({

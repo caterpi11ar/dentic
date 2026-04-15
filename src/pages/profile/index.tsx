@@ -97,7 +97,7 @@ export default function ProfilePage() {
       </Text>
 
       {/* ── 用户信息卡片 ── */}
-      <Card className="mt-6 rounded-anthropic">
+      <Card className="mt-6">
         <CardContent>
           {authorized && !showNicknameInput ? (
           /* 已授权：展示头像和昵称，点击可重新设置 */
@@ -186,7 +186,7 @@ export default function ProfilePage() {
         <View className="flex-1 h-px bg-line" />
       </View>
 
-      <Card className="mt-5 overflow-hidden rounded-anthropic">
+      <Card className="mt-5 overflow-hidden">
         <CardContent className="p-0 divide-y divide-line">
           <View className="flex items-center justify-between gap-4 px-5 py-4">
             <View className="flex items-start gap-3 flex-1 min-w-0">

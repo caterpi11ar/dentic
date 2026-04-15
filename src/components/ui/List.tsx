@@ -7,7 +7,18 @@ interface ListProps extends PropsWithChildren {
 }
 
 export function List({ className, children }: ListProps) {
-  return <View className={cn('rounded-anthropic border border-content/[0.08] overflow-hidden divide-y divide-content/[0.06]', className)}>{children}</View>
+  return (
+    <View
+      className={cn(
+        'overflow-hidden rounded-anthropic-lg border border-line bg-surface-white',
+        className,
+      )}
+    >
+      <View className="divide-y divide-line">
+        {children}
+      </View>
+    </View>
+  )
 }
 
 interface ListItemProps {
@@ -36,8 +47,8 @@ export function ListItem({
   return (
     <View
       className={cn(
-        'px-4 py-3.5 min-h-[3.75rem] flex items-center justify-between gap-3 bg-surface-white',
-        interactive && !disabled && 'active:opacity-85',
+        'px-4 py-3.5 min-h-[3.75rem] flex items-center justify-between gap-3 bg-surface-white transition-colors duration-200 ease-out',
+        interactive && !disabled && 'active:bg-primary-light/45',
         disabled && 'opacity-55',
         className,
       )}

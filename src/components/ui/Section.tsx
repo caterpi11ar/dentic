@@ -1,6 +1,6 @@
 import type { PropsWithChildren, ReactNode } from 'react'
-import { Text, View } from '@tarojs/components'
-import { Card, CardContent, CardHeader } from '@/components/ui/Card'
+import { View } from '@tarojs/components'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
 import { cn } from '@/components/ui/cn'
 
 interface SectionProps extends PropsWithChildren {
@@ -22,13 +22,13 @@ export default function Section({
   const hasHeader = !!title || !!description || !!headerRight
 
   return (
-    <Card className={cn('rounded-anthropic', className)}>
+    <Card className={className}>
       {hasHeader && (
         <CardHeader className="pb-2">
           <View className="flex items-start justify-between gap-3">
             <View className="min-w-0">
-              {title && <Text className="text-label-sm font-body font-semibold tracking-[0.1em] uppercase text-content/50">{title}</Text>}
-              {description && <Text className="mt-1.5 text-paragraph-sm text-content/40">{description}</Text>}
+              {title && <CardTitle className="text-paragraph-sm">{title}</CardTitle>}
+              {description && <CardDescription className="text-content-tertiary">{description}</CardDescription>}
             </View>
             {headerRight ? <View className="shrink-0">{headerRight}</View> : null}
           </View>

@@ -9,6 +9,7 @@ import BrushCountdownOverlay from '@/domains/brush/components/BrushCountdownOver
 import BrushIdleState from '@/domains/brush/components/BrushIdleState'
 import { useBrushSession } from '@/domains/brush/hooks/useBrushSession'
 import { formatTodayHeading, getGreeting } from '@/domains/brush/utils'
+import { usePageTransition } from '@/motion'
 import { trackEvent } from '@/services/analytics'
 import { getBusinessAnchorDate } from '@/services/dateBoundary'
 import { generateShareMessage } from '@/services/share'
@@ -16,6 +17,8 @@ import { applyLightThemeToChrome } from '@/services/theme'
 import { familyStore } from '@/stores/family'
 
 export default function IndexPage() {
+  const pageTransition = usePageTransition()
+
   const {
     session,
     streak,
@@ -66,7 +69,9 @@ export default function IndexPage() {
         className={cn(
           'px-page-x pt-12 max-w-2xl mx-auto',
           isBrushingFlow ? 'h-screen overflow-hidden flex flex-col' : 'min-h-screen pb-bottom-safe flex flex-col',
+          pageTransition.className,
         )}
+        style={pageTransition.style}
       >
         {session.state === 'countdown' && (
           <BrushCountdownOverlay remaining={session.countdownRemaining} />

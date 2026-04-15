@@ -101,7 +101,7 @@ export default function RankPage() {
 
       {/* 我的排名卡 */}
       {myRank && (
-        <Card className="mt-6 border-line bg-primary-light">
+        <Card className="mt-6">
           <CardContent className="py-3.5">
             <View className="flex items-center justify-between">
               <View>
@@ -159,8 +159,8 @@ export default function RankPage() {
                   <View
                     key={item.openId}
                     className={cn(
-                      'flex items-center gap-3 px-4 py-3 border-b border-line last:border-b-0',
-                      item.isMe && 'bg-primary-light',
+                      'flex items-center gap-3 px-4 py-3 border-b border-line last:border-b-0 transition-colors duration-200 ease-out',
+                      item.isMe ? 'bg-primary-light/55' : 'bg-surface-white',
                     )}
                   >
                     {/* 排名 */}
