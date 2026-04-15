@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 项目概述
 
-"今天刷牙了吗" (Dentic) — 基于巴氏（Bass）刷牙法的微信小程序，引导用户按 15 个区域科学刷牙（约 2.5 分钟）。技术栈：Taro 4 + React 18 + TypeScript，目标平台为微信小程序（主）和 H5（辅）。
+"今天刷牙了吗" (Dentic) — 基于巴氏（Bass）刷牙法的微信小程序，引导用户按 15 个区域科学刷牙（约 2.5 分钟）。技术栈：Taro 4 + React 18 + TypeScript，目标平台为微信小程序
 
 ## 常用命令
 
