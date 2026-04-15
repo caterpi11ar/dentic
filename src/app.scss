@@ -149,3 +149,43 @@ button:focus-visible,
 ::selection {
   background: rgba(201, 100, 66, 0.4);
 }
+
+@keyframes motion-page-enter {
+  from {
+    opacity: 0.75;
+    transform: translate3d(0, 12px, 0) scale(0.995);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes motion-page-exit-overlay {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.motion-page-enter {
+  animation-name: motion-page-enter;
+  animation-fill-mode: both;
+  will-change: opacity;
+}
+
+.motion-page-exit-overlay {
+  animation-name: motion-page-exit-overlay;
+  animation-fill-mode: both;
+  will-change: opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-page-enter,
+  .motion-page-exit-overlay {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

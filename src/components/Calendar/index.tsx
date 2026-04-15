@@ -3,7 +3,6 @@ import iconChevLeft from '@/assets/icons/icon-chevron-left.svg'
 import iconChevRight from '@/assets/icons/icon-chevron-right.svg'
 import Badge from '@/components/ui/Badge'
 import { cn } from '@/components/ui/cn'
-import IconButton from '@/components/ui/IconButton'
 
 const WEEKDAYS = ['日', '一', '二', '三', '四', '五', '六']
 
@@ -134,18 +133,24 @@ export default function Calendar({
               {formatMonth(year, month)}
             </Text>
             <View className="flex items-center gap-2">
-              <IconButton
-                icon={<Image src={iconChevLeft} className="size-4" mode="aspectFit" />}
-                ariaLabel="上个月"
-                className="size-8 min-h-8 min-w-8 rounded-full border border-line active:bg-line"
+              <View
+                role="button"
+                aria-label="上个月"
+                className="size-8 min-h-8 min-w-8 rounded-full border border-content/[0.28] bg-surface-white flex items-center justify-center active:bg-line-light"
+                style={{ boxShadow: 'inset 0 0 0 1px rgba(255, 255, 255, 0.55)' }}
                 onClick={onPrevMonth}
-              />
-              <IconButton
-                icon={<Image src={iconChevRight} className="size-4" mode="aspectFit" />}
-                ariaLabel="下个月"
-                className="size-8 min-h-8 min-w-8 rounded-full border border-line active:bg-line"
+              >
+                <Image src={iconChevLeft} className="size-4" mode="aspectFit" />
+              </View>
+              <View
+                role="button"
+                aria-label="下个月"
+                className="size-8 min-h-8 min-w-8 rounded-full border border-content/[0.28] bg-surface-white flex items-center justify-center active:bg-line-light"
+                style={{ boxShadow: 'inset 0 0 0 1px rgba(255, 255, 255, 0.55)' }}
                 onClick={onNextMonth}
-              />
+              >
+                <Image src={iconChevRight} className="size-4" mode="aspectFit" />
+              </View>
             </View>
           </View>
 

@@ -4,6 +4,7 @@ import Taro, { useRouter } from '@tarojs/taro'
 import { useState } from 'react'
 import PageLayout from '@/components/PageLayout'
 import Button from '@/components/ui/Button'
+import { Card, CardContent } from '@/components/ui/Card'
 import { getFamilyPreview } from '@/services/api/familyApi'
 import { familyStore } from '@/stores/family'
 
@@ -128,27 +129,29 @@ export default function FamilyJoinPage() {
         加入家庭
       </Text>
 
-      <View className="mt-10 rounded-anthropic border border-line bg-surface-white/80 px-5 py-6">
-        <View className="flex flex-col items-center gap-4">
-          <View className="size-16 rounded-full bg-primary-light flex items-center justify-center">
-            <Text className="text-display-md font-heading text-primary">家</Text>
-          </View>
-          <Text className="text-display-sm font-heading font-medium text-content">
-            {preview.name}
-          </Text>
-          <View className="flex flex-col items-center gap-1">
-            <Text className="text-paragraph-sm font-body text-content-secondary">
-              创建者：
-              {preview.creatorNickname}
+      <Card className="mt-10">
+        <CardContent className="py-6">
+          <View className="flex flex-col items-center gap-4">
+            <View className="size-16 rounded-full bg-primary-light flex items-center justify-center">
+              <Text className="text-display-md font-heading text-primary">家</Text>
+            </View>
+            <Text className="text-display-sm font-heading font-medium text-content">
+              {preview.name}
             </Text>
-            <Text className="text-paragraph-sm font-body text-content-tertiary">
-              当前
-              {preview.memberCount}
-              人
-            </Text>
+            <View className="flex flex-col items-center gap-1">
+              <Text className="text-paragraph-sm font-body text-content-secondary">
+                创建者：
+                {preview.creatorNickname}
+              </Text>
+              <Text className="text-paragraph-sm font-body text-content-tertiary">
+                当前
+                {preview.memberCount}
+                人
+              </Text>
+            </View>
           </View>
-        </View>
-      </View>
+        </CardContent>
+      </Card>
 
       <View className="mt-10">
         <Button

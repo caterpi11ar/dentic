@@ -7,6 +7,7 @@ import iconSun from '@/assets/icons/sun.svg'
 import Calendar from '@/components/Calendar'
 import InPageTabBar from '@/components/InPageTabBar'
 import PageLayout from '@/components/PageLayout'
+import { Card, CardContent } from '@/components/ui/Card'
 import { getBusinessAnchorDate, getBusinessDate } from '@/services/dateBoundary'
 import { getCurrentStreak, getTotalBrushedDays } from '@/services/recordStatsService'
 import { generateShareMessage } from '@/services/share'
@@ -173,38 +174,40 @@ export default function HistoryPage() {
           hideStats
         />
 
-        <View className="mt-5 rounded-anthropic border border-line bg-surface-white p-4">
-          <View className="flex items-baseline justify-between">
-            <Text className="text-label-sm font-body font-semibold tracking-[0.08em] uppercase text-content-tertiary">当天记录</Text>
-            {selectedDate && (
-              <Text className="text-paragraph-sm font-heading text-content-secondary">
-                {formatSelectedDate(selectedDate)}
-              </Text>
-            )}
-          </View>
-          {selectedDate ? (
-            <View className="mt-3 grid grid-cols-2 gap-2">
-              {(['morning', 'evening'] as const).map(session => (
-                <View
-                  key={session}
-                  className="rounded-anthropic-sm border border-line bg-primary-light/70 px-3 py-2.5 flex items-center justify-between"
-                >
-                  <View className="flex items-center gap-1.5">
-                    <Image src={SESSION_ICONS[session]} className="size-4" mode="aspectFit" />
-                    <Text className="text-label-xs font-heading font-semibold tracking-[0.08em] uppercase text-content-tertiary">
-                      {SESSION_LABELS[session]}
+        <Card className="mt-5">
+          <CardContent className="p-4">
+            <View className="flex items-baseline justify-between">
+              <Text className="text-label-sm font-body font-semibold tracking-[0.08em] uppercase text-content-tertiary">当天记录</Text>
+              {selectedDate && (
+                <Text className="text-paragraph-sm font-heading text-content-secondary">
+                  {formatSelectedDate(selectedDate)}
+                </Text>
+              )}
+            </View>
+            {selectedDate ? (
+              <View className="mt-3 grid grid-cols-2 gap-2">
+                {(['morning', 'evening'] as const).map(session => (
+                  <View
+                    key={session}
+                    className="rounded-anthropic-sm border border-line bg-primary-light/70 px-3 py-2.5 flex items-center justify-between"
+                  >
+                    <View className="flex items-center gap-1.5">
+                      <Image src={SESSION_ICONS[session]} className="size-4" mode="aspectFit" />
+                      <Text className="text-label-xs font-heading font-semibold tracking-[0.08em] uppercase text-content-tertiary">
+                        {SESSION_LABELS[session]}
+                      </Text>
+                    </View>
+                    <Text className="text-paragraph-md font-heading font-bold tabular-nums text-primary ml-2">
+                      {selectedTimes[session]}
                     </Text>
                   </View>
-                  <Text className="text-paragraph-md font-heading font-bold tabular-nums text-primary ml-2">
-                    {selectedTimes[session]}
-                  </Text>
-                </View>
-              ))}
-            </View>
-          ) : (
-            <Text className="mt-2 text-paragraph-sm text-content-disabled">请选择日期查看晨间和夜间时间</Text>
-          )}
-        </View>
+                ))}
+              </View>
+            ) : (
+              <Text className="mt-2 text-paragraph-sm text-content-disabled">请选择日期查看晨间和夜间时间</Text>
+            )}
+          </CardContent>
+        </Card>
       </View>
 
       <InPageTabBar current="history" />
