@@ -18,33 +18,70 @@ export default function FamilyJoinPage() {
 
   // 页面显示时获取家庭预览信息
   Taro.useDidShow(() => {
-    if (!familyId) {
-      setError('无效的邀请链接')
-      setLoading(false)
-      return
+    const init = async () => {
+      if (!familyId) {
+        setError('无效的邀请链接')
+        setLoading(false)
+        return
+      }
+
+      setLoading(true)
+      setError('')
+
+      const myFamily = await familyStore.getState().fetchFamily()
+      if (myFamily) {
+        const msg = myFamily.familyId === familyId
+          ? '你已在该家庭中'
+          : '你已加入其他家庭，不能重复加入'
+        Taro.showToast({ title: msg, icon: 'none' }).catch(() => undefined)
+        Taro.redirectTo({ url: '/pages/family/index' }).catch(() => undefined)
+        setLoading(false)
+        return
+      }
+
+      getFamilyPreview(familyId).then((info) => {
+        setPreview(info)
+        setLoading(false)
+      }).catch(() => {
+        setError('家庭不存在或已解散')
+        setLoading(false)
+      })
     }
-    setLoading(true)
-    getFamilyPreview(familyId).then((info) => {
-      setPreview(info)
-      setLoading(false)
-    }).catch(() => {
+
+    init().catch(() => {
       setError('家庭不存在或已解散')
       setLoading(false)
     })
   })
 
-  const handleJoin = () => {
+  const handleJoin = async () => {
     if (!familyId || joining)
       return
+
     setJoining(true)
-    familyStore.getState().joinFamily(familyId).then(() => {
+
+    try {
+      const myFamily = await familyStore.getState().fetchFamily()
+      if (myFamily) {
+        const msg = myFamily.familyId === familyId
+          ? '你已在该家庭中'
+          : '你已加入其他家庭，不能重复加入'
+        Taro.showToast({ title: msg, icon: 'none' }).catch(() => undefined)
+        Taro.redirectTo({ url: '/pages/family/index' }).catch(() => undefined)
+        return
+      }
+
+      await familyStore.getState().joinFamily(familyId)
       Taro.showToast({ title: '已加入家庭', icon: 'success' }).catch(() => undefined)
       Taro.redirectTo({ url: '/pages/family/index' }).catch(() => undefined)
-    }).catch((err) => {
+    }
+    catch (err) {
       const msg = (err as Error)?.message || '加入失败'
       Taro.showToast({ title: msg, icon: 'none' }).catch(() => undefined)
+    }
+    finally {
       setJoining(false)
-    })
+    }
   }
 
   // 加载中
