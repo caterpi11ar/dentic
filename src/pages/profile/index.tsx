@@ -5,6 +5,7 @@ import iconBell from '@/assets/icons/icon-bell.svg'
 import iconMusic from '@/assets/icons/icon-music.svg'
 import iconUser from '@/assets/icons/icon-user.svg'
 import iconVoice from '@/assets/icons/icon-voice.svg'
+import AvatarImage from '@/components/AvatarImage'
 import InPageTabBar from '@/components/InPageTabBar'
 import PageLayout from '@/components/PageLayout'
 import { Card, CardContent } from '@/components/ui/Card'
@@ -108,7 +109,7 @@ export default function ProfilePage() {
               <View className="flex items-center gap-4">
                 <View className="size-14 rounded-full bg-primary-light flex items-center justify-center overflow-hidden flex-shrink-0">
                   {avatar ? (
-                    <Image src={avatar} className="size-14 rounded-full" mode="aspectFill" />
+                    <AvatarImage src={avatar} className="size-14 rounded-full" mode="aspectFill" />
                   ) : (
                     <Text className="text-xl font-heading font-semibold text-primary">
                       {nickname.slice(0, 1)}
@@ -130,7 +131,7 @@ export default function ProfilePage() {
             <View className="flex flex-col items-center gap-4 py-2">
               <View className="size-16 rounded-full bg-primary-light flex items-center justify-center overflow-hidden">
                 {avatar ? (
-                  <Image src={avatar} className="size-16 rounded-full" mode="aspectFill" />
+                  <AvatarImage src={avatar} className="size-16 rounded-full" mode="aspectFill" />
                 ) : (
                   <Image src={iconUser} className="size-8 text-content-tertiary" mode="aspectFit" />
                 )}

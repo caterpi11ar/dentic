@@ -8,6 +8,7 @@ import iconEmpty from '@/assets/icons/icon-empty.svg'
 import iconMedal1 from '@/assets/icons/icon-medal-1.svg'
 import iconMedal2 from '@/assets/icons/icon-medal-2.svg'
 import iconMedal3 from '@/assets/icons/icon-medal-3.svg'
+import AvatarImage from '@/components/AvatarImage'
 import InPageTabBar from '@/components/InPageTabBar'
 import PageLayout from '@/components/PageLayout'
 import { Card, CardContent } from '@/components/ui/Card'
@@ -176,7 +177,7 @@ export default function RankPage() {
                     {/* 头像 */}
                     <View className="size-9 rounded-full bg-primary-light flex items-center justify-center flex-shrink-0 overflow-hidden">
                       {item.avatar ? (
-                        <Image src={item.avatar} className="size-9 rounded-full" mode="aspectFill" />
+                        <AvatarImage src={item.avatar} className="size-9 rounded-full" mode="aspectFill" />
                       ) : (
                         <Text className="text-paragraph-sm font-heading font-semibold text-primary">
                           {item.nickname.slice(0, 1) || '?'}
