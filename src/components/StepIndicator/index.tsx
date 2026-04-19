@@ -29,7 +29,7 @@ export default function StepIndicator({ currentStep, totalSteps = TOTAL_STEPS }:
               key={i}
               className={cn(
                 'h-2 flex-1 rounded-full transition-[background-color] duration-300 ease-in-out motion-reduce:transition-none',
-                isDone ? 'bg-primary' : isActive ? 'bg-primary animate-gentle-pulse' : 'bg-line',
+                isDone ? 'bg-primary' : isActive ? 'bg-primary' : 'bg-line',
               )}
             />
           )

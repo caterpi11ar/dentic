@@ -5,6 +5,7 @@ import iconMoon from '@/assets/icons/moon.svg'
 import iconSun from '@/assets/icons/sun.svg'
 import AvatarImage from '@/components/AvatarImage'
 import Progress from '@/components/ui/Progress'
+import StatRow from '@/components/ui/StatRow'
 import { useWeather } from '@/hooks/useWeather'
 import { useFamilyStore } from '@/stores/family'
 
@@ -200,24 +201,13 @@ export default function BrushIdleState({
 
       {/* ── 模块 C：连续打卡 ── */}
       <View className="animate-fade-up-delay-3 motion-reduce:animate-none">
-        <View className="flex items-baseline gap-2">
-          <Text className="text-label-sm font-body font-semibold text-content-tertiary uppercase">
-            连续
-          </Text>
-          <Text className="text-display-md leading-none font-heading font-medium tabular-nums text-primary">
-            {streak}
-          </Text>
-          <Text className="text-label-sm font-body font-semibold text-content-tertiary uppercase">
-            天
-          </Text>
-        </View>
+        <StatRow label="连续" value={streak} unit="天" tone="primary" align="baseline" />
 
         <Progress
           value={milestoneProgress}
           max={100}
           label={`下一个目标 连续 ${nextMilestone} 天`}
           className="mt-3"
-          trackClassName="h-2 bg-line"
         />
       </View>
 

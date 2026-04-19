@@ -10,6 +10,8 @@ import InPageTabBar from '@/components/InPageTabBar'
 import PageLayout from '@/components/PageLayout'
 import Button from '@/components/ui/Button'
 import { Card, CardContent } from '@/components/ui/Card'
+import IconBadge from '@/components/ui/IconBadge'
+import { List, ListItem } from '@/components/ui/List'
 import PageHeader from '@/components/ui/PageHeader'
 import Section from '@/components/ui/Section'
 import Switch from '@/components/ui/Switch'
@@ -105,7 +107,7 @@ export default function ProfilePage() {
             <TaroButton
               openType="chooseAvatar"
               onChooseAvatar={handleChooseAvatar}
-              className="!p-0 !m-0 !bg-transparent !border-0 !leading-none after:!border-0 w-full"
+              className="!p-0 !m-0 !bg-transparent !border-0 after:!border-0 w-full"
             >
               <View className="flex items-center gap-4">
                 <View className="size-14 rounded-full bg-primary-light flex items-center justify-center overflow-hidden flex-shrink-0">
@@ -161,7 +163,7 @@ export default function ProfilePage() {
             <TaroButton
               openType="chooseAvatar"
               onChooseAvatar={handleChooseAvatar}
-              className="!p-0 !m-0 !bg-transparent !border-0 !leading-none after:!border-0 w-full"
+              className="!p-0 !m-0 !bg-transparent !border-0 after:!border-0 w-full"
             >
               <View className="flex flex-col items-center gap-3 py-2">
                 <View className="size-16 rounded-full bg-primary-light flex items-center justify-center">
@@ -181,59 +183,41 @@ export default function ProfilePage() {
 
       {/* ── 声音与提醒 ── */}
       <Section variant="group" label="声音与提醒" className="mt-section-gap">
-        <Card className="overflow-hidden">
-          <CardContent variant="flush" className="divide-y divide-line">
-            <View className="flex items-center justify-between gap-4 px-5 py-4">
-              <View className="flex items-start gap-3 flex-1 min-w-0">
-                <View className="size-9 rounded-anthropic-sm border border-warning/20 bg-warning-light/75 flex items-center justify-center">
-                  <Image src={iconBell} className="size-5 text-content-secondary" mode="aspectFit" />
-                </View>
-                <View className="flex-1 min-w-0">
-                  <Text className="block text-paragraph-sm font-body font-semibold text-content">刷牙提醒</Text>
-                  <Text className="block mt-1 text-label-sm text-content-tertiary">
-                    每天
-                    {reminderTime}
-                    {' '}
-                    提醒你
-                  </Text>
-                </View>
-              </View>
-              <View className="shrink-0">
-                <Switch checked={reminderEnabled} onClick={handleReminderToggle} ariaLabel="刷牙提醒开关" />
-              </View>
-            </View>
-
-            <View className="flex items-center justify-between gap-4 px-5 py-4">
-              <View className="flex items-start gap-3 flex-1 min-w-0">
-                <View className="size-9 rounded-anthropic-sm border border-info/20 bg-info-light/80 flex items-center justify-center">
-                  <Image src={iconMusic} className="size-5 text-content-secondary" mode="aspectFit" />
-                </View>
-                <View className="flex-1 min-w-0">
-                  <Text className="block text-paragraph-sm font-body font-semibold text-content">步骤提示音</Text>
-                  <Text className="block mt-1 text-label-sm text-content-tertiary">步骤切换时播放提示音</Text>
-                </View>
-              </View>
-              <View className="shrink-0">
-                <Switch checked={soundEnabled} onClick={handleSoundToggle} ariaLabel="步骤提示音开关" />
-              </View>
-            </View>
-
-            <View className="flex items-center justify-between gap-4 px-5 py-4">
-              <View className="flex items-start gap-3 flex-1 min-w-0">
-                <View className="size-9 rounded-anthropic-sm border border-success/20 bg-success-light/80 flex items-center justify-center">
-                  <Image src={iconVoice} className="size-5 text-content-secondary" mode="aspectFit" />
-                </View>
-                <View className="flex-1 min-w-0">
-                  <Text className="block text-paragraph-sm font-body font-semibold text-content">语音播报</Text>
-                  <Text className="block mt-1 text-label-sm text-content-tertiary">步骤切换时朗读提示</Text>
-                </View>
-              </View>
-              <View className="shrink-0">
-                <Switch checked={voiceEnabled} onClick={handleVoiceToggle} ariaLabel="语音播报开关" />
-              </View>
-            </View>
-          </CardContent>
-        </Card>
+        <List>
+          <ListItem
+            left={(
+              <IconBadge
+                variant="neutral"
+                icon={<Image src={iconBell} className="size-5" mode="aspectFit" />}
+              />
+            )}
+            title="刷牙提醒"
+            description={`每天 ${reminderTime} 提醒你`}
+            right={<Switch checked={reminderEnabled} onClick={handleReminderToggle} ariaLabel="刷牙提醒开关" />}
+          />
+          <ListItem
+            left={(
+              <IconBadge
+                variant="neutral"
+                icon={<Image src={iconMusic} className="size-5" mode="aspectFit" />}
+              />
+            )}
+            title="步骤提示音"
+            description="步骤切换时播放提示音"
+            right={<Switch checked={soundEnabled} onClick={handleSoundToggle} ariaLabel="步骤提示音开关" />}
+          />
+          <ListItem
+            left={(
+              <IconBadge
+                variant="neutral"
+                icon={<Image src={iconVoice} className="size-5" mode="aspectFit" />}
+              />
+            )}
+            title="语音播报"
+            description="步骤切换时朗读提示"
+            right={<Switch checked={voiceEnabled} onClick={handleVoiceToggle} ariaLabel="语音播报开关" />}
+          />
+        </List>
       </Section>
 
       <InPageTabBar current="profile" />

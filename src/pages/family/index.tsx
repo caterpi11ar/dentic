@@ -10,6 +10,7 @@ import Button from '@/components/ui/Button'
 import { Card, CardContent } from '@/components/ui/Card'
 import PageHeader from '@/components/ui/PageHeader'
 import Section from '@/components/ui/Section'
+import StatRow from '@/components/ui/StatRow'
 import Tabs from '@/components/ui/Tabs'
 import { getBusinessAnchorDate, getBusinessDate } from '@/services/dateBoundary'
 import { applyLightThemeToChrome } from '@/services/theme'
@@ -219,16 +220,8 @@ function OverviewTab({ dashboard }: { dashboard: FamilyDashboard }) {
   return (
     <View className="mt-page-gap">
       {/* 家庭连续天数 */}
-      <View className="flex items-baseline gap-2 mb-page-gap">
-        <Text className="text-label-sm font-body font-semibold text-content-tertiary uppercase">
-          家庭连续
-        </Text>
-        <Text className="text-display-md leading-none font-heading font-medium tabular-nums text-primary">
-          {dashboard.streak}
-        </Text>
-        <Text className="text-label-sm font-body font-semibold text-content-tertiary uppercase">
-          天
-        </Text>
+      <View className="mb-page-gap">
+        <StatRow label="家庭连续" value={dashboard.streak} unit="天" tone="primary" align="baseline" />
       </View>
 
       {/* 日历 */}
@@ -466,28 +459,22 @@ export default function FamilyPage() {
       {activeTab === 'interactions' && (
         <View className="mt-page-gap">
           <View className="flex gap-3">
-            <View
-              className="flex-1 rounded-anthropic border border-line bg-surface-white/80 py-4 flex flex-col items-center gap-1.5 active:opacity-80"
-              role="button"
+            <Button
+              variant="secondary"
+              size="md"
               onClick={() => handleInteraction('like')}
-              aria-label="鼓励"
+              aria-label="鼓励家人"
             >
-              <View className="size-10 rounded-full bg-success-light flex items-center justify-center">
-                <Text className="text-paragraph-md font-body font-semibold text-success">赞</Text>
-              </View>
-              <Text className="text-label-xs font-body text-content-secondary">鼓励</Text>
-            </View>
-            <View
-              className="flex-1 rounded-anthropic border border-line bg-surface-white/80 py-4 flex flex-col items-center gap-1.5 active:opacity-80"
-              role="button"
+              鼓励
+            </Button>
+            <Button
+              variant="secondary"
+              size="md"
               onClick={() => handleInteraction('reminder')}
-              aria-label="提醒刷牙"
+              aria-label="提醒家人刷牙"
             >
-              <View className="size-10 rounded-full bg-warning-light flex items-center justify-center">
-                <Text className="text-paragraph-md font-body font-semibold text-warning">!</Text>
-              </View>
-              <Text className="text-label-xs font-body text-content-secondary">提醒刷牙</Text>
-            </View>
+              提醒刷牙
+            </Button>
           </View>
 
           {interactions.length > 0 ? (

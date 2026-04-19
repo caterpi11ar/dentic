@@ -47,8 +47,8 @@ export function ListItem({
   return (
     <View
       className={cn(
-        'px-4 py-3.5 min-h-[3.75rem] flex items-center justify-between gap-3 bg-surface-white transition-colors duration-200 ease-out',
-        interactive && !disabled && 'active:bg-primary-light/45',
+        'px-5 py-4 min-h-14 flex items-center justify-between gap-3 bg-surface-white transition-colors duration-200 ease-out',
+        interactive && !disabled && 'active:bg-line-lighter',
         disabled && 'opacity-55',
         className,
       )}

@@ -78,35 +78,9 @@ module.exports = {
       boxShadow: {
         card: '0px 0px 0px 1px rgba(240, 238, 230, 1)',
         'card-hover': '0px 0px 0px 1px rgba(209, 207, 197, 1)',
-        'card-lg': 'rgba(0, 0, 0, 0.05) 0px 4px 24px',
         nav: '0 -1px 0 rgba(240, 238, 230, 1)',
       },
       keyframes: {
-        slideUp: {
-          from: { opacity: '0', transform: 'translateY(20px)' },
-          to: { opacity: '1', transform: 'translateY(0)' },
-        },
-        fadeScaleIn: {
-          from: { opacity: '0', transform: 'scale(0.95)' },
-          to: { opacity: '1', transform: 'scale(1)' },
-        },
-        bounce: {
-          '0%, 100%': { transform: 'scale(1)' },
-          '50%': { transform: 'scale(1.05)' },
-        },
-        countdownPulse: {
-          '0%': { transform: 'scale(0.5)', opacity: '0' },
-          '50%': { transform: 'scale(1.2)', opacity: '1' },
-          '100%': { transform: 'scale(1)', opacity: '0.8' },
-        },
-        shimmer: {
-          '0%': { backgroundPosition: '-200% 0' },
-          '100%': { backgroundPosition: '200% 0' },
-        },
-        gentlePulse: {
-          '0%, 100%': { opacity: '1' },
-          '50%': { opacity: '0.7' },
-        },
         fadeUp: {
           from: { opacity: '0', transform: 'translateY(10%)' },
           to: { opacity: '1', transform: 'translateY(0)' },
@@ -119,29 +93,19 @@ module.exports = {
           from: { opacity: '0', transform: 'scale(0.98)' },
           to: { opacity: '1', transform: 'scale(1)' },
         },
-        arrowBounce: {
-          '0%, 100%': { transform: 'translateX(0)' },
-          '50%': { transform: 'translateX(6px)' },
-        },
         ripple: {
           '0%': { transform: 'scale(1)', opacity: '0.5' },
           '100%': { transform: 'scale(2.5)', opacity: '0' },
         },
       },
       animation: {
-        'slide-up': 'slideUp 0.3s ease-out',
-        'fade-scale-in': 'fadeScaleIn 0.45s ease-out',
-        'bounce-slow': 'bounce 1s ease-in-out infinite',
-        'countdown-pulse': 'countdownPulse 0.8s ease-out',
-        shimmer: 'shimmer 2s linear infinite',
-        'gentle-pulse': 'gentlePulse 2s ease-in-out infinite',
-        ripple: 'ripple 3s ease-out infinite',
         'fade-up': 'fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both',
         'fade-up-delay-1': 'fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both',
         'fade-up-delay-2': 'fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both',
         'fade-up-delay-3': 'fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both',
         'fade-in': 'fadeIn 0.4s ease-out both',
         'subtle-scale': 'subtleScale 0.5s ease-out both',
+        ripple: 'ripple 3s ease-out infinite',
       },
     },
   },

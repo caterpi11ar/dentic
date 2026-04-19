@@ -38,12 +38,12 @@ export default function BrushActiveState({ session, stepPrompt, onPause }: Brush
       </View>
 
       <View className="flex-1 min-h-0 overflow-hidden px-1 pt-1">
-        <View className="h-full min-h-0 flex flex-col items-center gap-2.5 animate-slide-up motion-reduce:animate-none">
+        <View className="h-full min-h-0 flex flex-col items-center gap-2.5 animate-fade-up motion-reduce:animate-none">
           <BrushTimer seconds={session.stepTimeLeft} stepDuration={session.stepDuration} />
           {/* key 触发步骤切换时卡片重新挂载 → 入场动画 */}
           <View
             key={session.currentStepIndex}
-            className="w-full rounded-anthropic border border-line bg-primary-light px-4 py-3.5 animate-slide-up motion-reduce:animate-none"
+            className="w-full rounded-anthropic border border-line bg-primary-light/80 px-4 py-3.5 animate-fade-up motion-reduce:animate-none"
           >
             <Text className="text-paragraph-md font-medium text-content leading-relaxed">{stepPrompt}</Text>
             {/* 下一步提示 */}
@@ -56,7 +56,7 @@ export default function BrushActiveState({ session, stepPrompt, onPause }: Brush
             <View
               role="button"
               hoverClass="none"
-              className="size-12 rounded-full bg-surface-white/95 shadow-card flex items-center justify-center active:scale-[0.96] transition-transform"
+              className="size-12 rounded-full bg-surface-white border border-line flex items-center justify-center active:scale-[0.96] transition-transform"
               onClick={onPause}
               aria-label={isPaused ? '继续刷牙' : '暂停刷牙'}
             >

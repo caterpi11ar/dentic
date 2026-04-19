@@ -12,7 +12,7 @@ export default function BrushCountdownOverlay({ remaining }: BrushCountdownOverl
     >
       <Text
         key={remaining}
-        className="text-countdown font-heading font-medium animate-countdown-pulse motion-reduce:animate-none text-content"
+        className="text-countdown font-heading font-medium animate-subtle-scale motion-reduce:animate-none text-content"
       >
         {remaining}
       </Text>

@@ -5,15 +5,15 @@ import { Image, Text, View } from '@tarojs/components'
 import { useDidShow } from '@tarojs/taro'
 import { useEffect, useState } from 'react'
 import iconEmpty from '@/assets/icons/icon-empty.svg'
-import iconMedal1 from '@/assets/icons/icon-medal-1.svg'
-import iconMedal2 from '@/assets/icons/icon-medal-2.svg'
-import iconMedal3 from '@/assets/icons/icon-medal-3.svg'
 import AvatarImage from '@/components/AvatarImage'
 import InPageTabBar from '@/components/InPageTabBar'
 import PageLayout from '@/components/PageLayout'
 import { Card, CardContent } from '@/components/ui/Card'
 import { cn } from '@/components/ui/cn'
+import { SkeletonRow } from '@/components/ui/LoadingSkeleton'
 import PageHeader from '@/components/ui/PageHeader'
+import Section from '@/components/ui/Section'
+import StatRow from '@/components/ui/StatRow'
 import Tabs from '@/components/ui/Tabs'
 import { trackEvent } from '@/services/analytics'
 import { getLeaderboard } from '@/services/api/rankApi'
@@ -34,14 +34,14 @@ const PERIOD_LABELS: Record<RankPeriodType, string> = {
   streak: '连续打卡',
 }
 
-function getRankIcon(rank: number): string | null {
+function getRankClass(rank: number): string {
   if (rank === 1)
-    return iconMedal1
+    return 'text-display-sm font-heading font-medium text-primary'
   if (rank === 2)
-    return iconMedal2
+    return 'text-display-sm font-heading font-medium text-content'
   if (rank === 3)
-    return iconMedal3
-  return null
+    return 'text-display-sm font-heading font-medium text-content-secondary'
+  return 'text-paragraph-sm font-body font-medium text-content-tertiary'
 }
 
 export default function RankPage() {
@@ -100,38 +100,20 @@ export default function RankPage() {
 
       {/* 我的排名卡 */}
       {myRank && (
-        <Card className="mt-page-gap">
-          <CardContent variant="dense">
-            <View className="flex items-center justify-between">
-              <View>
-                <Text className="text-label-xs uppercase text-content-tertiary">
-                  我的排名
-                </Text>
-                <Text className="mt-1 block text-display-sm font-heading font-bold text-primary">
-                  #
-                  {myRank.rank}
-                </Text>
-              </View>
-              <View className="text-right">
-                <Text className="text-label-xs uppercase text-content-tertiary">
-                  {PERIOD_LABELS[periodType]}
-                </Text>
-                <Text className="mt-1 block text-paragraph-md font-body font-bold tabular-nums text-content-secondary">
-                  {myRank.score}
-                  {unit}
-                </Text>
-              </View>
-            </View>
-          </CardContent>
-        </Card>
+        <Section variant="group" label="我的排名" className="mt-page-gap">
+          <View className="flex items-end justify-between">
+            <StatRow label="排名" value={`#${myRank.rank}`} tone="primary" />
+            <StatRow label={PERIOD_LABELS[periodType]} value={myRank.score} unit={unit} />
+          </View>
+        </Section>
       )}
 
       {/* 排行列表 */}
       <View className="mt-page-gap flex-1 min-h-0 overflow-y-auto">
         {loading ? (
-          <View className="flex flex-col gap-3 p-4">
-            {[1, 2, 3].map(i => (
-              <View key={i} className="h-14 rounded-anthropic bg-line animate-shimmer" />
+          <View className="divide-y divide-line border-y border-line">
+            {[1, 2, 3, 4, 5].map(i => (
+              <SkeletonRow key={i} />
             ))}
           </View>
         ) : error ? (
@@ -150,63 +132,56 @@ export default function RankPage() {
             </CardContent>
           </Card>
         ) : (
-          <Card>
-            <CardContent variant="flush">
-              {list.map((item) => {
-                const medal = getRankIcon(item.rank)
-                return (
-                  <View
-                    key={item.openId}
-                    className={cn(
-                      'flex items-center gap-3 px-4 py-3 border-b border-line last:border-b-0 transition-colors duration-200 ease-out',
-                      item.isMe ? 'bg-primary-light/55' : 'bg-surface-white',
-                    )}
-                  >
-                    {/* 排名 */}
-                    <View className="w-8 flex items-center justify-center flex-shrink-0">
-                      {medal ? (
-                        <Image src={medal} className="size-6" mode="aspectFit" />
-                      ) : (
-                        <Text className="font-body font-medium text-content-tertiary">
-                          {item.rank}
-                        </Text>
-                      )}
-                    </View>
-
-                    {/* 头像 */}
-                    <View className="size-9 rounded-full bg-primary-light flex items-center justify-center flex-shrink-0 overflow-hidden">
-                      {item.avatar ? (
-                        <AvatarImage src={item.avatar} className="size-9 rounded-full" mode="aspectFill" />
-                      ) : (
-                        <Text className="text-paragraph-sm font-body font-semibold text-primary">
-                          {item.nickname.slice(0, 1) || '?'}
-                        </Text>
-                      )}
-                    </View>
-
-                    {/* 昵称 */}
-                    <View className="flex-1 min-w-0">
-                      <Text
-                        className={cn(
-                          'text-paragraph-sm font-body truncate',
-                          item.isMe ? 'text-primary font-medium' : 'text-content',
-                        )}
-                      >
-                        {item.nickname}
-                        {item.isMe && ' (我)'}
-                      </Text>
-                    </View>
-
-                    {/* 分数 */}
-                    <Text className="text-paragraph-sm font-body font-bold tabular-nums text-content-secondary flex-shrink-0">
-                      {item.score}
-                      {unit}
+          <View className="divide-y divide-line border-y border-line">
+            {list.map((item) => {
+              return (
+                <View
+                  key={item.openId}
+                  className={cn(
+                    'flex items-center gap-3 px-5 py-4 min-h-14 bg-surface-white transition-colors duration-200 ease-out',
+                    item.isMe && 'relative pl-[18px] before:absolute before:left-0 before:top-3 before:bottom-3 before:w-[2px] before:bg-primary',
+                  )}
+                >
+                  {/* 排名 */}
+                  <View className="w-8 flex items-baseline justify-center flex-shrink-0">
+                    <Text className={cn('tabular-nums leading-none', getRankClass(item.rank))}>
+                      {item.rank}
                     </Text>
                   </View>
-                )
-              })}
-            </CardContent>
-          </Card>
+
+                  {/* 头像 */}
+                  <View className="size-9 rounded-full bg-primary-light flex items-center justify-center flex-shrink-0 overflow-hidden">
+                    {item.avatar ? (
+                      <AvatarImage src={item.avatar} className="size-9 rounded-full" mode="aspectFill" />
+                    ) : (
+                      <Text className="text-paragraph-sm font-body font-semibold text-primary">
+                        {item.nickname.slice(0, 1) || '?'}
+                      </Text>
+                    )}
+                  </View>
+
+                  {/* 昵称 */}
+                  <View className="flex-1 min-w-0">
+                    <Text
+                      className={cn(
+                        'text-paragraph-sm font-body truncate block',
+                        item.isMe ? 'text-primary font-semibold' : 'text-content',
+                      )}
+                    >
+                      {item.nickname}
+                      {item.isMe && ' (我)'}
+                    </Text>
+                  </View>
+
+                  {/* 分数 */}
+                  <Text className="text-paragraph-sm font-body font-semibold tabular-nums text-content-secondary flex-shrink-0">
+                    {item.score}
+                    {unit}
+                  </Text>
+                </View>
+              )
+            })}
+          </View>
         )}
       </View>
 

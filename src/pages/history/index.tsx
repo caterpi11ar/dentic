@@ -9,6 +9,7 @@ import InPageTabBar from '@/components/InPageTabBar'
 import PageLayout from '@/components/PageLayout'
 import { Card, CardContent } from '@/components/ui/Card'
 import PageHeader from '@/components/ui/PageHeader'
+import StatRow from '@/components/ui/StatRow'
 import { getBusinessAnchorDate, getBusinessDate } from '@/services/dateBoundary'
 import { getCurrentStreak, getTotalBrushedDays } from '@/services/recordStatsService'
 import { generateShareMessage } from '@/services/share'
@@ -142,19 +143,10 @@ export default function HistoryPage() {
     <PageLayout>
       <PageHeader title="历史" />
 
-      <View className="flex items-center gap-3">
-        <Text className="text-paragraph-sm font-body font-semibold tabular-nums text-primary">
-          {streak}
-          <Text className="text-label-xs text-content-tertiary ml-0.5">天连续</Text>
-        </Text>
-        <Text className="text-paragraph-sm font-body font-semibold tabular-nums text-content">
-          {totalDays}
-          <Text className="text-label-xs text-content-tertiary ml-0.5">天累计</Text>
-        </Text>
-        <Text className="text-paragraph-sm font-body font-semibold tabular-nums text-primary">
-          {monthRate}
-          <Text className="text-label-xs text-content-tertiary ml-0.5">%本月</Text>
-        </Text>
+      <View className="flex items-start gap-6">
+        <StatRow label="连续" value={streak} unit="天" tone="primary" />
+        <StatRow label="累计" value={totalDays} unit="天" />
+        <StatRow label="本月" value={monthRate} unit="%" tone="primary" />
       </View>
 
       <View className="mt-page-gap flex-1 min-h-0 overflow-y-auto">
@@ -188,7 +180,7 @@ export default function HistoryPage() {
                 {(['morning', 'evening'] as const).map(session => (
                   <View
                     key={session}
-                    className="rounded-anthropic-sm border border-line bg-primary-light/70 px-3 py-2.5 flex items-center justify-between"
+                    className="rounded-anthropic-sm border border-line bg-surface-white px-3 py-2.5 flex items-center justify-between"
                   >
                     <View className="flex items-center gap-1.5">
                       <Image src={SESSION_ICONS[session]} className="size-4" mode="aspectFit" />
@@ -196,7 +188,7 @@ export default function HistoryPage() {
                         {SESSION_LABELS[session]}
                       </Text>
                     </View>
-                    <Text className="text-paragraph-md font-body font-bold tabular-nums text-primary ml-2">
+                    <Text className="text-paragraph-md font-body font-semibold tabular-nums text-content ml-2">
                       {selectedTimes[session]}
                     </Text>
                   </View>

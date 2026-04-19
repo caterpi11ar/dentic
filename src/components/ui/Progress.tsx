@@ -31,9 +31,9 @@ export default function Progress({
       aria-label={label || '进度'}
     >
       {label ? <Text className="text-label-xs text-content/40">{label}</Text> : null}
-      <View className={cn('mt-2 w-full h-1 rounded-full bg-content/[0.06] overflow-hidden', trackClassName)}>
+      <View className={cn('mt-2 w-full h-[2px] rounded-full bg-line overflow-hidden', trackClassName)}>
         <View
-          className={cn('h-full rounded-full bg-primary transition-[width] duration-300 ease-out', indicatorClassName)}
+          className={cn('h-full rounded-full bg-primary transition-[width] duration-200 ease-out', indicatorClassName)}
           style={{ width: `${pct}%` }}
         />
       </View>

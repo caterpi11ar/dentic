@@ -45,7 +45,7 @@ export default function BrushCompletedState({
   const nextPrompt = getNextPrompt(dailyStatus)
 
   return (
-    <View className="flex-1 flex flex-col items-center justify-center animate-fade-scale-in motion-reduce:animate-none">
+    <View className="flex-1 flex flex-col items-center justify-center animate-subtle-scale motion-reduce:animate-none">
       {/* 对勾 */}
       <View className="size-16 rounded-full bg-primary flex items-center justify-center mb-5">
         <Image src={iconCheck} className="size-8" mode="aspectFit" />

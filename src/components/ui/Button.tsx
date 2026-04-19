@@ -26,10 +26,10 @@ const VARIANT_CLASS: Record<ButtonVariant, string> = {
 }
 
 const SIZE_CLASS: Record<ButtonSize, string> = {
-  sm: 'min-h-9 rounded-anthropic-sm px-3.5 text-paragraph-sm',
-  md: 'min-h-11 rounded-anthropic px-5 text-paragraph-sm',
-  lg: 'min-h-[3.25rem] rounded-anthropic px-6 text-paragraph-md',
-  icon: 'size-10 min-h-10 min-w-10 rounded-anthropic p-0',
+  sm: 'min-h-9 rounded-anthropic px-3.5 text-paragraph-sm',
+  md: 'min-h-10 rounded-anthropic px-4 text-paragraph-sm',
+  lg: 'min-h-12 rounded-anthropic px-6 text-paragraph-md',
+  icon: 'size-9 min-h-9 min-w-9 rounded-anthropic p-0',
 }
 
 export default function Button({

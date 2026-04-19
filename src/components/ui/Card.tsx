@@ -21,8 +21,8 @@ interface CardTextProps extends PropsWithChildren {
 }
 
 const cardContentPadding: Record<NonNullable<CardContentProps['variant']>, string> = {
-  default: 'px-5 py-4',
-  dense: 'px-4 py-3.5',
+  default: 'px-6 py-5',
+  dense: 'px-5 py-4',
   flush: 'p-0',
 }
 
@@ -41,7 +41,6 @@ export function Card({
       )}
       style={style}
     >
-      <View className="pointer-events-none absolute inset-x-0 top-0 h-px bg-surface-white/80" />
       <View className="relative">
         {children}
       </View>
@@ -63,7 +62,7 @@ export function CardFooter({ className, children }: CardSectionProps) {
 
 export function CardTitle({ className, children }: CardTextProps) {
   return (
-    <Text className={cn('text-paragraph-md font-heading font-medium tracking-tight text-content', className)}>
+    <Text className={cn('text-paragraph-md font-body font-semibold tracking-tight text-content', className)}>
       {children}
     </Text>
   )
