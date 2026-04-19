@@ -7,6 +7,9 @@ import Calendar from '@/components/Calendar'
 import InPageTabBar from '@/components/InPageTabBar'
 import PageLayout from '@/components/PageLayout'
 import Button from '@/components/ui/Button'
+import { Card, CardContent } from '@/components/ui/Card'
+import PageHeader from '@/components/ui/PageHeader'
+import Section from '@/components/ui/Section'
 import Tabs from '@/components/ui/Tabs'
 import { getBusinessAnchorDate, getBusinessDate } from '@/services/dateBoundary'
 import { applyLightThemeToChrome } from '@/services/theme'
@@ -53,7 +56,7 @@ function AvatarStack({
             {m.avatar
               ? <AvatarImage src={m.avatar} className="size-9 rounded-full" mode="aspectFill" />
               : (
-                  <Text className="text-label-xs font-heading font-semibold text-primary">
+                  <Text className="text-label-xs font-body font-semibold text-primary">
                     {m.nickname.slice(0, 1)}
                   </Text>
                 )}
@@ -117,7 +120,7 @@ function StatusGroup({
     ? 'border-success/20'
     : variant === 'warning'
       ? 'border-warning/20'
-      : 'border-line'
+      : undefined
 
   const labelClass = variant === 'success'
     ? 'text-success'
@@ -126,12 +129,14 @@ function StatusGroup({
       : 'text-content-tertiary'
 
   return (
-    <View className={`rounded-anthropic border ${borderClass} bg-surface-white/80 px-4 py-3.5`}>
-      <Text className={`text-label-sm font-heading font-semibold ${labelClass} mb-2.5 block`}>
-        {label}
-      </Text>
-      <AvatarStack members={members} expanded={expanded} onToggle={onToggle} />
-    </View>
+    <Card className={borderClass}>
+      <CardContent variant="dense">
+        <Text className={`text-label-sm font-body font-semibold ${labelClass} mb-2.5 block`}>
+          {label}
+        </Text>
+        <AvatarStack members={members} expanded={expanded} onToggle={onToggle} />
+      </CardContent>
+    </Card>
   )
 }
 
@@ -212,16 +217,16 @@ function OverviewTab({ dashboard }: { dashboard: FamilyDashboard }) {
   }, [selectedDate])
 
   return (
-    <View className="mt-6">
+    <View className="mt-page-gap">
       {/* 家庭连续天数 */}
-      <View className="flex items-baseline gap-2 mb-6">
-        <Text className="text-label-sm font-body font-semibold tracking-wide text-content-tertiary uppercase">
+      <View className="flex items-baseline gap-2 mb-page-gap">
+        <Text className="text-label-sm font-body font-semibold text-content-tertiary uppercase">
           家庭连续
         </Text>
         <Text className="text-display-md leading-none font-heading font-medium tabular-nums text-primary">
           {dashboard.streak}
         </Text>
-        <Text className="text-label-sm font-body font-semibold tracking-wide text-content-tertiary uppercase">
+        <Text className="text-label-sm font-body font-semibold text-content-tertiary uppercase">
           天
         </Text>
       </View>
@@ -244,8 +249,8 @@ function OverviewTab({ dashboard }: { dashboard: FamilyDashboard }) {
 
       {/* 选中日期 → 头像堆叠分组 */}
       {selectedDate && selectedDayMembers && (
-        <View className="mt-4">
-          <Text className="text-label-sm font-heading font-semibold text-content-secondary mb-3 block">
+        <View className="mt-page-gap">
+          <Text className="text-label-sm font-body font-semibold text-content-secondary mb-3 block">
             {selectedDateLabel}
             {' '}
             完成情况
@@ -270,7 +275,7 @@ function OverviewTab({ dashboard }: { dashboard: FamilyDashboard }) {
       )}
 
       {!selectedDate && (
-        <View className="mt-4 flex justify-center">
+        <View className="mt-page-gap flex justify-center">
           <Text className="text-paragraph-sm text-content-tertiary">点击日期查看成员完成情况</Text>
         </View>
       )}
@@ -330,15 +335,13 @@ export default function FamilyPage() {
   if (!family && !loading) {
     return (
       <PageLayout scroll>
-        <Text className="text-display-md font-heading font-medium tracking-tight text-content">
-          家庭
-        </Text>
+        <PageHeader title="家庭" />
 
-        <View className="mt-16 flex flex-col items-center gap-6">
+        <View className="mt-section-gap flex flex-col items-center gap-6">
           <View className="size-16 rounded-full bg-primary-light flex items-center justify-center">
             <Text className="text-display-md font-heading text-primary">家</Text>
           </View>
-          <Text className="text-paragraph-md font-heading text-content-secondary text-center leading-relaxed px-4">
+          <Text className="text-paragraph-md font-body text-content-secondary text-center leading-relaxed px-4">
             创建家庭后，可以邀请家人一起
             {'\n'}
             关注孩子的刷牙情况
@@ -360,10 +363,8 @@ export default function FamilyPage() {
   if (loading && !family) {
     return (
       <PageLayout scroll>
-        <Text className="text-display-md font-heading font-medium tracking-tight text-content">
-          家庭
-        </Text>
-        <View className="mt-16 flex justify-center">
+        <PageHeader title="家庭" />
+        <View className="mt-section-gap flex justify-center">
           <Text className="text-paragraph-sm text-content-tertiary">加载中...</Text>
         </View>
         <InPageTabBar current="family" />
@@ -374,13 +375,10 @@ export default function FamilyPage() {
   // ── 已有家庭 ──
   return (
     <PageLayout scroll>
-      {/* 标题 */}
-      <Text className="text-display-md font-heading font-medium tracking-tight text-content">
-        {family!.name}
-      </Text>
+      <PageHeader title={family!.name} />
 
       {/* Tab 切换 */}
-      <View className="mt-6">
+      <View>
         <Tabs value={activeTab} options={TAB_OPTIONS} onValueChange={setActiveTab} className="w-full" />
       </View>
 
@@ -390,40 +388,42 @@ export default function FamilyPage() {
       )}
 
       {activeTab === 'overview' && !dashboard && (
-        <View className="mt-10 flex justify-center">
+        <View className="mt-section-gap flex justify-center">
           <Text className="text-paragraph-sm text-content-tertiary">加载看板数据中...</Text>
         </View>
       )}
 
       {/* ── Tab: 成员 ── */}
       {activeTab === 'members' && (
-        <View className="mt-6">
+        <View className="mt-page-gap">
           <View className="flex flex-col gap-3">
             {family!.members.map(member => (
-              <View key={member.openId} className="flex items-center gap-3 rounded-anthropic border border-line bg-surface-white/80 px-4 py-3.5">
-                <View className="size-10 rounded-full bg-primary-light flex items-center justify-center overflow-hidden flex-shrink-0">
-                  {member.avatar ? (
-                    <AvatarImage src={member.avatar} className="size-10 rounded-full" mode="aspectFill" />
-                  ) : (
-                    <Text className="text-paragraph-sm font-heading font-semibold text-primary">
-                      {member.nickname.slice(0, 1)}
+              <Card key={member.openId}>
+                <CardContent variant="dense" className="flex items-center gap-3">
+                  <View className="size-10 rounded-full bg-primary-light flex items-center justify-center overflow-hidden flex-shrink-0">
+                    {member.avatar ? (
+                      <AvatarImage src={member.avatar} className="size-10 rounded-full" mode="aspectFill" />
+                    ) : (
+                      <Text className="text-paragraph-sm font-body font-semibold text-primary">
+                        {member.nickname.slice(0, 1)}
+                      </Text>
+                    )}
+                  </View>
+                  <View className="flex-1 min-w-0">
+                    <Text className="text-paragraph-sm font-body font-semibold text-content truncate block">
+                      {member.nickname}
                     </Text>
-                  )}
-                </View>
-                <View className="flex-1 min-w-0">
-                  <Text className="text-paragraph-sm font-heading font-semibold text-content truncate block">
-                    {member.nickname}
-                  </Text>
-                  <Text className="text-label-xs font-body text-content-tertiary mt-0.5 block">
-                    {member.role === 'creator' ? '创建者' : '成员'}
-                  </Text>
-                </View>
-              </View>
+                    <Text className="text-label-xs font-body text-content-tertiary mt-0.5 block">
+                      {member.role === 'creator' ? '创建者' : '成员'}
+                    </Text>
+                  </View>
+                </CardContent>
+              </Card>
             ))}
           </View>
 
           {family!.members.length < 2 && (
-            <View className="mt-6">
+            <View className="mt-page-gap">
               <Button
                 openType="share"
                 aria-label="邀请家人加入"
@@ -464,7 +464,7 @@ export default function FamilyPage() {
 
       {/* ── Tab: 互动 ── */}
       {activeTab === 'interactions' && (
-        <View className="mt-6">
+        <View className="mt-page-gap">
           <View className="flex gap-3">
             <View
               className="flex-1 rounded-anthropic border border-line bg-surface-white/80 py-4 flex flex-col items-center gap-1.5 active:opacity-80"
@@ -473,7 +473,7 @@ export default function FamilyPage() {
               aria-label="鼓励"
             >
               <View className="size-10 rounded-full bg-success-light flex items-center justify-center">
-                <Text className="text-paragraph-md font-heading font-semibold text-success">赞</Text>
+                <Text className="text-paragraph-md font-body font-semibold text-success">赞</Text>
               </View>
               <Text className="text-label-xs font-body text-content-secondary">鼓励</Text>
             </View>
@@ -484,17 +484,14 @@ export default function FamilyPage() {
               aria-label="提醒刷牙"
             >
               <View className="size-10 rounded-full bg-warning-light flex items-center justify-center">
-                <Text className="text-paragraph-md font-heading font-semibold text-warning">!</Text>
+                <Text className="text-paragraph-md font-body font-semibold text-warning">!</Text>
               </View>
               <Text className="text-label-xs font-body text-content-secondary">提醒刷牙</Text>
             </View>
           </View>
 
           {interactions.length > 0 ? (
-            <View className="mt-6">
-              <Text className="text-label-sm font-heading font-semibold text-content-secondary mb-3 block">
-                今日动态
-              </Text>
+            <Section variant="group" label="今日动态" className="mt-section-gap">
               {/* 时间轴 */}
               <View className="relative pl-5">
                 {/* 竖线 */}
@@ -523,9 +520,9 @@ export default function FamilyPage() {
                   })}
                 </View>
               </View>
-            </View>
+            </Section>
           ) : (
-            <View className="mt-10 flex justify-center">
+            <View className="mt-section-gap flex justify-center">
               <Text className="text-paragraph-sm text-content-tertiary">今天还没有互动，发个鼓励吧</Text>
             </View>
           )}

@@ -8,6 +8,7 @@ import Calendar from '@/components/Calendar'
 import InPageTabBar from '@/components/InPageTabBar'
 import PageLayout from '@/components/PageLayout'
 import { Card, CardContent } from '@/components/ui/Card'
+import PageHeader from '@/components/ui/PageHeader'
 import { getBusinessAnchorDate, getBusinessDate } from '@/services/dateBoundary'
 import { getCurrentStreak, getTotalBrushedDays } from '@/services/recordStatsService'
 import { generateShareMessage } from '@/services/share'
@@ -139,11 +140,9 @@ export default function HistoryPage() {
 
   return (
     <PageLayout>
-      <Text className="text-display-md font-body font-medium tracking-tight text-content">
-        历史
-      </Text>
+      <PageHeader title="历史" />
 
-      <View className="mt-3 flex items-center gap-3">
+      <View className="flex items-center gap-3">
         <Text className="text-paragraph-sm font-body font-semibold tabular-nums text-primary">
           {streak}
           <Text className="text-label-xs text-content-tertiary ml-0.5">天连续</Text>
@@ -158,7 +157,7 @@ export default function HistoryPage() {
         </Text>
       </View>
 
-      <View className="mt-4 flex-1 min-h-0 overflow-y-auto">
+      <View className="mt-page-gap flex-1 min-h-0 overflow-y-auto">
         <Calendar
           year={year}
           month={month}
@@ -174,12 +173,12 @@ export default function HistoryPage() {
           hideStats
         />
 
-        <Card className="mt-5">
-          <CardContent className="p-4">
+        <Card className="mt-page-gap">
+          <CardContent variant="dense">
             <View className="flex items-baseline justify-between">
-              <Text className="text-label-sm font-body font-semibold tracking-[0.08em] uppercase text-content-tertiary">当天记录</Text>
+              <Text className="text-label-sm uppercase text-content-tertiary">当天记录</Text>
               {selectedDate && (
-                <Text className="text-paragraph-sm font-heading text-content-secondary">
+                <Text className="text-paragraph-sm font-body text-content-secondary">
                   {formatSelectedDate(selectedDate)}
                 </Text>
               )}
@@ -193,11 +192,11 @@ export default function HistoryPage() {
                   >
                     <View className="flex items-center gap-1.5">
                       <Image src={SESSION_ICONS[session]} className="size-4" mode="aspectFit" />
-                      <Text className="text-label-xs font-heading font-semibold tracking-[0.08em] uppercase text-content-tertiary">
+                      <Text className="text-label-xs uppercase text-content-tertiary">
                         {SESSION_LABELS[session]}
                       </Text>
                     </View>
-                    <Text className="text-paragraph-md font-heading font-bold tabular-nums text-primary ml-2">
+                    <Text className="text-paragraph-md font-body font-bold tabular-nums text-primary ml-2">
                       {selectedTimes[session]}
                     </Text>
                   </View>

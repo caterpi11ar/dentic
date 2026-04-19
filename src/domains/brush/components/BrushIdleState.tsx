@@ -37,11 +37,11 @@ function FamilyProgress({ familyInfo, dashboard }: { familyInfo: FamilyInfo, das
       <View className="my-5 h-px bg-line" />
       <View className="animate-fade-up-delay-3 motion-reduce:animate-none">
         <View className="flex items-center justify-between">
-          <Text className="text-label-sm font-body font-semibold tracking-wide text-content-tertiary uppercase">
+          <Text className="text-label-sm font-body font-semibold text-content-tertiary uppercase">
             {familyInfo.name}
           </Text>
           <View className="flex items-baseline gap-1.5">
-            <Text className="text-paragraph-sm font-heading font-medium tabular-nums text-primary">
+            <Text className="text-paragraph-sm font-body font-medium tabular-nums text-primary">
               {dashboard.streak}
             </Text>
             <Text className="text-label-xs font-body text-content-tertiary">天连续</Text>
@@ -62,7 +62,7 @@ function FamilyProgress({ familyInfo, dashboard }: { familyInfo: FamilyInfo, das
                   {m.avatar
                     ? <AvatarImage src={m.avatar} className="size-7 rounded-full" mode="aspectFill" />
                     : (
-                        <Text className="text-[10px] font-heading font-semibold text-primary">
+                        <Text className="text-[10px] font-body font-semibold text-primary">
                           {m.nickname.slice(0, 1)}
                         </Text>
                       )}
@@ -90,7 +90,7 @@ function FamilyProgress({ familyInfo, dashboard }: { familyInfo: FamilyInfo, das
                   {m.avatar
                     ? <AvatarImage src={m.avatar} className="size-7 rounded-full" mode="aspectFill" />
                     : (
-                        <Text className="text-[10px] font-heading font-semibold text-content-tertiary">
+                        <Text className="text-[10px] font-body font-semibold text-content-tertiary">
                           {m.nickname.slice(0, 1)}
                         </Text>
                       )}
@@ -128,7 +128,7 @@ export default function BrushIdleState({
       {/* ── 日期 + 天气 ── */}
       <View className="pt-4 animate-fade-up motion-reduce:animate-none">
         <View className="flex items-baseline gap-3">
-          <Text className="text-paragraph-sm font-body font-semibold tracking-[0.12em] uppercase text-content-secondary">
+          <Text className="text-label-sm font-body font-semibold uppercase text-content-secondary">
             {todayHeading}
           </Text>
           {weather && (
@@ -201,13 +201,13 @@ export default function BrushIdleState({
       {/* ── 模块 C：连续打卡 ── */}
       <View className="animate-fade-up-delay-3 motion-reduce:animate-none">
         <View className="flex items-baseline gap-2">
-          <Text className="text-label-sm font-body font-semibold tracking-wide text-content-tertiary uppercase">
+          <Text className="text-label-sm font-body font-semibold text-content-tertiary uppercase">
             连续
           </Text>
           <Text className="text-display-md leading-none font-heading font-medium tabular-nums text-primary">
             {streak}
           </Text>
-          <Text className="text-label-sm font-body font-semibold tracking-wide text-content-tertiary uppercase">
+          <Text className="text-label-sm font-body font-semibold text-content-tertiary uppercase">
             天
           </Text>
         </View>

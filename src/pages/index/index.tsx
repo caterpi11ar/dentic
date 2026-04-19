@@ -1,7 +1,6 @@
-import { View } from '@tarojs/components'
 import { showShareMenu, useDidShow, useShareAppMessage, useShareTimeline } from '@tarojs/taro'
 import InPageTabBar from '@/components/InPageTabBar'
-import { cn } from '@/components/ui/cn'
+import PageLayout from '@/components/PageLayout'
 import { MILESTONES } from '@/constants/brushing-steps'
 import BrushActiveState from '@/domains/brush/components/BrushActiveState'
 import BrushCompletedState from '@/domains/brush/components/BrushCompletedState'
@@ -9,7 +8,6 @@ import BrushCountdownOverlay from '@/domains/brush/components/BrushCountdownOver
 import BrushIdleState from '@/domains/brush/components/BrushIdleState'
 import { useBrushSession } from '@/domains/brush/hooks/useBrushSession'
 import { formatTodayHeading, getGreeting } from '@/domains/brush/utils'
-import { usePageTransition } from '@/motion'
 import { trackEvent } from '@/services/analytics'
 import { getBusinessAnchorDate } from '@/services/dateBoundary'
 import { generateShareMessage } from '@/services/share'
@@ -17,8 +15,6 @@ import { applyLightThemeToChrome } from '@/services/theme'
 import { familyStore } from '@/stores/family'
 
 export default function IndexPage() {
-  const pageTransition = usePageTransition()
-
   const {
     session,
     streak,
@@ -64,50 +60,44 @@ export default function IndexPage() {
   const isBrushingFlow = session.state !== 'idle' && session.state !== 'completed'
 
   return (
-    <View className="theme-page theme-day min-h-screen">
-      <View
-        className={cn(
-          'px-page-x pt-12 max-w-2xl mx-auto',
-          isBrushingFlow ? 'h-screen overflow-hidden flex flex-col' : 'min-h-screen pb-bottom-safe flex flex-col',
-          pageTransition.className,
-        )}
-        style={pageTransition.style}
-      >
-        {session.state === 'countdown' && (
-          <BrushCountdownOverlay remaining={session.countdownRemaining} />
-        )}
+    <PageLayout
+      scroll={!isBrushingFlow}
+      className={!isBrushingFlow ? 'flex flex-col' : undefined}
+    >
+      {session.state === 'countdown' && (
+        <BrushCountdownOverlay remaining={session.countdownRemaining} />
+      )}
 
-        {isIdle && (
-          <BrushIdleState
-            todayHeading={todayHeading}
-            greeting={greeting}
-            streak={streak}
-            dailyStatus={dailyStatus}
-            nextMilestone={nextMilestone}
-            milestoneProgress={milestoneProgress}
-            onStart={handleStart}
-          />
-        )}
+      {isIdle && (
+        <BrushIdleState
+          todayHeading={todayHeading}
+          greeting={greeting}
+          streak={streak}
+          dailyStatus={dailyStatus}
+          nextMilestone={nextMilestone}
+          milestoneProgress={milestoneProgress}
+          onStart={handleStart}
+        />
+      )}
 
-        {session.state === 'completed' ? (
-          <BrushCompletedState
-            completionMessage={completionMessage}
-            milestone={milestone}
-            elapsedTime={session.elapsedTime}
-            streak={streak}
-            dailyStatus={dailyStatus}
-            onReset={handleReset}
-          />
-        ) : session.state !== 'idle' ? (
-          <BrushActiveState
-            session={session}
-            stepPrompt={stepPrompt}
-            onPause={handlePause}
-          />
-        ) : null}
+      {session.state === 'completed' ? (
+        <BrushCompletedState
+          completionMessage={completionMessage}
+          milestone={milestone}
+          elapsedTime={session.elapsedTime}
+          streak={streak}
+          dailyStatus={dailyStatus}
+          onReset={handleReset}
+        />
+      ) : session.state !== 'idle' ? (
+        <BrushActiveState
+          session={session}
+          stepPrompt={stepPrompt}
+          onPause={handlePause}
+        />
+      ) : null}
 
-        <InPageTabBar current="brush" />
-      </View>
-    </View>
+      <InPageTabBar current="brush" />
+    </PageLayout>
   )
 }

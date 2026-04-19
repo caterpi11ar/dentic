@@ -42,7 +42,7 @@ export default function StepIndicator({ currentStep, totalSteps = TOTAL_STEPS }:
           /
           {totalSteps}
         </Text>
-        <Text className="text-paragraph-sm font-heading text-primary font-medium">{stepName}</Text>
+        <Text className="text-paragraph-sm font-body text-primary font-medium">{stepName}</Text>
       </View>
     </View>
   )

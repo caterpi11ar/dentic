@@ -13,6 +13,7 @@ import InPageTabBar from '@/components/InPageTabBar'
 import PageLayout from '@/components/PageLayout'
 import { Card, CardContent } from '@/components/ui/Card'
 import { cn } from '@/components/ui/cn'
+import PageHeader from '@/components/ui/PageHeader'
 import Tabs from '@/components/ui/Tabs'
 import { trackEvent } from '@/services/analytics'
 import { getLeaderboard } from '@/services/api/rankApi'
@@ -85,12 +86,10 @@ export default function RankPage() {
 
   return (
     <PageLayout>
-      <Text className="text-display-md font-body font-medium tracking-tight text-content">
-        排行榜
-      </Text>
+      <PageHeader title="排行榜" />
 
       {/* 榜单类型切换 */}
-      <View className="mt-6 flex justify-center">
+      <View className="flex justify-center">
         <Tabs
           value={periodType}
           options={RANK_TAB_OPTIONS}
@@ -101,11 +100,11 @@ export default function RankPage() {
 
       {/* 我的排名卡 */}
       {myRank && (
-        <Card className="mt-6">
-          <CardContent className="py-3.5">
+        <Card className="mt-page-gap">
+          <CardContent variant="dense">
             <View className="flex items-center justify-between">
               <View>
-                <Text className="text-label-xs font-heading font-semibold tracking-[0.08em] uppercase text-content-tertiary">
+                <Text className="text-label-xs uppercase text-content-tertiary">
                   我的排名
                 </Text>
                 <Text className="mt-1 block text-display-sm font-heading font-bold text-primary">
@@ -114,10 +113,10 @@ export default function RankPage() {
                 </Text>
               </View>
               <View className="text-right">
-                <Text className="text-label-xs font-heading font-semibold tracking-[0.08em] uppercase text-content-tertiary">
+                <Text className="text-label-xs uppercase text-content-tertiary">
                   {PERIOD_LABELS[periodType]}
                 </Text>
-                <Text className="mt-1 block text-paragraph-md font-heading font-bold tabular-nums text-content-secondary">
+                <Text className="mt-1 block text-paragraph-md font-body font-bold tabular-nums text-content-secondary">
                   {myRank.score}
                   {unit}
                 </Text>
@@ -128,7 +127,7 @@ export default function RankPage() {
       )}
 
       {/* 排行列表 */}
-      <View className="mt-6 flex-1 min-h-0 overflow-y-auto">
+      <View className="mt-page-gap flex-1 min-h-0 overflow-y-auto">
         {loading ? (
           <View className="flex flex-col gap-3 p-4">
             {[1, 2, 3].map(i => (
@@ -152,7 +151,7 @@ export default function RankPage() {
           </Card>
         ) : (
           <Card>
-            <CardContent className="p-0">
+            <CardContent variant="flush">
               {list.map((item) => {
                 const medal = getRankIcon(item.rank)
                 return (
@@ -179,7 +178,7 @@ export default function RankPage() {
                       {item.avatar ? (
                         <AvatarImage src={item.avatar} className="size-9 rounded-full" mode="aspectFill" />
                       ) : (
-                        <Text className="text-paragraph-sm font-heading font-semibold text-primary">
+                        <Text className="text-paragraph-sm font-body font-semibold text-primary">
                           {item.nickname.slice(0, 1) || '?'}
                         </Text>
                       )}
@@ -199,7 +198,7 @@ export default function RankPage() {
                     </View>
 
                     {/* 分数 */}
-                    <Text className="text-paragraph-sm font-heading font-bold tabular-nums text-content-secondary flex-shrink-0">
+                    <Text className="text-paragraph-sm font-body font-bold tabular-nums text-content-secondary flex-shrink-0">
                       {item.score}
                       {unit}
                     </Text>

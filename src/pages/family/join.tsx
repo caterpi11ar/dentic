@@ -5,6 +5,7 @@ import { useState } from 'react'
 import PageLayout from '@/components/PageLayout'
 import Button from '@/components/ui/Button'
 import { Card, CardContent } from '@/components/ui/Card'
+import PageHeader from '@/components/ui/PageHeader'
 import { getFamilyPreview } from '@/services/api/familyApi'
 import { familyStore } from '@/stores/family'
 
@@ -89,10 +90,8 @@ export default function FamilyJoinPage() {
   if (loading) {
     return (
       <PageLayout scroll>
-        <Text className="text-display-md font-heading font-medium tracking-tight text-content">
-          加入家庭
-        </Text>
-        <View className="mt-16 flex justify-center">
+        <PageHeader title="加入家庭" />
+        <View className="mt-section-gap flex justify-center">
           <Text className="text-paragraph-sm text-content-tertiary">加载中...</Text>
         </View>
       </PageLayout>
@@ -103,10 +102,8 @@ export default function FamilyJoinPage() {
   if (error || !preview) {
     return (
       <PageLayout scroll>
-        <Text className="text-display-md font-heading font-medium tracking-tight text-content">
-          加入家庭
-        </Text>
-        <View className="mt-16 flex flex-col items-center gap-6">
+        <PageHeader title="加入家庭" />
+        <View className="mt-section-gap flex flex-col items-center gap-6">
           <Text className="text-paragraph-md font-body text-content-tertiary">
             {error || '家庭不存在或已解散'}
           </Text>
@@ -125,13 +122,11 @@ export default function FamilyJoinPage() {
   // 正常展示
   return (
     <PageLayout scroll>
-      <Text className="text-display-md font-heading font-medium tracking-tight text-content">
-        加入家庭
-      </Text>
+      <PageHeader title="加入家庭" />
 
-      <Card className="mt-10">
-        <CardContent className="py-6">
-          <View className="flex flex-col items-center gap-4">
+      <Card className="mt-section-gap">
+        <CardContent>
+          <View className="flex flex-col items-center gap-4 py-2">
             <View className="size-16 rounded-full bg-primary-light flex items-center justify-center">
               <Text className="text-display-md font-heading text-primary">家</Text>
             </View>
@@ -153,7 +148,7 @@ export default function FamilyJoinPage() {
         </CardContent>
       </Card>
 
-      <View className="mt-10">
+      <View className="mt-section-gap">
         <Button
           onClick={handleJoin}
           disabled={joining}
@@ -163,7 +158,7 @@ export default function FamilyJoinPage() {
         </Button>
       </View>
 
-      <View className="mt-6">
+      <View className="mt-page-gap">
         <Button
           variant="ghost"
           onClick={() => Taro.redirectTo({ url: '/pages/index/index' }).catch(() => undefined)}

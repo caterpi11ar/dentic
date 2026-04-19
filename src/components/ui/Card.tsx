@@ -12,8 +12,18 @@ interface CardSectionProps extends PropsWithChildren {
   className?: string
 }
 
+interface CardContentProps extends CardSectionProps {
+  variant?: 'default' | 'dense' | 'flush'
+}
+
 interface CardTextProps extends PropsWithChildren {
   className?: string
+}
+
+const cardContentPadding: Record<NonNullable<CardContentProps['variant']>, string> = {
+  default: 'px-5 py-4',
+  dense: 'px-4 py-3.5',
+  flush: 'p-0',
 }
 
 export function Card({
@@ -43,8 +53,8 @@ export function CardHeader({ className, children }: CardSectionProps) {
   return <View className={cn('px-5 pt-5 pb-2', className)}>{children}</View>
 }
 
-export function CardContent({ className, children }: CardSectionProps) {
-  return <View className={cn('px-5 py-4', className)}>{children}</View>
+export function CardContent({ className, children, variant = 'default' }: CardContentProps) {
+  return <View className={cn(cardContentPadding[variant], className)}>{children}</View>
 }
 
 export function CardFooter({ className, children }: CardSectionProps) {

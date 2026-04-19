@@ -8,7 +8,10 @@ import iconVoice from '@/assets/icons/icon-voice.svg'
 import AvatarImage from '@/components/AvatarImage'
 import InPageTabBar from '@/components/InPageTabBar'
 import PageLayout from '@/components/PageLayout'
+import Button from '@/components/ui/Button'
 import { Card, CardContent } from '@/components/ui/Card'
+import PageHeader from '@/components/ui/PageHeader'
+import Section from '@/components/ui/Section'
 import Switch from '@/components/ui/Switch'
 import { applyLightThemeToChrome } from '@/services/theme'
 import { useProfileStore } from '@/stores/profile'
@@ -92,12 +95,10 @@ export default function ProfilePage() {
 
   return (
     <PageLayout scroll>
-      <Text className="text-display-md font-body font-medium tracking-tight text-content">
-        我的
-      </Text>
+      <PageHeader title="我的" />
 
       {/* ── 用户信息卡片 ── */}
-      <Card className="mt-6">
+      <Card>
         <CardContent>
           {authorized && !showNicknameInput ? (
           /* 已授权：展示头像和昵称，点击可重新设置 */
@@ -111,13 +112,13 @@ export default function ProfilePage() {
                   {avatar ? (
                     <AvatarImage src={avatar} className="size-14 rounded-full" mode="aspectFill" />
                   ) : (
-                    <Text className="text-xl font-heading font-semibold text-primary">
+                    <Text className="text-xl font-body font-semibold text-primary">
                       {nickname.slice(0, 1)}
                     </Text>
                   )}
                 </View>
                 <View className="flex-1 min-w-0 text-left">
-                  <Text className="text-paragraph-md font-heading font-semibold text-content truncate">
+                  <Text className="text-paragraph-md font-body font-semibold text-content truncate">
                     {nickname}
                   </Text>
                   <Text className="mt-0.5 block text-label-xs text-content-disabled">
@@ -146,14 +147,14 @@ export default function ProfilePage() {
                 onConfirm={handleNicknameConfirm}
                 onBlur={handleNicknameConfirm}
               />
-              <View
-                className="rounded-anthropic bg-primary px-6 py-3 active:opacity-85"
-                role="button"
+              <Button
+                size="md"
+                fullWidth={false}
                 onClick={handleSaveNickname}
                 aria-label="确认昵称"
               >
-                <Text className="text-paragraph-sm font-heading font-semibold text-surface-white">确认</Text>
-              </View>
+                确认
+              </Button>
             </View>
           ) : (
           /* 未授权：展示授权入口 */
@@ -179,66 +180,61 @@ export default function ProfilePage() {
       </Card>
 
       {/* ── 声音与提醒 ── */}
-      <View className="mt-12 flex items-center gap-3">
-        <Text className="text-label-sm font-heading font-semibold tracking-[0.1em] uppercase text-content-tertiary shrink-0">
-          声音与提醒
-        </Text>
-        <View className="flex-1 h-px bg-line" />
-      </View>
+      <Section variant="group" label="声音与提醒" className="mt-section-gap">
+        <Card className="overflow-hidden">
+          <CardContent variant="flush" className="divide-y divide-line">
+            <View className="flex items-center justify-between gap-4 px-5 py-4">
+              <View className="flex items-start gap-3 flex-1 min-w-0">
+                <View className="size-9 rounded-anthropic-sm border border-warning/20 bg-warning-light/75 flex items-center justify-center">
+                  <Image src={iconBell} className="size-5 text-content-secondary" mode="aspectFit" />
+                </View>
+                <View className="flex-1 min-w-0">
+                  <Text className="block text-paragraph-sm font-body font-semibold text-content">刷牙提醒</Text>
+                  <Text className="block mt-1 text-label-sm text-content-tertiary">
+                    每天
+                    {reminderTime}
+                    {' '}
+                    提醒你
+                  </Text>
+                </View>
+              </View>
+              <View className="shrink-0">
+                <Switch checked={reminderEnabled} onClick={handleReminderToggle} ariaLabel="刷牙提醒开关" />
+              </View>
+            </View>
 
-      <Card className="mt-5 overflow-hidden">
-        <CardContent className="p-0 divide-y divide-line">
-          <View className="flex items-center justify-between gap-4 px-5 py-4">
-            <View className="flex items-start gap-3 flex-1 min-w-0">
-              <View className="size-9 rounded-anthropic-sm border border-warning/20 bg-warning-light/75 flex items-center justify-center">
-                <Image src={iconBell} className="size-5 text-content-secondary" mode="aspectFit" />
+            <View className="flex items-center justify-between gap-4 px-5 py-4">
+              <View className="flex items-start gap-3 flex-1 min-w-0">
+                <View className="size-9 rounded-anthropic-sm border border-info/20 bg-info-light/80 flex items-center justify-center">
+                  <Image src={iconMusic} className="size-5 text-content-secondary" mode="aspectFit" />
+                </View>
+                <View className="flex-1 min-w-0">
+                  <Text className="block text-paragraph-sm font-body font-semibold text-content">步骤提示音</Text>
+                  <Text className="block mt-1 text-label-sm text-content-tertiary">步骤切换时播放提示音</Text>
+                </View>
               </View>
-              <View className="flex-1 min-w-0">
-                <Text className="block text-paragraph-sm font-heading font-semibold text-content">刷牙提醒</Text>
-                <Text className="block mt-1 text-label-sm text-content-tertiary">
-                  每天
-                  {reminderTime}
-                  {' '}
-                  提醒你
-                </Text>
+              <View className="shrink-0">
+                <Switch checked={soundEnabled} onClick={handleSoundToggle} ariaLabel="步骤提示音开关" />
               </View>
             </View>
-            <View className="shrink-0">
-              <Switch checked={reminderEnabled} onClick={handleReminderToggle} ariaLabel="刷牙提醒开关" />
-            </View>
-          </View>
 
-          <View className="flex items-center justify-between gap-4 px-5 py-4">
-            <View className="flex items-start gap-3 flex-1 min-w-0">
-              <View className="size-9 rounded-anthropic-sm border border-info/20 bg-info-light/80 flex items-center justify-center">
-                <Image src={iconMusic} className="size-5 text-content-secondary" mode="aspectFit" />
+            <View className="flex items-center justify-between gap-4 px-5 py-4">
+              <View className="flex items-start gap-3 flex-1 min-w-0">
+                <View className="size-9 rounded-anthropic-sm border border-success/20 bg-success-light/80 flex items-center justify-center">
+                  <Image src={iconVoice} className="size-5 text-content-secondary" mode="aspectFit" />
+                </View>
+                <View className="flex-1 min-w-0">
+                  <Text className="block text-paragraph-sm font-body font-semibold text-content">语音播报</Text>
+                  <Text className="block mt-1 text-label-sm text-content-tertiary">步骤切换时朗读提示</Text>
+                </View>
               </View>
-              <View className="flex-1 min-w-0">
-                <Text className="block text-paragraph-sm font-heading font-semibold text-content">步骤提示音</Text>
-                <Text className="block mt-1 text-label-sm text-content-tertiary">步骤切换时播放提示音</Text>
-              </View>
-            </View>
-            <View className="shrink-0">
-              <Switch checked={soundEnabled} onClick={handleSoundToggle} ariaLabel="步骤提示音开关" />
-            </View>
-          </View>
-
-          <View className="flex items-center justify-between gap-4 px-5 py-4">
-            <View className="flex items-start gap-3 flex-1 min-w-0">
-              <View className="size-9 rounded-anthropic-sm border border-success/20 bg-success-light/80 flex items-center justify-center">
-                <Image src={iconVoice} className="size-5 text-content-secondary" mode="aspectFit" />
-              </View>
-              <View className="flex-1 min-w-0">
-                <Text className="block text-paragraph-sm font-heading font-semibold text-content">语音播报</Text>
-                <Text className="block mt-1 text-label-sm text-content-tertiary">步骤切换时朗读提示</Text>
+              <View className="shrink-0">
+                <Switch checked={voiceEnabled} onClick={handleVoiceToggle} ariaLabel="语音播报开关" />
               </View>
             </View>
-            <View className="shrink-0">
-              <Switch checked={voiceEnabled} onClick={handleVoiceToggle} ariaLabel="语音播报开关" />
-            </View>
-          </View>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </Section>
 
       <InPageTabBar current="profile" />
     </PageLayout>

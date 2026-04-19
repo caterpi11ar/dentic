@@ -61,7 +61,7 @@ export default function BottomNav<T extends string>({ items, activeKey, onChange
             </View>
             <Text
               className={cn(
-                'text-label-xs font-body font-semibold tracking-[0.02em] transition-[color,opacity,transform]',
+                'text-label-xs font-body font-semibold transition-[color,opacity,transform]',
                 active ? 'text-primary opacity-100' : 'text-content-disabled opacity-80',
               )}
               style={transitionStyle}

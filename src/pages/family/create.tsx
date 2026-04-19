@@ -3,6 +3,7 @@ import Taro from '@tarojs/taro'
 import { useState } from 'react'
 import PageLayout from '@/components/PageLayout'
 import Button from '@/components/ui/Button'
+import PageHeader from '@/components/ui/PageHeader'
 import { familyStore } from '@/stores/family'
 
 export default function FamilyCreatePage() {
@@ -34,17 +35,14 @@ export default function FamilyCreatePage() {
 
   return (
     <PageLayout scroll>
-      <Text className="text-display-md font-heading font-medium tracking-tight text-content">
-        创建我的家
-      </Text>
-
-      <Text className="block mt-3 text-paragraph-md font-body text-content-tertiary leading-relaxed">
-        创建家庭后，可以邀请家人一起关注孩子的刷牙情况
-      </Text>
+      <PageHeader
+        title="创建我的家"
+        description="创建家庭后，可以邀请家人一起关注孩子的刷牙情况"
+      />
 
       {/* 表单 */}
-      <View className="mt-10">
-        <Text className="block text-label-sm font-heading font-semibold text-content-secondary mb-2">
+      <View className="mt-section-gap">
+        <Text className="block text-label-sm font-body font-semibold text-content-secondary mb-2">
           家庭名称
         </Text>
         <Input
@@ -56,7 +54,7 @@ export default function FamilyCreatePage() {
         />
       </View>
 
-      <View className="mt-10">
+      <View className="mt-section-gap">
         <Button
           onClick={handleCreate}
           disabled={loading}
@@ -66,7 +64,7 @@ export default function FamilyCreatePage() {
         </Button>
       </View>
 
-      <View className="mt-6">
+      <View className="mt-page-gap">
         <Button
           variant="ghost"
           onClick={() => Taro.redirectTo({ url: '/pages/family/index' }).catch(() => undefined)}

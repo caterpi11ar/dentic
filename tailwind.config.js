@@ -52,10 +52,6 @@ module.exports = {
       spacing: {
         ring: '6.25rem',
         'ring-inner': '5.3125rem',
-        section: '3rem',
-        'section-lg': '4rem',
-        block: '2rem',
-        'block-sm': '1.5rem',
         'page-x': '1.5rem',
         'page-gap': '1.25rem',
         'section-gap': '3.5rem',

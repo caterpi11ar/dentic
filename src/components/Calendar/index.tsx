@@ -81,7 +81,7 @@ function CalendarDayButton({
             isSelected
               ? 'text-surface-white font-body font-semibold'
               : isToday
-                ? 'text-primary font-heading font-medium'
+                ? 'text-primary font-body font-medium'
                 : isBrushed
                   ? 'text-content font-body font-medium'
                   : 'text-content-disabled font-body',
@@ -179,7 +179,7 @@ export default function Calendar({
         <View className="grid grid-cols-7 mb-0.5">
           {WEEKDAYS.map(weekday => (
             <View key={weekday} className="flex items-center justify-center py-1">
-              <Text className="text-label-xs font-body font-semibold text-content-tertiary tracking-widest">
+              <Text className="text-label-xs font-body font-semibold text-content-tertiary">
                 {weekday}
               </Text>
             </View>
