@@ -126,6 +126,14 @@ pnpm run typecheck
    - `cloudfunctionRoot`: `cloud/functions/`
 4. Deploy the required cloud functions in WeChat DevTools before end-to-end testing.
 
+## Success Case
+
+### First Offline Kindergarten Brushing Health Class Collaboration
+
+In an offline kindergarten brushing health class, the mini program was used as a classroom teaching aid for the first time. After the in-class demonstration, parents could follow the guided steps with their children at home, creating a closed loop of "classroom learning + family practice."
+
+![Success Case: Offline Kindergarten Brushing Health Class](./public/success-case-kindergarten-class.jpg)
+
 ## License
 
 MIT

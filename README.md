@@ -126,6 +126,14 @@ pnpm run typecheck
    - `cloudfunctionRoot`: `cloud/functions/`
 4. 需要在微信开发者工具中同步上传/部署对应云函数后再联调云端能力。
 
+## 成功案例
+
+### 线下幼儿刷牙健康课教具实践（首次合作）
+
+在一次线下幼儿刷牙健康课中，小程序首次作为课堂“教具”使用，老师在课堂演示后，家长可按小程序步骤陪同孩子课后练习，形成“课堂学习 + 家庭巩固”的闭环。
+
+![成功案例：线下幼儿刷牙健康课](./public/success-case-kindergarten-class.jpg)
+
 ## License
 
 MIT
