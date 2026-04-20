@@ -1,10 +1,13 @@
 import { Image, Text, View } from '@tarojs/components'
 import iconChevLeft from '@/assets/icons/icon-chevron-left.svg'
 import iconChevRight from '@/assets/icons/icon-chevron-right.svg'
+import RingPair from '@/components/RingPair'
 import Badge from '@/components/ui/Badge'
 import { cn } from '@/components/ui/cn'
 
 const WEEKDAYS = ['日', '一', '二', '三', '四', '五', '六']
+const CELL_HEIGHT = 78
+const RING_SIZE = 40
 
 interface DaySessionInfo {
   morning: boolean
@@ -33,6 +36,7 @@ interface CalendarDayButtonProps {
   dateStr: string
   isToday: boolean
   isSelected: boolean
+  isFuture: boolean
   sessionInfo?: DaySessionInfo
   onSelectDate: (date: string) => void
 }
@@ -47,60 +51,68 @@ function CalendarDayButton({
   dateStr,
   isToday,
   isSelected,
+  isFuture,
   sessionInfo,
   onSelectDate,
 }: CalendarDayButtonProps) {
   const isBrushed = !!sessionInfo
-  const handleActivate = () => onSelectDate(dateStr)
+
+  const handleActivate = () => {
+    if (isFuture)
+      return
+    onSelectDate(dateStr)
+  }
+
+  const ariaLabel = `${month}月${day}日${
+    isToday ? '，今天' : ''
+  }${
+    isBrushed ? '，已刷牙' : ''
+  }${
+    isFuture ? '，未来' : ''
+  }`
 
   return (
     <View
-      className="flex flex-col items-center justify-center"
-      style={{ height: '44px' }}
+      className={cn(
+        'flex flex-col items-center gap-1.5 py-1',
+        isFuture && 'pointer-events-none',
+      )}
+      style={{ height: `${CELL_HEIGHT}px` }}
       role="button"
-      aria-label={`${month}月${day}日${isBrushed ? '，已刷牙' : ''}`}
+      aria-label={ariaLabel}
       aria-pressed={isSelected}
+      aria-disabled={isFuture}
       onClick={handleActivate}
     >
-      {/* 日期圆 */}
       <View
         className={cn(
-          'size-9 rounded-full flex items-center justify-center relative',
-          isSelected
-            ? 'bg-primary'
-            : isToday
-              ? 'bg-primary/15'
-              : isBrushed
-                ? 'bg-content/[0.05]'
-                : '',
+          'size-6 rounded-full flex items-center justify-center',
+          isToday ? 'bg-primary' : '',
         )}
       >
         <Text
           className={cn(
-            'text-paragraph-sm tabular-nums',
-            isSelected
-              ? 'text-surface-white font-body font-semibold'
-              : isToday
-                ? 'text-primary font-body font-medium'
-                : isBrushed
-                  ? 'text-content font-body font-medium'
-                  : 'text-content-disabled font-body',
+            'text-label-xs tabular-nums font-body',
+            isToday
+              ? 'text-surface-white font-semibold'
+              : isSelected
+                ? 'text-primary font-semibold'
+                : isFuture
+                  ? 'text-content-disabled'
+                  : 'text-content',
           )}
         >
           {day}
         </Text>
-
-        {/* 今天指示环 */}
-        {isToday && !isSelected && (
-          <View className="absolute inset-0 rounded-full border-2 border-primary/40" />
-        )}
       </View>
 
-      {/* 刷牙指示 */}
-      <View className="flex items-center justify-center gap-1" style={{ height: '6px' }}>
-        {sessionInfo?.morning && <View className="size-2 rounded-full bg-surface-white border border-content/20" />}
-        {sessionInfo?.evening && <View className="size-2 rounded-full bg-content" />}
-      </View>
+      <RingPair
+        morning={sessionInfo?.morning ?? false}
+        evening={sessionInfo?.evening ?? false}
+        size={RING_SIZE}
+        variant={isFuture ? 'skeleton' : 'filled'}
+        className={isSelected ? 'ring-2 ring-primary/60 ring-offset-1' : ''}
+      />
     </View>
   )
 }
@@ -174,7 +186,7 @@ export default function Calendar({
       )}
 
       {/* 日历体 */}
-      <View className={cn('px-2', hideHeader ? 'pt-3' : 'pt-1', 'pb-1')}>
+      <View className={cn('px-2', hideHeader ? 'pt-3' : 'pt-1', 'pb-2')}>
         {/* 星期头 */}
         <View className="grid grid-cols-7 mb-0.5">
           {WEEKDAYS.map(weekday => (
@@ -189,7 +201,7 @@ export default function Calendar({
         {/* 日期网格 */}
         <View className="grid grid-cols-7">
           {Array.from({ length: firstDayOfWeek }, (_, i) => (
-            <View key={`empty-${i}`} style={{ height: '44px' }} />
+            <View key={`empty-${i}`} style={{ height: `${CELL_HEIGHT}px` }} />
           ))}
 
           {Array.from({ length: daysInMonth }, (_, i) => {
@@ -198,6 +210,7 @@ export default function Calendar({
             const sessionInfo = daySessionMap.get(dateStr)
             const isToday = dateStr === todayStr
             const isSelected = dateStr === selectedDate
+            const isFuture = dateStr > todayStr
 
             return (
               <CalendarDayButton
@@ -208,22 +221,11 @@ export default function Calendar({
                 sessionInfo={sessionInfo}
                 isToday={isToday}
                 isSelected={isSelected}
+                isFuture={isFuture}
                 onSelectDate={onSelectDate}
               />
             )
           })}
-        </View>
-
-        {/* 图例 */}
-        <View className="flex items-center justify-center gap-4 mt-2 pt-2 border-t border-line-lighter">
-          <View className="flex items-center gap-1.5">
-            <View className="size-2 rounded-full bg-surface-white border border-content/20" />
-            <Text className="text-label-xs text-content-tertiary">白天</Text>
-          </View>
-          <View className="flex items-center gap-1.5">
-            <View className="size-2 rounded-full bg-content" />
-            <Text className="text-label-xs text-content-tertiary">夜晚</Text>
-          </View>
         </View>
       </View>
     </View>

@@ -1,4 +1,4 @@
-import { getBusinessAnchorDate, getBusinessDateOffset } from '@/services/dateBoundary'
+import { getBusinessAnchorDate, getBusinessDateOffset, getWeekDates } from '@/services/dateBoundary'
 import { formatDate } from '@/services/recordStorage'
 import { recordsStore } from '@/stores/records'
 
@@ -6,6 +6,60 @@ export interface WeeklyStatsData {
   days: { date: string, count: number, totalDuration: number }[]
   totalSessions: number
   avgDuration: number
+}
+
+export interface DayCompletion {
+  morning: boolean
+  evening: boolean
+}
+
+export function getDayCompletion(date: string): DayCompletion {
+  const records = recordsStore.getState().records
+  const result: DayCompletion = { morning: false, evening: false }
+  records
+    .filter(record => record.date === date && record.completed)
+    .forEach((record) => {
+      if (record.session === 'morning')
+        result.morning = true
+      if (record.session === 'evening')
+        result.evening = true
+    })
+  return result
+}
+
+export function getMonthCompletionMap(year: number, month: number): Map<string, DayCompletion> {
+  const prefix = `${year}-${String(month).padStart(2, '0')}`
+  const records = recordsStore.getState().records
+  const map = new Map<string, DayCompletion>()
+  records
+    .filter(record => record.completed && record.date.startsWith(prefix))
+    .forEach((record) => {
+      const entry = map.get(record.date) ?? { morning: false, evening: false }
+      if (record.session === 'morning')
+        entry.morning = true
+      if (record.session === 'evening')
+        entry.evening = true
+      map.set(record.date, entry)
+    })
+  return map
+}
+
+export function getWeekCompletionMap(anchorDateStr: string): Map<string, DayCompletion> {
+  const weekDates = getWeekDates(anchorDateStr)
+  const dateSet = new Set(weekDates)
+  const records = recordsStore.getState().records
+  const map = new Map<string, DayCompletion>()
+  weekDates.forEach(date => map.set(date, { morning: false, evening: false }))
+  records
+    .filter(record => record.completed && dateSet.has(record.date))
+    .forEach((record) => {
+      const entry = map.get(record.date)!
+      if (record.session === 'morning')
+        entry.morning = true
+      if (record.session === 'evening')
+        entry.evening = true
+    })
+  return map
 }
 
 export function getCurrentStreak(): number {

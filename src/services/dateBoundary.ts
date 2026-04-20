@@ -33,3 +33,25 @@ export function isMorningSessionHour(hour: number): boolean {
 export function isEveningSessionHour(hour: number): boolean {
   return !isMorningSessionHour(hour)
 }
+
+function parseDateString(dateStr: string): Date {
+  const [y, m, d] = dateStr.split('-').map(Number)
+  return new Date(y, m - 1, d)
+}
+
+export function getWeekDates(anchorDateStr: string): string[] {
+  const anchor = parseDateString(anchorDateStr)
+  const dayOfWeek = anchor.getDay()
+  const mondayOffset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek
+  const monday = new Date(anchor)
+  monday.setDate(anchor.getDate() + mondayOffset)
+  monday.setHours(0, 0, 0, 0)
+
+  const dates: string[] = []
+  for (let i = 0; i < 7; i++) {
+    const day = new Date(monday)
+    day.setDate(monday.getDate() + i)
+    dates.push(formatDate(day))
+  }
+  return dates
+}
