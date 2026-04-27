@@ -1,10 +1,10 @@
+import type { DailyTip } from '@/constants/daily-tips'
 import type { DailyStatus } from '@/domains/brush/utils'
 import type { BrushingSession } from '@/services/brushing'
 import { useMemoizedFn } from 'ahooks'
-import { useMemo, useState } from 'react'
-import { getRandomCompletionMessage, MILESTONE_MESSAGES, MILESTONES } from '@/constants/brushing-steps'
+import { useMemo, useRef, useState } from 'react'
+import { getRandomCompletionMessage } from '@/constants/brushing-steps'
 import {
-
   createSession,
   getCurrentStep,
   pauseSession,
@@ -19,37 +19,44 @@ export type BrushInteractionAction = 'start' | 'pauseToggle'
 interface UseBrushSessionStateResult {
   session: BrushingSession
   streak: number
-  milestone: string | null
+  newlyUnlockedIds: string[]
   completionMessage: string
+  dailyTip: DailyTip | null
   dailyStatus: DailyStatus
   stepPrompt: string
   interactionAction: BrushInteractionAction | null
   interactionVersion: number
+  /** 本次会话是否暂停过（refs.current 可由 effects 在完成时读取） */
+  pausedOnceRef: { readonly current: boolean }
   startFlow: () => void
   pauseOrResume: () => void
   resetFlow: () => void
   tickFlow: () => void
   syncOverview: (nextStreak: number, nextStatus: DailyStatus) => void
-  applyCompletionMeta: (nextStreak: number) => void
+  applyCompletionMeta: (nextStreak: number, tip: DailyTip | null, newlyUnlockedIds: string[]) => void
   markInteraction: (action: BrushInteractionAction) => void
 }
 
 export function useBrushSessionState(): UseBrushSessionStateResult {
   const [session, setSession] = useState<BrushingSession>(createSession)
   const [streak, setStreak] = useState(0)
-  const [milestone, setMilestone] = useState<string | null>(null)
+  const [newlyUnlockedIds, setNewlyUnlockedIds] = useState<string[]>([])
   const [completionMessage, setCompletionMessage] = useState('')
+  const [dailyTip, setDailyTip] = useState<DailyTip | null>(null)
   const [dailyStatus, setDailyStatus] = useState<DailyStatus>({ morningDone: false, eveningDone: false })
   const [interactionAction, setInteractionAction] = useState<BrushInteractionAction | null>(null)
   const [interactionVersion, setInteractionVersion] = useState(0)
+  const pausedOnceRef = useRef(false)
 
   const startFlow = useMemoizedFn(() => {
+    pausedOnceRef.current = false
     setSession(startCountdown(createSession()))
   })
 
   const pauseOrResume = useMemoizedFn(() => {
     setSession((prev) => {
       if (prev.state === 'brushing') {
+        pausedOnceRef.current = true
         return pauseSession(prev)
       }
       if (prev.state === 'paused') {
@@ -60,8 +67,10 @@ export function useBrushSessionState(): UseBrushSessionStateResult {
   })
 
   const resetFlow = useMemoizedFn(() => {
+    pausedOnceRef.current = false
     setSession(createSession())
-    setMilestone(null)
+    setNewlyUnlockedIds([])
+    setDailyTip(null)
   })
 
   const tickFlow = useMemoizedFn(() => {
@@ -78,10 +87,10 @@ export function useBrushSessionState(): UseBrushSessionStateResult {
     setDailyStatus(nextStatus)
   })
 
-  const applyCompletionMeta = useMemoizedFn((nextStreak: number) => {
+  const applyCompletionMeta = useMemoizedFn((nextStreak: number, tip: DailyTip | null, newlyIds: string[]) => {
     setCompletionMessage(getRandomCompletionMessage())
-    const currentMilestone = MILESTONES.find(m => m === nextStreak)
-    setMilestone(currentMilestone ? MILESTONE_MESSAGES[currentMilestone] : null)
+    setDailyTip(tip)
+    setNewlyUnlockedIds(newlyIds)
   })
 
   const markInteraction = useMemoizedFn((action: BrushInteractionAction) => {
@@ -94,12 +103,14 @@ export function useBrushSessionState(): UseBrushSessionStateResult {
   return {
     session,
     streak,
-    milestone,
+    newlyUnlockedIds,
     completionMessage,
+    dailyTip,
     dailyStatus,
     stepPrompt,
     interactionAction,
     interactionVersion,
+    pausedOnceRef,
     startFlow,
     pauseOrResume,
     resetFlow,

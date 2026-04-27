@@ -6,6 +6,7 @@ export interface BrushingRecord {
   duration: number // 实际用时（秒）
   completedSteps: number // 完成的步骤数
   timestamp: number // 完成时间戳
+  cleanSession?: boolean // 全程未暂停（旧记录为 undefined）
 }
 
 /** 刷牙步骤 */

@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { AchievementsProvider } from './achievements'
 import { AuthProvider } from './auth'
 import { FamilyProvider } from './family'
 import { ProfileProvider } from './profile'
@@ -11,7 +12,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       <RecordsProvider>
         <AuthProvider>
           <ProfileProvider>
-            <FamilyProvider>{children}</FamilyProvider>
+            <FamilyProvider>
+              <AchievementsProvider>{children}</AchievementsProvider>
+            </FamilyProvider>
           </ProfileProvider>
         </AuthProvider>
       </RecordsProvider>

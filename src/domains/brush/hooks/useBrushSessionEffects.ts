@@ -1,3 +1,4 @@
+import type { DailyTip } from '@/constants/daily-tips'
 import type { BrushInteractionAction } from '@/domains/brush/hooks/useBrushSessionState'
 import type { DailyStatus } from '@/domains/brush/utils'
 import type { BrushingSession } from '@/services/brushing'
@@ -23,15 +24,20 @@ import {
   shouldShowBrushOnboarding,
   syncBrushRecordToCloud,
 } from '@/domains/brush/repositories/brushRepository'
+import { evaluateAndMerge } from '@/services/achievements'
 import { trackEvent } from '@/services/analytics'
+import { getDailyTip } from '@/services/dailyTips'
+import { getBusinessDate } from '@/services/dateBoundary'
+import { achievementsStore } from '@/stores/achievements'
 
 interface UseBrushSessionEffectsParams {
   session: BrushingSession
   tickFlow: () => void
   syncOverview: (nextStreak: number, nextStatus: DailyStatus) => void
-  applyCompletionMeta: (nextStreak: number) => void
+  applyCompletionMeta: (nextStreak: number, tip: DailyTip | null, newlyUnlockedIds: string[]) => void
   interactionAction: BrushInteractionAction | null
   interactionVersion: number
+  pausedOnceRef: { readonly current: boolean }
 }
 
 export function useBrushSessionEffects({
@@ -41,6 +47,7 @@ export function useBrushSessionEffects({
   applyCompletionMeta,
   interactionAction,
   interactionVersion,
+  pausedOnceRef,
 }: UseBrushSessionEffectsParams): void {
   const completedHandledRef = useRef(false)
 
@@ -99,7 +106,8 @@ export function useBrushSessionEffects({
 
     completedHandledRef.current = true
 
-    saveBrushCompletionRecord(session.elapsedTime)
+    const cleanSession = !pausedOnceRef.current
+    saveBrushCompletionRecord(session.elapsedTime, { cleanSession })
 
     // 异步上报云端（不阻塞 UI）
     syncBrushRecordToCloud(session.elapsedTime)
@@ -111,8 +119,17 @@ export function useBrushSessionEffects({
 
     const { streak: newStreak, dailyStatus } = getBrushOverview()
     syncOverview(newStreak, dailyStatus)
-    applyCompletionMeta(newStreak)
-  }, [session.state, session.elapsedTime, syncOverview, applyCompletionMeta])
+
+    // 计算并落盘当日小贴士
+    const today = getBusinessDate(new Date())
+    const tip = getDailyTip(today, achievementsStore.getState().tipHistory)
+    achievementsStore.getState().commitTipShown(today, tip.id)
+
+    // 评估并合并成就（返回本次新解锁 ids）
+    const newlyUnlockedIds = evaluateAndMerge()
+
+    applyCompletionMeta(newStreak, tip, newlyUnlockedIds)
+  }, [session.state, session.elapsedTime, syncOverview, applyCompletionMeta, pausedOnceRef])
 
   useEffect(() => {
     setBrushScreenWakeLock(session.state === 'brushing' || session.state === 'countdown')

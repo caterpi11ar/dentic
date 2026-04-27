@@ -1,6 +1,7 @@
 import type { PropsWithChildren } from 'react'
 import Taro from '@tarojs/taro'
 import { useEffect } from 'react'
+import { evaluateAndMerge } from '@/services/achievements'
 import { migrateLocalRecordsToCloud } from '@/services/migration'
 import { processSyncQueue } from '@/services/syncQueue'
 import { StoreProvider } from '@/stores/provider'
@@ -20,6 +21,8 @@ function App({ children }: PropsWithChildren) {
     processSyncQueue().catch(() => undefined)
     // 一次性迁移本地历史数据到云端（已迁移则跳过）
     migrateLocalRecordsToCloud().catch(() => undefined)
+    // 启动时全量评估成就（老用户补发）
+    evaluateAndMerge()
   }, [])
 
   return <StoreProvider>{children}</StoreProvider>

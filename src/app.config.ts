@@ -7,6 +7,7 @@ export default defineAppConfig({
     'pages/family/join',
     'pages/rank/index',
     'pages/profile/index',
+    'pages/achievements/index',
   ],
   window: {
     navigationStyle: 'custom',

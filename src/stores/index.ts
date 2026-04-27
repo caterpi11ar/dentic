@@ -1,3 +1,4 @@
+export { AchievementsProvider, achievementsStore, useAchievementsStore } from './achievements'
 export { AuthProvider, authStore, useAuthStore } from './auth'
 export { FamilyProvider, familyStore, useFamilyStore } from './family'
 export { ProfileProvider, profileStore, useProfileStore } from './profile'

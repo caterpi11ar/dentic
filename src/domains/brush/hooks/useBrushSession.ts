@@ -6,12 +6,14 @@ export function useBrushSession() {
   const {
     session,
     streak,
-    milestone,
+    newlyUnlockedIds,
     completionMessage,
+    dailyTip,
     dailyStatus,
     stepPrompt,
     interactionAction,
     interactionVersion,
+    pausedOnceRef,
     startFlow,
     pauseOrResume,
     resetFlow,
@@ -28,6 +30,7 @@ export function useBrushSession() {
     applyCompletionMeta,
     interactionAction,
     interactionVersion,
+    pausedOnceRef,
   })
 
   const handleStart = useMemoizedFn(() => {
@@ -43,8 +46,9 @@ export function useBrushSession() {
   return {
     session,
     streak,
-    milestone,
+    newlyUnlockedIds,
     completionMessage,
+    dailyTip,
     dailyStatus,
     stepPrompt,
     handleStart,

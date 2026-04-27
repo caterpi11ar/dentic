@@ -67,7 +67,10 @@ export function markBrushOnboardingSeen(): void {
   markOnboardingSeen()
 }
 
-export function saveBrushCompletionRecord(elapsedTime: number): void {
+export function saveBrushCompletionRecord(
+  elapsedTime: number,
+  meta?: { cleanSession?: boolean },
+): void {
   const now = new Date()
   recordsStore.getState().saveRecord({
     date: getBusinessDate(now),
@@ -76,6 +79,7 @@ export function saveBrushCompletionRecord(elapsedTime: number): void {
     duration: elapsedTime,
     completedSteps: TOTAL_STEPS,
     timestamp: now.getTime(),
+    ...(meta?.cleanSession !== undefined ? { cleanSession: meta.cleanSession } : {}),
   })
 }
 

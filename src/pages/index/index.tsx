@@ -1,13 +1,13 @@
 import { showShareMenu, useDidShow, useShareAppMessage, useShareTimeline } from '@tarojs/taro'
 import InPageTabBar from '@/components/InPageTabBar'
 import PageLayout from '@/components/PageLayout'
-import { MILESTONES } from '@/constants/brushing-steps'
 import BrushActiveState from '@/domains/brush/components/BrushActiveState'
 import BrushCompletedState from '@/domains/brush/components/BrushCompletedState'
 import BrushCountdownOverlay from '@/domains/brush/components/BrushCountdownOverlay'
 import BrushIdleState from '@/domains/brush/components/BrushIdleState'
 import { useBrushSession } from '@/domains/brush/hooks/useBrushSession'
 import { formatTodayHeading, getGreeting } from '@/domains/brush/utils'
+import { getNextStreakTarget } from '@/services/achievements'
 import { trackEvent } from '@/services/analytics'
 import { getBusinessAnchorDate } from '@/services/dateBoundary'
 import { generateShareMessage } from '@/services/share'
@@ -18,8 +18,9 @@ export default function IndexPage() {
   const {
     session,
     streak,
-    milestone,
+    newlyUnlockedIds,
     completionMessage,
+    dailyTip,
     dailyStatus,
     stepPrompt,
     handleStart,
@@ -53,7 +54,7 @@ export default function IndexPage() {
   const businessNow = getBusinessAnchorDate(now)
   const todayHeading = formatTodayHeading(businessNow)
   const greeting = getGreeting(now.getHours())
-  const nextMilestone = MILESTONES.find(m => m > streak) ?? streak + 3
+  const nextMilestone = getNextStreakTarget(streak) ?? streak + 3
   const milestoneProgress = nextMilestone > 0 ? Math.min(100, Math.round((streak / nextMilestone) * 100)) : 0
 
   const isIdle = session.state === 'idle'
@@ -83,7 +84,8 @@ export default function IndexPage() {
       {session.state === 'completed' ? (
         <BrushCompletedState
           completionMessage={completionMessage}
-          milestone={milestone}
+          newlyUnlockedIds={newlyUnlockedIds}
+          dailyTip={dailyTip}
           elapsedTime={session.elapsedTime}
           streak={streak}
           dailyStatus={dailyStatus}

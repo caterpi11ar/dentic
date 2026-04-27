@@ -1,7 +1,9 @@
 import { Image, Input, Button as TaroButton, Text, View } from '@tarojs/components'
 import Taro, { useDidShow } from '@tarojs/taro'
 import { useState } from 'react'
+import iconStreakUnlocked from '@/assets/icons/achievements/achievement-streak-unlocked.svg'
 import iconBell from '@/assets/icons/icon-bell.svg'
+import iconChevRight from '@/assets/icons/icon-chevron-right.svg'
 import iconMusic from '@/assets/icons/icon-music.svg'
 import iconUser from '@/assets/icons/icon-user.svg'
 import iconVoice from '@/assets/icons/icon-voice.svg'
@@ -15,7 +17,9 @@ import { List, ListItem } from '@/components/ui/List'
 import PageHeader from '@/components/ui/PageHeader'
 import Section from '@/components/ui/Section'
 import Switch from '@/components/ui/Switch'
+import { ACHIEVEMENTS } from '@/services/achievements'
 import { applyLightThemeToChrome } from '@/services/theme'
+import { useAchievementsStore } from '@/stores/achievements'
 import { useProfileStore } from '@/stores/profile'
 import { useSettingsStore } from '@/stores/settings'
 
@@ -32,6 +36,9 @@ export default function ProfilePage() {
   const updateNickname = useProfileStore(s => s.updateNickname)
   const updateAvatar = useProfileStore(s => s.updateAvatar)
   const fetchProfile = useProfileStore(s => s.fetchProfile)
+
+  const unlockedCount = useAchievementsStore(s => s.unlocked.length)
+  const totalAchievements = ACHIEVEMENTS.length
 
   const [showNicknameInput, setShowNicknameInput] = useState(false)
   const [tempNickname, setTempNickname] = useState('')
@@ -180,6 +187,25 @@ export default function ProfilePage() {
           )}
         </CardContent>
       </Card>
+
+      {/* ── 我的成就 ── */}
+      <Section variant="group" label="成就" className="mt-section-gap">
+        <List>
+          <ListItem
+            left={(
+              <IconBadge
+                variant="accent"
+                icon={<Image src={iconStreakUnlocked} className="size-5" mode="aspectFit" />}
+              />
+            )}
+            title="我的成就"
+            description={`已解锁 ${unlockedCount} / ${totalAchievements}`}
+            right={<Image src={iconChevRight} className="size-4 opacity-50" mode="aspectFit" />}
+            onClick={() => Taro.navigateTo({ url: '/pages/achievements/index' }).catch(() => undefined)}
+            ariaLabel="查看我的成就"
+          />
+        </List>
+      </Section>
 
       {/* ── 声音与提醒 ── */}
       <Section variant="group" label="声音与提醒" className="mt-section-gap">

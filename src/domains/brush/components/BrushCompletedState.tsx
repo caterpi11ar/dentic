@@ -1,9 +1,12 @@
+import type { DailyTip } from '@/constants/daily-tips'
 import type { DailyStatus } from '@/domains/brush/utils'
 import { Image, Text, View } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import iconCheck from '@/assets/icons/icon-check.svg'
 import Button from '@/components/ui/Button'
 import { TOTAL_STEPS } from '@/constants/brushing-steps'
+import DailyTipCard from '@/domains/brush/components/DailyTipCard'
+import NewlyUnlockedStrip from '@/domains/brush/components/NewlyUnlockedStrip'
 import { isDailyComplete } from '@/domains/brush/utils'
 import { isEveningSessionHour } from '@/services/dateBoundary'
 
@@ -27,7 +30,8 @@ function getNextPrompt(dailyStatus: DailyStatus): string | null {
 
 interface BrushCompletedStateProps {
   completionMessage: string
-  milestone: string | null
+  newlyUnlockedIds: string[]
+  dailyTip: DailyTip | null
   elapsedTime: number
   streak: number
   dailyStatus: DailyStatus
@@ -36,7 +40,8 @@ interface BrushCompletedStateProps {
 
 export default function BrushCompletedState({
   completionMessage,
-  milestone,
+  newlyUnlockedIds,
+  dailyTip,
   elapsedTime,
   streak,
   dailyStatus,
@@ -55,10 +60,12 @@ export default function BrushCompletedState({
       <Text className="text-display-md font-heading font-medium text-content text-center px-4">
         {completionMessage}
       </Text>
-      {milestone && (
-        <Text className="text-paragraph-sm leading-relaxed text-content-secondary font-medium mt-2 text-center px-4">
-          {milestone}
-        </Text>
+
+      {/* 新解锁成就高光 */}
+      {newlyUnlockedIds.length > 0 && (
+        <View className="mt-6 w-full">
+          <NewlyUnlockedStrip ids={newlyUnlockedIds} />
+        </View>
       )}
 
       {/* 统计数据 - 横向三栏 */}
@@ -86,6 +93,13 @@ export default function BrushCompletedState({
           <Text className="mt-1 text-label-xs font-body text-content-tertiary">连续天数</Text>
         </View>
       </View>
+
+      {/* 每日小贴士 */}
+      {dailyTip && (
+        <View className="mt-6 w-full px-2">
+          <DailyTipCard tip={dailyTip} />
+        </View>
+      )}
 
       {/* 今日状态提示 */}
       {nextPrompt && (

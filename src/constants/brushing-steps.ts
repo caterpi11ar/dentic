@@ -160,14 +160,3 @@ export const COMPLETION_MESSAGES = [
 export function getRandomCompletionMessage(): string {
   return COMPLETION_MESSAGES[Math.floor(Math.random() * COMPLETION_MESSAGES.length)]
 }
-
-export const MILESTONES = [3, 7, 14, 30, 60, 100, 365]
-export const MILESTONE_MESSAGES: Record<number, string> = {
-  3: '连续3天！好的开始！',
-  7: '一周达成！习惯正在养成！',
-  14: '两周坚持！你太棒了！',
-  30: '一个月！刷牙达人！',
-  60: '两个月！牙齿一定很健康！',
-  100: '100天里程碑！',
-  365: '一整年！传奇！',
-}

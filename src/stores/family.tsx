@@ -7,7 +7,9 @@ import type {
 import { createContext } from 'react'
 import { persist } from 'zustand/middleware'
 import { createStore } from 'zustand/vanilla'
+import { evaluateAndMerge } from '@/services/achievements'
 import * as familyApi from '@/services/api/familyApi'
+import { achievementsStore } from './achievements'
 import { createTaroStorage } from './middleware/taroStorage'
 import { useVanillaStore } from './useVanillaStore'
 
@@ -58,6 +60,7 @@ export const familyStore = createStore<FamilyState>()(
         try {
           const data = await familyApi.getDashboard(family.familyId)
           set({ dashboard: data })
+          evaluateAndMerge()
         }
         catch {
           // 静默处理
@@ -105,6 +108,9 @@ export const familyStore = createStore<FamilyState>()(
         await familyApi.sendInteraction(family.familyId, type)
         const list = await familyApi.getInteractions(family.familyId)
         set({ interactions: list })
+        if (type === 'like')
+          achievementsStore.getState().incrementCheersSent()
+        evaluateAndMerge()
       },
 
       clearFamily: () => {
