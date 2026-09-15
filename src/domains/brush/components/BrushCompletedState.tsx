@@ -1,6 +1,5 @@
 import type { DailyStatus } from '@/domains/brush/utils'
 import { Image, Text, View } from '@tarojs/components'
-import Taro from '@tarojs/taro'
 import iconCheck from '@/assets/icons/icon-check.svg'
 import Button from '@/components/ui/Button'
 import { TOTAL_STEPS } from '@/constants/brushing-steps'
@@ -101,20 +100,9 @@ export default function BrushCompletedState({
         <Button className="min-h-11 text-base" openType="share" aria-label="分享刷牙成绩">
           分享
         </Button>
-        <View className="flex gap-3">
-          <Button
-            variant="secondary"
-            className="min-h-11 text-base flex-1"
-            fullWidth={false}
-            onClick={() => Taro.redirectTo({ url: '/pages/rank/index' }).catch(() => undefined)}
-            aria-label="查看好友排行榜"
-          >
-            排行榜
-          </Button>
-          <Button variant="ghost" className="min-h-11 text-base flex-1" fullWidth={false} onClick={onReset} aria-label="返回首页">
-            返回
-          </Button>
-        </View>
+        <Button variant="secondary" className="min-h-11 text-base" onClick={onReset} aria-label="返回首页">
+          返回
+        </Button>
       </View>
     </View>
   )

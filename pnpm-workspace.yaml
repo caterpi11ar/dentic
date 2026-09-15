@@ -1,0 +1,9 @@
+# pnpm 12 默认阻止依赖执行安装脚本（构建期原生绑定、编译器需要例外）
+allowBuilds:
+  '@parcel/watcher': true # dev --watch 的文件监听
+  '@swc/core': true # 编译器
+  '@tarojs/binding': true # Taro 原生绑定，必需
+  '@tarojs/cli': true
+  core-js: false # 仅 postinstall 广告，无需执行
+  esbuild: true # Vite 依赖，必需
+  weapp-tailwindcss: true

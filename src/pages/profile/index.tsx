@@ -31,14 +31,12 @@ export default function ProfilePage() {
   const authorized = useProfileStore(s => s.authorized)
   const updateNickname = useProfileStore(s => s.updateNickname)
   const updateAvatar = useProfileStore(s => s.updateAvatar)
-  const fetchProfile = useProfileStore(s => s.fetchProfile)
 
   const [showNicknameInput, setShowNicknameInput] = useState(false)
   const [tempNickname, setTempNickname] = useState('')
 
   useDidShow(() => {
     applyLightThemeToChrome()
-    fetchProfile()
   })
 
   const handleChooseAvatar = (e: { detail: { avatarUrl?: string } }) => {
@@ -172,9 +170,6 @@ export default function ProfilePage() {
                 <Text className="text-paragraph-sm text-content-tertiary">
                   点击授权微信头像和昵称
                 </Text>
-                <Text className="text-paragraph-sm text-content-disabled">
-                  用于排行榜展示
-                </Text>
               </View>
             </TaroButton>
           )}
@@ -202,9 +197,9 @@ export default function ProfilePage() {
                 icon={<Image src={iconMusic} className="size-5" mode="aspectFit" />}
               />
             )}
-            title="步骤提示音"
-            description="步骤切换时播放提示音"
-            right={<Switch checked={soundEnabled} onClick={handleSoundToggle} ariaLabel="步骤提示音开关" />}
+            title="提示音"
+            description="换步骤时“叮”一声"
+            right={<Switch checked={soundEnabled} onClick={handleSoundToggle} ariaLabel="提示音开关" />}
           />
           <ListItem
             left={(
@@ -214,7 +209,7 @@ export default function ProfilePage() {
               />
             )}
             title="语音播报"
-            description="步骤切换时朗读提示"
+            description="念出要刷的区域，如“上牙外侧左”"
             right={<Switch checked={voiceEnabled} onClick={handleVoiceToggle} ariaLabel="语音播报开关" />}
           />
         </List>

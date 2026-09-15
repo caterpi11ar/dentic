@@ -9,6 +9,7 @@ type ViteCssConfig = {
       plugins?: unknown[]
     } | string
   }
+  publicDir?: string | false
 }
 
 export default defineConfig({
@@ -24,10 +25,7 @@ export default defineConfig({
   sourceRoot: 'src',
   outputRoot: 'dist',
   copy: {
-    patterns: [
-      { from: 'src/assets/audio/', to: 'dist/assets/audio/' },
-      { from: 'src/assets/fonts/', to: 'dist/assets/fonts/' },
-    ],
+    patterns: [{ from: 'src/assets/audio/', to: 'dist/assets/audio/' }],
     options: {},
   },
   framework: 'react',
@@ -47,6 +45,13 @@ export default defineConfig({
   compiler: {
     type: 'vite',
     vitePlugins: [
+      {
+        // public/ 只存放 README 展示图，不是小程序资源，禁止打进包内（约 244KB）
+        name: 'disable-public-dir-plugin',
+        config(config: ViteCssConfig) {
+          config.publicDir = false
+        },
+      },
       {
         name: 'postcss-config-loader-plugin',
         config(config: ViteCssConfig) {

@@ -2,7 +2,6 @@ import type { ReactNode } from 'react'
 import { createContext } from 'react'
 import { persist } from 'zustand/middleware'
 import { createStore } from 'zustand/vanilla'
-import { getProfile, updateProfile } from '@/services/api/userApi'
 import { createTaroStorage } from './middleware/taroStorage'
 import { useVanillaStore } from './useVanillaStore'
 
@@ -12,11 +11,9 @@ interface ProfileState {
   nickname: string
   avatar: string
   authorized: boolean
-  /** 从云端同步最新资料 */
-  fetchProfile: () => Promise<void>
-  /** 更新昵称（乐观更新 + API 调用） */
+  /** 更新昵称 */
   updateNickname: (name: string) => void
-  /** 更新头像（乐观更新 + API 调用） */
+  /** 更新头像 */
   updateAvatar: (url: string) => void
 }
 
@@ -29,33 +26,12 @@ export const profileStore = createStore<ProfileState>()(
       avatar: '',
       authorized: false,
 
-      fetchProfile: async () => {
-        try {
-          const profile = await getProfile()
-          if (profile.nickname) {
-            set({
-              nickname: profile.nickname,
-              avatar: profile.avatar || '',
-              authorized: true,
-            })
-          }
-          else if (profile.avatar) {
-            set({ avatar: profile.avatar })
-          }
-        }
-        catch {
-          // 静默处理
-        }
-      },
-
       updateNickname: (name) => {
         set({ nickname: name, authorized: true })
-        updateProfile({ nickname: name }).catch(() => undefined)
       },
 
       updateAvatar: (url) => {
         set({ avatar: url })
-        updateProfile({ avatar: url }).catch(() => undefined)
       },
     }),
     {

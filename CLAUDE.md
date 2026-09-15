@@ -8,6 +8,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 "今天刷牙了吗" (Dentic) — 基于巴氏（Bass）刷牙法的微信小程序，引导用户按 15 个区域科学刷牙（约 2.5 分钟）。技术栈：Taro 4 + React 18 + TypeScript，目标平台为微信小程序
 
+**项目为纯本地零后端工具**：全部数据仅通过 `Taro.setStorageSync` 保存在本机，无任何网络请求、无云函数、无账号体系、无定位权限。不得引入服务端依赖。
+
 ## 常用命令
 
 ```bash
@@ -20,13 +22,15 @@ pnpm lint:fix             # ESLint 自动修复
 
 构建产物输出到 `dist/`。项目暂未配置测试框架。
 
+**pnpm 12 注意**：pnpm 12 默认阻止依赖执行安装脚本，必须由 `pnpm-workspace.yaml` 的 `allowBuilds` 白名单显式放行（`@tarojs/binding`、`esbuild`、`@swc/core` 等必需），否则安装会直接失败。
+
 ## 架构
 
 ### 分层领域结构
 
 ```
-pages/          → 页面编排层（5 个页面：index 刷牙主页、history 历史、family 家庭、rank 排行榜、profile 设置）
-stores/         → Zustand 全局状态（settings、records、auth、profile、family）
+pages/          → 页面编排层（3 个页面：index 刷牙主页、history 历史、profile 设置）
+stores/         → Zustand 全局状态（settings、records、profile）
 domains/brush/  → 刷牙功能领域
   hooks/        → 状态与副作用分离：useBrushSessionState → useBrushSessionEffects → useBrushSession（门面）
   components/   → 按流程状态拆分的 UI：BrushIdleState、BrushActiveState、BrushCompletedState、BrushCountdownOverlay
@@ -41,7 +45,7 @@ services/       → 与框架无关的业务逻辑（状态机、存储、统计
 
 - **不可变状态机**（`services/brushing.ts`）：纯函数返回新的 session 对象。状态流转：`idle → countdown → brushing ⇄ paused → completed`。
 - **Hook 组合模式**：`useBrushSessionState`（纯状态）+ `useBrushSessionEffects`（副作用）组合为 `useBrushSession` 门面 Hook。
-- **Zustand 全局状态管理**（`stores/`）：4 个独立 store 管理跨页面共享状态，配合自定义 Taro 存储适配器实现持久化。详见下方「状态管理」章节。
+- **Zustand 全局状态管理**（`stores/`）：3 个独立 store 管理跨页面共享状态，配合自定义 Taro 存储适配器实现持久化。详见下方「状态管理」章节。
 - **导航**：自定义 `InPageTabBar` 组件，使用 `Taro.redirectTo()` 导航（非 Taro 内置 TabBar）。自定义导航栏（`navigationStyle: 'custom'`）。
 - **日期边界**：业务日从凌晨 6:00 开始；早晚刷牙以 18:00 分界（`services/dateBoundary.ts`）。
 
@@ -54,8 +58,7 @@ stores/                     → Zustand stores（全局客户端状态，模块�
   middleware/taroStorage.ts → Taro 存储适配器（桥接 Zustand persist 与 Taro.getStorageSync）
   settings.ts               → useSettingsStore — 用户设置（声音、提醒等）
   records.ts                → useRecordsStore — 刷牙记录（核心共享数据）
-  auth.ts                   → useAuthStore — 认证状态（openId）
-  profile.ts                → useProfileStore — 用户资料（昵称、头像）
+  profile.ts                → useProfileStore — 用户资料（昵称、头像，纯本地）
 ```
 
 **关键约束**：微信小程序中 `Taro.redirectTo` 销毁页面组件树，Context 无法跨页面 — 只有 Zustand（模块级单例）可跨页面共享状态。
@@ -64,14 +67,14 @@ stores/                     → Zustand stores（全局客户端状态，模块�
 - React 组件内：`useXxxStore(state => state.field)` 精准选择器订阅
 - 多值选择器：使用 `useShallow` 避免不必要重渲染
 - 非 React 代码（services）：`useXxxStore.getState()` 同步读取
-- 兼容层：`services/settingsStorage.ts`、`services/recordStorage.ts`、`services/auth/index.ts` 作为 shim 委托给 store，供未迁移的模块使用
+- 兼容层：`services/settingsStorage.ts`、`services/recordStorage.ts` 作为 shim 委托给 store，供未迁移的模块使用
 
 ### 样式体系
 
 - Tailwind CSS 3.4 + `weapp-tailwindcss`（rem→rpx 自动转换）。
 - CSS 自定义属性定义在 `app.scss`（`.theme-day` 类）中，通过 `tailwind.config.js` 映射为语义化色彩 token。
 - 语义化颜色：primary、success、warning、info、danger、content-*、surface-*、line。
-- 自定义字体：Poppins（标题）、Lora（正文）。
+- **不得引入自定义字体**：小程序 WXSS 的 `@font-face` 不支持引用包内本地字体文件（仅支持 https 或 base64），因此必须使用系统字体栈（`PingFang SC` / `Hiragino Sans GB` / `Microsoft YaHei` 等）。
 - 使用 `cn()` 工具函数（`components/ui/cn.ts`，基于 `clsx` + `tailwind-merge`）组合条件样式类。
 
 ### 路径别名
@@ -86,3 +89,4 @@ stores/                     → Zustand stores（全局客户端状态，模块�
 - 使用 ARIA 属性保障无障碍访问（`role`、`aria-label`、`aria-checked`、`aria-live`）。
 - 使用 `motion-reduce:animate-none` 支持减弱动画偏好。
 - Taro API 错误静默处理（`.catch(() => {})` 模式）。
+- **不发起网络请求**：项目为纯本地工具，新增功能不得依赖服务端、云开发或第三方 API。

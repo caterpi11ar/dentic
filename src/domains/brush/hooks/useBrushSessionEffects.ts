@@ -21,9 +21,7 @@ import {
   markBrushOnboardingSeen,
   saveBrushCompletionRecord,
   shouldShowBrushOnboarding,
-  syncBrushRecordToCloud,
 } from '@/domains/brush/repositories/brushRepository'
-import { trackEvent } from '@/services/analytics'
 
 interface UseBrushSessionEffectsParams {
   session: BrushingSession
@@ -70,7 +68,6 @@ export function useBrushSessionEffects({
     vibrateBrushTap()
     if (interactionAction === 'start') {
       playBrushStartAudio()
-      trackEvent('brush_start')
     }
   }, [interactionAction, interactionVersion])
 
@@ -78,7 +75,6 @@ export function useBrushSessionEffects({
     if (session.state === 'brushing' && session.currentStepIndex > 0) {
       vibrateBrushStepChange()
       playBrushStepAudio(session.currentStepIndex)
-      trackEvent('brush_step_complete', { stepIndex: session.currentStepIndex })
       return
     }
 
@@ -100,11 +96,6 @@ export function useBrushSessionEffects({
     completedHandledRef.current = true
 
     saveBrushCompletionRecord(session.elapsedTime)
-
-    // 异步上报云端（不阻塞 UI）
-    syncBrushRecordToCloud(session.elapsedTime)
-
-    trackEvent('brush_complete', { elapsedTime: session.elapsedTime })
 
     vibrateBrushComplete()
     playBrushCompleteAudio()

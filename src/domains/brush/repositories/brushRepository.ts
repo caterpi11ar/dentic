@@ -1,6 +1,5 @@
 import type { DailyStatus } from '@/domains/brush/utils'
 import { TOTAL_STEPS } from '@/constants/brushing-steps'
-import { upsertBrushRecord } from '@/services/api/brushApi'
 import { getSessionTypeForDate } from '@/services/brushing'
 import {
   getBusinessDate,
@@ -9,7 +8,6 @@ import {
 } from '@/services/dateBoundary'
 import { hasSeenOnboarding, markOnboardingSeen } from '@/services/onboardingStorage'
 import { getCurrentStreak } from '@/services/recordStatsService'
-import { enqueueSyncItem } from '@/services/syncQueue'
 import { recordsStore } from '@/stores/records'
 
 function getRecordHour(timestamp?: number): number | null {
@@ -76,31 +74,5 @@ export function saveBrushCompletionRecord(elapsedTime: number): void {
     duration: elapsedTime,
     completedSteps: TOTAL_STEPS,
     timestamp: now.getTime(),
-  })
-}
-
-/** 异步同步刷牙记录到云端，失败时入队重试 */
-export function syncBrushRecordToCloud(elapsedTime: number): void {
-  const now = new Date()
-  const bizDate = getBusinessDate(now)
-  const session = getSessionTypeForDate(now)
-
-  upsertBrushRecord({
-    bizDate,
-    session,
-    completed: true,
-    durationSec: elapsedTime,
-    completedSteps: TOTAL_STEPS,
-    source: 'direct',
-  }).catch(() => {
-    // 上报失败，入队重试
-    enqueueSyncItem({
-      bizDate,
-      session,
-      completed: true,
-      durationSec: elapsedTime,
-      completedSteps: TOTAL_STEPS,
-      source: 'local_sync',
-    })
   })
 }

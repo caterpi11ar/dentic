@@ -1,5 +1,4 @@
 {
-  "cloudfunctionRoot": "cloud/functions/",
   "miniprogramRoot": "dist/",
   "projectname": "dentic",
   "description": "今天刷牙了吗 - 巴氏刷牙引导",
@@ -50,6 +49,5 @@
     "ignore": [],
     "include": []
   },
-  "editorSetting": {},
-  "cloudfunctionTemplateRoot": "cloudfunctionTemplate/"
+  "editorSetting": {}
 }
