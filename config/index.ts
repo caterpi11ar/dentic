@@ -1,66 +1,32 @@
 import { defineConfig } from '@tarojs/cli'
 import path from 'node:path'
 import tailwindcss from 'tailwindcss'
-import { UnifiedViteWeappTailwindcssPlugin as uvtw } from 'weapp-tailwindcss/vite'
-
-type ViteCssConfig = {
-  css?: {
-    postcss?: {
-      plugins?: unknown[]
-    } | string
-  }
-  publicDir?: string | false
-}
+import { UnifiedViteWeappTailwindcssPlugin } from 'weapp-tailwindcss/vite'
 
 export default defineConfig({
-  projectName: 'dentic',
-  date: '2026-03-14',
+  projectName: 'dentic-starter',
+  date: '2026-10-27',
   designWidth: 750,
-  deviceRatio: {
-    640: 2.34 / 2,
-    750: 1,
-    375: 2,
-    828: 1.81 / 2,
-  },
+  deviceRatio: { 750: 1 },
   sourceRoot: 'src',
-  outputRoot: 'dist',
-  copy: {
-    patterns: [{ from: 'src/assets/audio/', to: 'dist/assets/audio/' }],
-    options: {},
-  },
+  outputRoot: process.env.TARO_ENV === 'h5' ? 'dist/h5' : 'dist',
+  copy: { patterns: [{ from: 'src/static/assets/pet-sprites/', to: process.env.TARO_ENV === 'h5' ? 'dist/h5/assets/pet-sprites/' : 'dist/assets/pet-sprites/' }, { from: 'src/static/assets/brush-audio/', to: process.env.TARO_ENV === 'h5' ? 'dist/h5/assets/brush-audio/' : 'dist/assets/brush-audio/' }], options: {} },
   framework: 'react',
   plugins: ['@tarojs/plugin-framework-react'],
-  defineConstants: {},
-  alias: {
-    '@': path.resolve(process.cwd(), 'src'),
-  },
-  mini: {
-    postcss: {
-      pxtransform: {
-        enable: true,
-        config: {},
-      },
-    },
-  },
+  alias: { '@': path.resolve(process.cwd(), 'src') },
+  h5: { publicPath: '/', router: { mode: 'hash' }, devServer: { host: '127.0.0.1', port: 10086 } },
+  mini: { postcss: { pxtransform: { enable: true } } },
   compiler: {
     type: 'vite',
     vitePlugins: [
       {
-        // public/ 只存放 README 展示图，不是小程序资源，禁止打进包内（约 244KB）
-        name: 'disable-public-dir-plugin',
-        config(config: ViteCssConfig) {
-          config.publicDir = false
+        name: 'tailwind-postcss',
+        config() {
+          return { publicDir: process.env.TARO_ENV === 'h5' ? path.resolve(process.cwd(), 'src/static') : false, css: { postcss: { plugins: [tailwindcss()] } } }
         },
       },
-      {
-        name: 'postcss-config-loader-plugin',
-        config(config: ViteCssConfig) {
-          if (typeof config.css?.postcss === 'object' && Array.isArray(config.css.postcss.plugins)) {
-            config.css.postcss.plugins.unshift(tailwindcss())
-          }
-        },
-      },
-      uvtw({
+      UnifiedViteWeappTailwindcssPlugin({
+        disabled: process.env.TARO_ENV === 'h5',
         rem2rpx: true,
         injectAdditionalCssVarScope: true,
       }),

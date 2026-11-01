@@ -1,0 +1,24 @@
+{
+  "source": "caterpi11ar/dentic",
+  "commit": "370f64990c0575b6080706eb7c5293cdab8e8144",
+  "files": {
+    "step-ding.mp3": "0c2ddfabe797a25ca90643c8de53d1a51189f97d9483f0851b5cd472821dd43b",
+    "voice/complete.mp3": "f0b72cf43c6df8c8314d2fea4e22706e97aa39a810813c0373fee57b8cb854d2",
+    "voice/start.mp3": "af0c11995bd23c37d2a946a8d24b356292ab94127aa175124d50e91531dd26d8",
+    "voice/step-01.mp3": "e327c01747758a7b4fdc12ddf756fddddca9f41997a2725b8e8d36304bed658c",
+    "voice/step-02.mp3": "c25b4676ff127e031969d8888a7f67436c175c8f6adac8e044c8cf208f3d93fc",
+    "voice/step-03.mp3": "28635c8905761abf6542f9cd4bdaa78167b4000435007d16396546a2a411f567",
+    "voice/step-04.mp3": "46fee3bd98494a6fb830353dc59661154832e30e6858621b21aa9082d393aca8",
+    "voice/step-05.mp3": "5332d466e8e723a7d3b5e7aec14feeee68090d276e579666fb44b0e0c0e490fe",
+    "voice/step-06.mp3": "0af3c9dee83b6ed12d1f49ffc4a5d52be1f72d1aa2ea3abb594df491744c290c",
+    "voice/step-07.mp3": "3a195c750198989c721ef7fec58d862de6464d34c126b84c02ba248523f94698",
+    "voice/step-08.mp3": "9d227b82742797b9b5520fa49dfad3c651dd63ef2a7f98ba1e1976aab47776d3",
+    "voice/step-09.mp3": "3800a106cc14bb9d7127f12deeab0a80a96cd646a4a7617b9bd18b4b77d849ed",
+    "voice/step-10.mp3": "edb1a92629791cdc70044a7420e08d882b14e0f5a76c398abefa69318226714b",
+    "voice/step-11.mp3": "885196960ba713bcf62e341f788ee2415b05319aeba8a93edfaf8281bb9ac2f1",
+    "voice/step-12.mp3": "d7ffc537f947e122e17d103fd4a2951ee6e557a2cc4b71b0dc0469f4cf2e94ff",
+    "voice/step-13.mp3": "378e38a6aafc186676e31057d87a6f8885e8c750be7229b83ef04e3be628174c",
+    "voice/step-14.mp3": "9728185e116a6c4023ec3a0250d981cfed93ae6d710ca091cd1e07f6f0e911cb",
+    "voice/step-15.mp3": "e26969a4818bd803649f29c2a5db48faf3b8ac89231be6aa6a54fb32f0a814f6"
+  }
+}

@@ -1,0 +1,5 @@
+/* Original tooth geometry, current Lingo palette. */
+.old-scene { position: relative; width: 440px; height: 472px; flex-shrink: 0; }
+.old-tooth { position: absolute; box-sizing: border-box; border-radius: 50%; background: #ffffff; border: 3px solid #e5e7eb; transition: background-color .3s; }
+.old-tooth-lit { background: #0072ce; border-color: #005baa; }
+@media (max-height: 700px) { .old-scene { width: 340px; height: 364px; } }

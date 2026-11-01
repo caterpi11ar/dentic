@@ -1,53 +1,12 @@
 {
   "miniprogramRoot": "dist/",
-  "projectname": "dentic",
-  "description": "今天刷牙了吗 - 巴氏刷牙引导",
-  "appid": "wx8d3bbd9dbc9a98d7",
-  "setting": {
-    "urlCheck": true,
-    "es6": true,
-    "enhance": true,
-    "compileHotReLoad": false,
-    "postcss": false,
-    "minified": false,
-    "newFeature": true,
-    "compileWorklet": false,
-    "uglifyFileName": false,
-    "uploadWithSourceMap": true,
-    "packNpmManually": false,
-    "packNpmRelationList": [],
-    "minifyWXSS": true,
-    "minifyWXML": true,
-    "localPlugins": false,
-    "disableUseStrict": false,
-    "useCompilerPlugins": false,
-    "condition": false,
-    "swc": false,
-    "disableSWC": true,
-    "babelSetting": {
-      "ignore": [],
-      "disablePlugins": [],
-      "outputPath": ""
-    }
-  },
+  "projectname": "dentic-starter",
+  "description": "Dentic 空白重设计项目",
+  "appid": "touristappid",
   "compileType": "miniprogram",
-  "condition": {
-    "miniprogram": {
-      "current": 0,
-      "list": [
-        {
-          "id": 0,
-          "name": "首页",
-          "pathName": "pages/index/index",
-          "query": ""
-        }
-      ]
-    }
-  },
-  "simulatorPluginLibVersion": {},
-  "packOptions": {
-    "ignore": [],
-    "include": []
-  },
-  "editorSetting": {}
+  "setting": {
+    "es6": true,
+    "minified": true,
+    "urlCheck": true
+  }
 }

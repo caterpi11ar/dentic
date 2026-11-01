@@ -1,0 +1,2 @@
+# Preserve vendored skills byte-for-byte for skills-provenance.json.
+.agents/skills/** -text

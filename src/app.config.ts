@@ -1,14 +1,4 @@
 export default defineAppConfig({
-  pages: [
-    'pages/index/index',
-    'pages/history/index',
-    'pages/profile/index',
-  ],
-  window: {
-    navigationStyle: 'custom',
-    backgroundTextStyle: 'light',
-    navigationBarBackgroundColor: '#faf9f5',
-    navigationBarTitleText: '今天刷牙了吗 | 刷牙',
-    navigationBarTextStyle: 'black',
-  },
+  pages: ['pages/index/index', 'pages/lesson/index', 'pages/quests/index', 'pages/achievements/index', 'pages/profile/index'],
+  window: { navigationBarTitleText: '刷了吗', navigationBarBackgroundColor: '#ffffff', navigationBarTextStyle: 'black', backgroundColor: '#ffffff' },
 })

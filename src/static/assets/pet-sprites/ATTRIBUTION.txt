@@ -1,0 +1,4 @@
+Free Pets Pack by Frakassets
+https://frakassets.itch.io/free-pets-pack
+CC BY 4.0 https://creativecommons.org/licenses/by/4.0/
+Original PNG unchanged. 64px scroller outline lit variant selected; frame configuration adapted from original Aseprite JSON.

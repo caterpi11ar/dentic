@@ -10,13 +10,27 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "skipLibCheck": true,
-    "lib": ["DOM", "ES2017"],
+    "lib": [
+      "DOM",
+      "ES2017"
+    ],
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": [
+        "src/*"
+      ]
     },
-    "types": ["@tarojs/taro"]
+    "types": [
+      "@tarojs/taro",
+      "node"
+    ]
   },
-  "include": ["src/**/*", "config/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "include": [
+    "src/**/*",
+    "config/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }
