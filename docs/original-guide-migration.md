@@ -7,7 +7,7 @@
 - `BrushCountdownOverlay`：恢复整屏 3/2/1，保留当前项目的暂停与退出入口。
 - `BrushCompletedState`：恢复勾选图案、用时/步骤/连续天数三栏与晨晚完成提示；返回现有按天旅程。没有恢复旧首页/底栏或新增分享功能。
 - `src/assets/audio`：18 个 MP3 原样复制，合计 592135 字节；开始、15 步、完成语音和 step-ding。逐文件 SHA-256 见 `original-guide-audio.json`。
-- 音频位于 `src/static/assets/brush-audio`，打包为实体文件，微信输出 `dist/assets/brush-audio`，H5 输出 `dist/h5/assets/brush-audio`；运行中不访问远程资源，不使用内联 data URI 音频。
+- 音频位于 `src/static/assets/brush-audio`，打包为实体文件，微信输出 `dist/assets/brush-audio`，H5 输出 `dist-h5/assets/brush-audio`；运行中不访问远程资源，不使用内联 data URI 音频。
 - 保留原独立语音/提示音开关和双音轨；暂停/切后台停音，继续时重播当前步骤，卸载销毁播放器。浏览器或系统拒绝播放时安静降级。
 - 当前 150 秒流程、晨晚记录、累计天数和未完成不保存规则保留；语音未结束时下一步骤会替换它，与旧项目一致。
 

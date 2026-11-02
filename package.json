@@ -6,7 +6,7 @@
   "packageManager": "pnpm@11.22.0",
   "scripts": {
     "dev:weapp": "taro build --type weapp --watch",
-    "build:weapp": "taro build --type weapp",
+    "build:weapp": "taro build --type weapp && node scripts/check-weapp-size.cjs",
     "typecheck": "tsc --noEmit",
     "dev:h5": "taro build --type h5 --watch",
     "build:h5": "taro build --type h5",

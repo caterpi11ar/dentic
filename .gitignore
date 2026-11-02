@@ -11,3 +11,4 @@ project.private.config.json
 .env
 .env.*
 !.env.example
+dist-h5/
