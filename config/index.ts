@@ -15,7 +15,7 @@ export default defineConfig({
   plugins: ['@tarojs/plugin-framework-react'],
   alias: { '@': path.resolve(process.cwd(), 'src') },
   h5: { publicPath: '/', router: { mode: 'hash' }, devServer: { host: '127.0.0.1', port: 10086 } },
-  mini: { postcss: { pxtransform: { enable: true } } },
+  mini: { imageUrlLoaderOption: { limit: false, name: (file: string) => 'assets/' + path.basename(file) }, postcss: { pxtransform: { enable: true } } },
   compiler: {
     type: 'vite',
     vitePlugins: [
